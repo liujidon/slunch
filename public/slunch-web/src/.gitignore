@@ -1,0 +1,9 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+
+node_modules/
+*.log
+package-lock.json
+strategy_*.json
+.env

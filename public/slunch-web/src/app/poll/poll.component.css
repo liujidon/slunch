@@ -1,0 +1,20 @@
+mat-grid-tile {
+  background: lightblue;
+}
+
+.new-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-container > * {
+  width: 30%;
+}
+
+mat-form-field {
+  margin: 1em;
+}
+
+button {
+  margin-right: 1em;
+}

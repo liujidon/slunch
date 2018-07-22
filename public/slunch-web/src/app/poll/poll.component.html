@@ -1,0 +1,40 @@
+<mat-card>
+  <mat-card-title>{{poll.topic}} Poll</mat-card-title>
+  <mat-card-content>
+    <mat-grid-list cols="2" rowHeight="4:1">
+      <mat-grid-tile *ngFor="let option of poll.options" (click)="updateVote(option)">
+        <app-poll-option [pollOption]="option"></app-poll-option>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card-content>
+</mat-card>
+
+<mat-accordion>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Create new poll {{newPoll.topic}}
+      </mat-panel-title>
+      <mat-panel-description>
+          Choices:
+          <span *ngFor="let option of newPoll.options">
+             {{option.name}} &nbsp;
+          </span>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="new-poll">
+    <mat-form-field>
+      <input matInput placeholder="Topic" [(ngModel)]="newPoll.topic">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select [ngModel]="newOption" (ngModelChange)="onOptionChange($event)" placeholder="choice">
+        <mat-option *ngFor="let op of pollOptions" [value]="op.name">{{op.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+    <mat-action-row>
+      <button mat-raised-button color="primary" (click)="createPoll()">Create</button>
+      <button mat-raised-button color="warn" (click)="resetPoll()">Clear</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
