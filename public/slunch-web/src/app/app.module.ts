@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AppComponent } from './app.component';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { environment } from '../environments/environment';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+
 import {
   MatAutocompleteModule,
   MatBadgeModule,
@@ -43,9 +45,16 @@ import {
   MatTooltipModule,
   MatTreeModule,
 } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { AppComponent } from './app.component';
+import { AppRoutes } from './app.routes';
+import { environment } from '../environments/environment';
 import { PollComponent } from './poll/poll.component';
 import { PollOptionComponent } from './poll-option/poll-option.component';
+import { LoginPageComponent } from './login-page/login-page.component';
+import { AuthService } from './providers/auth.service';
+import { AuthGuardService } from './providers/auth-guard.service';
+import { VotePageComponent } from './vote-page/vote-page.component';
 
 @NgModule({
   exports: [
@@ -91,18 +100,22 @@ export class MaterialModule {}
 @NgModule({
   declarations: [
     AppComponent,
+    VotePageComponent,
+    LoginPageComponent,
     PollComponent,
     PollOptionComponent
   ],
   imports: [
     BrowserModule,
+    AppRoutes,
     AngularFireModule.initializeApp(environment.firebase, 'slunch-web'),
     AngularFirestoreModule,
+    AngularFireAuthModule,
     BrowserAnimationsModule,
     MaterialModule,
-    FormsModule
+    FormsModule,
   ],
-  providers: [],
+  providers: [AuthService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

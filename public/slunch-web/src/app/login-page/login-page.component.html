@@ -1,0 +1,27 @@
+<mat-card class="login-card">
+  <mat-card-content>
+    <form class="login-form">
+      <table cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field>
+              <input matInput [(ngModel)]="user.email" name="email" placeholder="Email" required>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field>
+              <input matInput placeholder="Password" [(ngModel)]="user.password" type="password" name="password" required>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="signUpWithEmail()" color="warm">Sign up with Email</button>
+    <button mat-raised-button (click)="signInWithEmail()" color="primary">Login with Email</button>
+    <button mat-raised-button (click)="signInWithGoogle()" color="primary">Login with Google</button>
+  </mat-card-actions>
+</mat-card>

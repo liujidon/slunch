@@ -9,26 +9,25 @@ import { Observable } from 'rxjs';
 })
 export class PollService {
   db: AngularFirestore;
-  private pollCollection: AngularFirestoreCollection<Poll>;
+  private pollCollection;
 
   constructor(db: AngularFirestore) {
       this.db = db;
       this.pollCollection = db.collection<Poll>('poll');
   }
 
-  getPollOptions(): Observable<PollOption>[] {
+  getPollOptions(): Observable<PollOption[]> {
     return this.db.collection<PollOption>('poll-options').valueChanges();;
   }
 
-  getLatestPoll(): Observable<DocumentChangeAction>[] {
+  getLatestPoll(): Observable<any[]> {
     return this.db.collection<Poll>('poll', ref => ref.orderBy('createtime', 'desc').limit(1)).valueChanges();
-    //return this.db.collection<Poll>('poll', ref => ref.orderBy('createtime', 'desc').limit(1)).snapshotChanges();
   }
-  
+
   updatePoll(poll:Poll) {
     if(poll.id == null)
       poll.id = this.db.createId();
-    this.pollCollection.doc(poll.id).update(JSON.parse(JSON.stringify(poll)));
+    this.pollCollection.doc(poll.id).set(JSON.parse(JSON.stringify(poll)));
   }
 
 }

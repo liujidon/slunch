@@ -1,0 +1,12 @@
+<mat-toolbar color="primary" fullscreen>
+  <span>Welcome to {{ title }} {{username}}!</span>
+  <!-- This fills the remaining space of the current row -->
+  <span class="spacer"></span>
+  <span class="clickable" matTooltip="Sign Out" matTooltipPosition="before">
+  <mat-icon (click)="authService.logout()"
+          >exit_to_app</mat-icon>
+    </span>
+</mat-toolbar>
+<div>
+  <app-poll></app-poll>
+</div>

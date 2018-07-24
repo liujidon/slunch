@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Poll } from '../poll';
 import { PollOption } from '../poll-option';
 import { PollService } from '../poll.service';
+import { Observable } from 'rxjs';
+import { AuthService } from '../providers/auth.service';
 
 @Component({
   selector: 'app-poll',
@@ -10,14 +12,14 @@ import { PollService } from '../poll.service';
 })
 export class PollComponent implements OnInit {
   poll: Poll;
-  pollOptions: PollOption[];
   newPoll: Poll;
   newOption: String;
+  pollOptions$: Observable<PollOption[]>;
 
-  constructor(private pollService: PollService) {
-    this.poll = new Poll();
-    this.pollOptions = new PollOption();
-    this.newPoll = new Poll();
+
+  constructor(private pollService: PollService, private authService: AuthService) {
+    this.poll = new Poll("");
+    this.newPoll = new Poll("");
   }
 
   ngOnInit() {
@@ -29,8 +31,7 @@ export class PollComponent implements OnInit {
   }
 
   getPollOptions(): void {
-    this.pollService.getPollOptions()
-       .subscribe(pollOptions => this.pollOptions = pollOptions);
+    this.pollOptions$ = this.pollService.getPollOptions();
   }
 
   onOptionChange(newValue) {
@@ -51,16 +52,17 @@ export class PollComponent implements OnInit {
   }
 
   resetPoll() {
-    this.newPoll = new Poll();
+    this.newPoll = new Poll("");
     this.newOption = "";
   }
 
   updateVote(option) {
-    let index = option.votes.indexOf("Bill");
+    let name = this.authService.getUsername();
+    let index = option.votes.indexOf(name);
     if(index > -1)
       option.votes.splice(index, 1);
     else
-      option.votes.push("Bill");
+      option.votes.push(name);
 
     this.pollService.updatePoll(this.poll);
   }
