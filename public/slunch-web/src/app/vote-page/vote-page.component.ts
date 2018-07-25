@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../providers/auth.service';
+import { StateService } from '../providers/state.service';
 
 @Component({
   selector: 'app-vote-page',
@@ -10,9 +11,11 @@ export class VotePageComponent implements OnInit {
   title = 'Slunch';
   username = '';
   authService: AuthService;
+  stateService: StateService;
 
-  constructor(authService: AuthService) {
+  constructor(authService: AuthService, stateService: StateService) {
     this.authService = authService;
+    this.stateService = stateService;
   }
 
   ngOnInit() {

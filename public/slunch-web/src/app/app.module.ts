@@ -54,7 +54,9 @@ import { PollOptionComponent } from './poll-option/poll-option.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthService } from './providers/auth.service';
 import { AuthGuardService } from './providers/auth-guard.service';
+import { StateService } from './providers/state.service';
 import { VotePageComponent } from './vote-page/vote-page.component';
+import { OrderComponent } from './order/order.component';
 
 @NgModule({
   exports: [
@@ -103,7 +105,8 @@ export class MaterialModule {}
     VotePageComponent,
     LoginPageComponent,
     PollComponent,
-    PollOptionComponent
+    PollOptionComponent,
+    OrderComponent
   ],
   imports: [
     BrowserModule,
@@ -115,7 +118,7 @@ export class MaterialModule {}
     MaterialModule,
     FormsModule,
   ],
-  providers: [AuthService, AuthGuardService],
+  providers: [AuthService, AuthGuardService, StateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

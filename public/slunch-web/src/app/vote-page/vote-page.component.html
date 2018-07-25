@@ -8,5 +8,11 @@
     </span>
 </mat-toolbar>
 <div>
-  <app-poll></app-poll>
+
+  <div *ngIf="stateService.allowOrders()">
+    <app-order></app-order>
+  </div>
+  <div *ngIf="stateService.allowPoll()">
+    <app-poll></app-poll>
+  </div>
 </div>
