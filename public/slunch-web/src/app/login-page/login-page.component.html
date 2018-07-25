@@ -1,27 +1,25 @@
-<mat-card class="login-card">
-  <mat-card-content>
-    <form class="login-form">
-      <table cellspacing="0">
-        <tr>
-          <td>
-            <mat-form-field>
-              <input matInput [(ngModel)]="user.email" name="email" placeholder="Email" required>
-            </mat-form-field>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <mat-form-field>
-              <input matInput placeholder="Password" [(ngModel)]="user.password" type="password" name="password" required>
-            </mat-form-field>
-          </td>
-        </tr>
-      </table>
-    </form>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button (click)="signUpWithEmail()" color="warm">Sign up with Email</button>
-    <button mat-raised-button (click)="signInWithEmail()" color="primary">Login with Email</button>
-    <button mat-raised-button (click)="signInWithGoogle()" color="primary">Login with Google</button>
-  </mat-card-actions>
-</mat-card>
+<div class="wrapper">
+  <mat-card class="login-card">
+    <div class="login-button-area">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="user.email" name="email" placeholder="Email" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput placeholder="Password" [(ngModel)]="user.password" type="password" name="password" required>
+        <mat-hint>Min 6 characters</mat-hint>
+      </mat-form-field>
+      <div>
+        <mat-divider></mat-divider>
+      </div>
+      <button class="login-button" mat-raised-button (click)="signUpWithEmail()" color="accent">
+        Sign up with Email</button>
+      <button class="login-button" mat-raised-button (click)="signInWithEmail()" color="primary">
+        <mat-icon align="left">email</mat-icon> Login with Email</button>
+      <button class="login-button" mat-raised-button (click)="signInWithGoogle()" color="primary">
+        <img src="http://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg">
+        Login with Google</button>
+    </div>
+  </mat-card>
+</div>

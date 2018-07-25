@@ -1,5 +1,16 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 5em;
+}
+
 .login-card {
-  margin: auto;
-  width: 40%;
-  text-align: center;
+  grid-column: 2 / 3;
+  grid-row: 1;
+}
+
+.login-button-area {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-gap: 10px;
 }
