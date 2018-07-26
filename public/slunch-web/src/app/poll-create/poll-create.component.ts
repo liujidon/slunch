@@ -3,6 +3,7 @@ import { PollService } from '../poll.service';
 import { AuthService } from '../providers/auth.service';
 import { Poll } from '../poll';
 import { PollOption } from '../poll-option';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-poll-create',
@@ -13,12 +14,14 @@ export class PollCreateComponent implements OnInit {
 
   newPoll: Poll;
   newOption: string;
+  pollOptions$: Observable<PollOption[]>;
 
   constructor(public pollService: PollService, public authService: AuthService) {
     this.newPoll = new Poll("");
   }
 
   ngOnInit() {
+    this.pollOptions$ = this.pollService.getPollOptions();
   }
 
   onOptionChange(newValue) {

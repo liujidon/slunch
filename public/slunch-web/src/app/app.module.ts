@@ -96,8 +96,7 @@ import { PollCreateComponent } from './poll-create/poll-create.component';
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-  ],
-  declarations: [PollCreateComponent]
+  ]
 })
 export class MaterialModule {}
 
@@ -108,7 +107,8 @@ export class MaterialModule {}
     LoginPageComponent,
     PollComponent,
     PollOptionComponent,
-    OrderComponent
+    OrderComponent,
+    PollCreateComponent
   ],
   imports: [
     BrowserModule,

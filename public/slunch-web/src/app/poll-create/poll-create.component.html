@@ -1,28 +1,29 @@
+
 <mat-accordion *ngIf="authService.isAdmin()">
-  <mat-expansion-panel style="margin:3em" [expanded]="false">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Create new poll {{newPoll.topic}}
-      </mat-panel-title>
-      <mat-panel-description *ngIf="newPoll.options.length">
-          <span class="close" *ngFor="let option of newPoll.options">
-              {{option.name}} &nbsp;
-          </span>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <div class="new-poll">
-    <mat-form-field>
-      <input matInput placeholder="Topic" [(ngModel)]="newPoll.topic">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-select [(ngModel)]="newOption" (ngModelChange)="onOptionChange($event)" placeholder="Option">
-        <mat-option *ngFor="let op of pollOptions$ | async" [value]="op.name">{{op.name}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-    <mat-action-row>
-      <button mat-raised-button color="primary" (click)="createPoll()">Create</button>
-      <button mat-raised-button color="warn" (click)="resetPoll()">Clear</button>
-    </mat-action-row>
-  </mat-expansion-panel>
-</mat-accordion>
+    <mat-expansion-panel style="margin:3em" [expanded]="false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+              Create new poll {{newPoll.topic}}
+            </mat-panel-title>
+            <mat-panel-description *ngIf="newPoll.options.length">
+                <span class="close" *ngFor="let option of newPoll.options">
+                    {{option.name}} &nbsp;
+                </span>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="new-poll">
+            <mat-form-field>
+              <input matInput placeholder="Topic" [(ngModel)]="newPoll.topic">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select [(ngModel)]="newOption" (ngModelChange)="onOptionChange($event)" placeholder="Option">
+                <mat-option *ngFor="let op of pollOptions$ | async" [value]="op.name">{{op.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <mat-action-row>
+            <button mat-raised-button color="primary" (click)="createPoll()">Create</button>
+            <button mat-raised-button color="warn" (click)="resetPoll()">Clear</button>
+          </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
