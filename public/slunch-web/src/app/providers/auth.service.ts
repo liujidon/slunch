@@ -13,6 +13,8 @@ export class AuthService {
   private user: Observable<firebase.User>;
   private userDetails: firebase.User = null;
 
+  private admins: Array<string> = ["lexwalmsley@gmail.com"];
+
   constructor(private firebaseAuth: AngularFireAuth, private router: Router) {
     this.user = firebaseAuth.authState;
     this.user.subscribe(
@@ -26,6 +28,15 @@ export class AuthService {
         }
       }
     );
+  }
+
+  isAdmin() {
+    if(this.admins.includes(this.userDetails.email)){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   getUsername() {

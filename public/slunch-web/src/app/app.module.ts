@@ -57,6 +57,7 @@ import { AuthGuardService } from './providers/auth-guard.service';
 import { StateService } from './providers/state.service';
 import { VotePageComponent } from './vote-page/vote-page.component';
 import { OrderComponent } from './order/order.component';
+import { PollCreateComponent } from './poll-create/poll-create.component';
 
 @NgModule({
   exports: [
@@ -95,7 +96,8 @@ import { OrderComponent } from './order/order.component';
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-  ]
+  ],
+  declarations: [PollCreateComponent]
 })
 export class MaterialModule {}
 

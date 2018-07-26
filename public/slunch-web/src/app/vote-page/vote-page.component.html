@@ -1,18 +1,40 @@
 <mat-toolbar color="primary" fullscreen>
-  <span>Welcome to {{ title }} {{username}}!</span>
-  <!-- This fills the remaining space of the current row -->
-  <span class="spacer"></span>
-  <span class="clickable" matTooltip="Sign Out" matTooltipPosition="before">
-  <mat-icon (click)="authService.logout()"
-          >exit_to_app</mat-icon>
-    </span>
+
+    <mat-grid-list style="width:100%" cols=20>
+      <mat-grid-tile colspan=6>
+        <span>Welcome to {{ title }} {{username}}!</span>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=3>
+        <mat-slide-toggle *ngIf="authService.isAdmin()">
+          Allow Orders
+        </mat-slide-toggle>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=2>
+        <mat-slide-toggle *ngIf="authService.isAdmin()">
+          New Poll
+        </mat-slide-toggle>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=8>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=1>
+        <span class="clickable" matTooltip="Sign Out" matTooltipPosition="before">
+          <mat-icon (click)="authService.logout()">exit_to_app</mat-icon>
+        </span>
+      </mat-grid-tile>
+    </mat-grid-list>
+
 </mat-toolbar>
+
 <div>
 
+  
   <div *ngIf="stateService.allowOrders()">
     <app-order></app-order>
   </div>
+
   <div *ngIf="stateService.allowPoll()">
     <app-poll></app-poll>
   </div>
+
+
 </div>
