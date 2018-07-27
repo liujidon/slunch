@@ -9,6 +9,7 @@ import { AuthService } from '../providers/auth.service';
 })
 export class PollOptionComponent implements OnInit {
   @Input() pollOption: PollOption;
+  
   constructor(private authService: AuthService) { }
 
   ngOnInit() {

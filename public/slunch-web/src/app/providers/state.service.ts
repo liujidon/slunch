@@ -1,38 +1,27 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs';
+import { AngularFirestore, AngularFirestoreDocument, DocumentData } from 'angularfire2/firestore';
+import { StateFace } from '../interfaces';
+import { Observable } from '../../../node_modules/rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StateService {
-  db: AngularFirestore;
-  state: any;
+  state: StateFace;
+  stateDocument: AngularFirestoreDocument;
+  stateObservable$: Observable<DocumentData>;
 
   constructor(db: AngularFirestore) {
-    this.state = {
-      allowOrders: false,
-      allowPoll: true
-    };
-    this.db = db;
-    this.db.doc('state/TMMQosAB4vACxDI9VUFX').valueChanges().
-      subscribe(
-        (state) => {
-          if (state) {
-            this.state = state;
-          }
-        });
+    this.stateDocument = db.doc('state/TMMQosAB4vACxDI9VUFX');
+    this.stateObservable$ = this.stateDocument.valueChanges();
+    this.state = {allowOrders: false, allowPoll: false};
+    this.stateObservable$.subscribe(
+      (state:StateFace)=>{if(state){this.state = state;}}
+    );
   }
 
-  allowOrders(): boolean {
-    return this.state.allowOrders;
-  }
-
-  allowPoll(): boolean {
-    return this.state.allowPoll;
-  }
-
-  setState(data){
-    this.db.doc('state/TMMQosAB4vACxDI9VUFX').set(data);
-  }
+  getStateObservable(){return this.stateObservable$;}
+  allowOrders(): boolean {return this.state.allowOrders;}
+  allowPoll(): boolean {return this.state.allowPoll;}
+  setState(data){this.stateDocument.set(data);}
 }

@@ -12,7 +12,6 @@ import { AuthService } from '../providers/auth.service';
 })
 export class PollComponent implements OnInit {
   poll: Poll;
-  newOption: String;
   pollOptions$: Observable<PollOption[]>;
 
   constructor(public pollService: PollService, public authService: AuthService) {
@@ -32,13 +31,22 @@ export class PollComponent implements OnInit {
   }
 
 
-  updateVote(option) {
+  updateVote(option: PollOption) {
+    let uid = this.authService.getUid();
     let name = this.authService.getUsername();
-    let index = option.votes.indexOf(name);
-    if(index > -1)
-      option.votes.splice(index, 1);
+    
+    let uidIndex = option.uidVotes.indexOf(uid);
+    let nameIndex = option.votes.indexOf(name);
+
+    if(nameIndex > -1)
+      option.votes.splice(nameIndex, 1);
     else
       option.votes.push(name);
+
+    if(uidIndex > -1)
+      option.uidVotes.splice(uidIndex, 1);
+    else
+      option.uidVotes.push(uid);
 
     this.pollService.updatePoll(this.poll);
   }

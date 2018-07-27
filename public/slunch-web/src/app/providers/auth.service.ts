@@ -4,6 +4,8 @@ import { Router } from "@angular/router";
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
+import { AngularFirestore } from '../../../node_modules/angularfire2/firestore';
+import { AdminFace } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -12,31 +14,29 @@ export class AuthService {
 
   private user: Observable<firebase.User>;
   public userDetails: firebase.User = null;
+  public isAdmin: boolean = false;
 
-  private admins: Array<string> = ["lexwalmsley@gmail.com"];
-
-  constructor(private firebaseAuth: AngularFireAuth, private router: Router) {
+  constructor(private firebaseAuth: AngularFireAuth, private router: Router, db: AngularFirestore) {
     this.user = firebaseAuth.authState;
     this.user.subscribe(
       (user) => {
         if (user) {
           this.userDetails = user;
-          console.log(this.userDetails);
+          db.doc("admin/awZQPDtQrd1P3AdCw0It").valueChanges().subscribe(
+            (doc: AdminFace)=>{
+              if(doc){
+                this.isAdmin = doc.uids.includes(this.userDetails.uid);
+              }
+            }
+          )
+          console.log(this.userDetails);          
           this.router.navigate(['vote']);
         } else {
           this.userDetails = null;
         }
       }
     );
-  }
 
-  isAdmin() {
-    if(this.admins.includes(this.userDetails.email)){
-      return true;
-    }
-    else{
-      return false;
-    }
   }
 
   getUsername() {
@@ -44,6 +44,10 @@ export class AuthService {
       return this.userDetails.displayName;
     else
       return this.userDetails.email;
+  }
+
+  getUid(){
+    return this.userDetails.uid;
   }
 
   signup(email: string, password: string) {

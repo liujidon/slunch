@@ -24,16 +24,16 @@ export class PollCreateComponent implements OnInit {
     this.pollOptions$ = this.pollService.getPollOptions();
   }
 
-  onOptionChange(newValue) {
+  onOptionChange(po: PollOption) {
     let exist = false;
     for(let i=0; i<this.newPoll.options.length; ++i) {
-      if(newValue === this.newPoll.options[i].name) {
+      if(po.name === this.newPoll.options[i].name) {
         exist = true;
         break;
       }
     }
     if(!exist)
-      this.newPoll.options.push(new PollOption(newValue));
+      this.newPoll.options.push(new PollOption(po.name, po.iconUrl, po.menuUrl));
   }
 
   createPoll() {

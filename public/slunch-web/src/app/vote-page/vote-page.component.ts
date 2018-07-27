@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../providers/auth.service';
 import { StateService } from '../providers/state.service';
+import { StateFace } from '../interfaces';
 
 @Component({
   selector: 'app-vote-page',
@@ -10,8 +11,8 @@ import { StateService } from '../providers/state.service';
 export class VotePageComponent implements OnInit {
   title = 'Slunch';
   username = '';
-  orderToggled: true;
-  newPollToggled: true;
+  orderToggled: boolean;
+  @Input() newPollToggled: boolean;
   authService: AuthService;
   stateService: StateService;
 
@@ -22,9 +23,13 @@ export class VotePageComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.authService.getUsername();
-    if(this.authService.isAdmin()){
-      this.toggleOrders();
-    }
+    this.stateService.getStateObservable().subscribe(
+      (state:StateFace)=>{this.orderToggled = state.allowOrders;}
+    );
+  }
+
+  setNewOrderToggle(b: boolean){
+    this.newPollToggled = b;
   }
 
   toggleOrders(){
