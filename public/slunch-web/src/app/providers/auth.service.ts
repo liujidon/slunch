@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 export class AuthService {
 
   private user: Observable<firebase.User>;
-  private userDetails: firebase.User = null;
+  public userDetails: firebase.User = null;
 
   private admins: Array<string> = ["lexwalmsley@gmail.com"];
 

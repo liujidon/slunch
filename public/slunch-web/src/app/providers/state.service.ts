@@ -31,4 +31,8 @@ export class StateService {
   allowPoll(): boolean {
     return this.state.allowPoll;
   }
+
+  setState(data){
+    this.db.doc('state/TMMQosAB4vACxDI9VUFX').set(data);
+  }
 }

@@ -17,7 +17,7 @@ export class PollService {
   }
 
   getPollOptions(): Observable<PollOption[]> {
-    return this.db.collection<PollOption>('poll-options').valueChanges();;
+    return this.db.collection<PollOption>('poll-options').valueChanges();
   }
 
   getLatestPoll(): Observable<any[]> {

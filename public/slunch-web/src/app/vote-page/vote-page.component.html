@@ -1,42 +1,39 @@
-<mat-toolbar color="primary" fullscreen>
-
-    <mat-grid-list style="width:100%" cols=20>
-      <mat-grid-tile colspan=6>
-        <span>Welcome to {{ title }} {{username}}!</span>
-      </mat-grid-tile>
-      <mat-grid-tile colspan=3>
-        <mat-slide-toggle *ngIf="authService.isAdmin()">
-          Allow Orders
-        </mat-slide-toggle>
-      </mat-grid-tile>
+<mat-toolbar style="background-color:#d81e05" fullscreen>  
+  <mat-grid-list style="width:100%" cols=20>
       <mat-grid-tile colspan=2>
-        <mat-slide-toggle *ngIf="authService.isAdmin()">
-          New Poll
-        </mat-slide-toggle>
+        <img width="70px" src="../../assets/scotia_icon.jpg">
       </mat-grid-tile>
-      <mat-grid-tile colspan=8>
+      <mat-grid-tile colspan=17>
       </mat-grid-tile>
       <mat-grid-tile colspan=1>
-        <span class="clickable" matTooltip="Sign Out" matTooltipPosition="before">
-          <mat-icon (click)="authService.logout()">exit_to_app</mat-icon>
-        </span>
+        <img class="clickable" matTooltip="Sign Out {{username}}" (click)="authService.logout()" src={{authService.userDetails.photoURL}} style="width: 50px">
       </mat-grid-tile>
     </mat-grid-list>
-
 </mat-toolbar>
 
-<div>
+<mat-grid-list style="width:100%" cols=20>
+  <mat-grid-tile colspan=3>
+    <mat-slide-toggle *ngIf="authService.isAdmin()" [(ngModel)]="newPollToggled">
+      New Poll
+    </mat-slide-toggle>
+  </mat-grid-tile>
+  <mat-grid-tile colspan=3>
+    <mat-slide-toggle *ngIf="authService.isAdmin()" [(ngModel)]="orderToggled" (change)="toggleOrders()">
+      Allow Orders
+    </mat-slide-toggle>
+  </mat-grid-tile>
+</mat-grid-list>
 
-  
+<div *ngIf="!newPollToggled">
   <div *ngIf="stateService.allowOrders()">
     <app-order></app-order>
   </div>
-
   <div *ngIf="stateService.allowPoll()">
     <app-poll></app-poll>
   </div>
-
-  
-
-
+</div>
+<div *ngIf="newPollToggled">
+    <div>
+        <app-poll-create></app-poll-create>
+    </div>
 </div>

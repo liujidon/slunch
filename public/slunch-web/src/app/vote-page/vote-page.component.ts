@@ -10,6 +10,8 @@ import { StateService } from '../providers/state.service';
 export class VotePageComponent implements OnInit {
   title = 'Slunch';
   username = '';
+  orderToggled: true;
+  newPollToggled: true;
   authService: AuthService;
   stateService: StateService;
 
@@ -20,6 +22,24 @@ export class VotePageComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.authService.getUsername();
+    if(this.authService.isAdmin()){
+      this.toggleOrders();
+    }
+  }
+
+  toggleOrders(){
+    if(this.orderToggled){
+      this.stateService.setState({
+        allowOrders: true,
+        allowPoll: false
+      });
+    }
+    else{
+      this.stateService.setState({
+        allowOrders: false,
+        allowPoll: true
+      });
+    }
   }
 
 }
