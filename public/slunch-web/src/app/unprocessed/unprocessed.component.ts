@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TransactionService } from '../providers/transaction.service';
 import { Transaction } from '../transaction';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { Router } from '../../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-unprocessed',
@@ -12,10 +13,12 @@ export class UnprocessedComponent implements OnInit {
 
   transactionService: TransactionService;
   unprocessedTransactions: Array<Transaction>;
+  router: Router;
   db: AngularFirestore;
 
-  constructor(transactionService: TransactionService, db: AngularFirestore) {
+  constructor(transactionService: TransactionService, db: AngularFirestore, router: Router) {
     this.transactionService = transactionService;
+    this.router = router;
   }
 
   ngOnInit() {
@@ -26,6 +29,10 @@ export class UnprocessedComponent implements OnInit {
       });
     });
 
+  }
+
+  backClick(){
+    this.router.navigate(["vote"]);
   }
 
 
