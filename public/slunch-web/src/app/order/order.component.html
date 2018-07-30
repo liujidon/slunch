@@ -1,5 +1,5 @@
 
-<div *ngIf="chosenOptions.length > 0" style="margin:3em">
+<mat-card *ngIf="chosenOptions.length > 0" style="margin:3em">
   <mat-card-title><strong>Ordering</strong></mat-card-title>
   <mat-card-content>
     <mat-vertical-stepper #stepper>
@@ -23,7 +23,15 @@
           </mat-grid-tile>
           <mat-grid-tile>
             <mat-form-field>
-              <textarea matInput placeholder="Order:" [(ngModel)]="order" required></textarea>
+              <textarea matInput placeholder="Order:" [(ngModel)]="order" required [matAutocomplete]="auto">
+              </textarea>
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-optgroup [label]="'Recent Orders'">
+                  <mat-option *ngFor="let o of recentOrders" [value]="o">
+                    {{o}}
+                  </mat-option>
+                </mat-optgroup>
+              </mat-autocomplete>
             </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile>
@@ -39,5 +47,5 @@
     </mat-vertical-stepper>
   </mat-card-content>
 
-</div>
+</mat-card>
 

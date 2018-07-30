@@ -5,6 +5,7 @@ import { PollFace } from '../interfaces';
 import { PollOption } from '../poll-option';
 import { MatStepper } from '@angular/material';
 import { TransactionService } from '../providers/transaction.service';
+import { Transaction } from '../transaction';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class OrderComponent implements OnInit{
   order: string;
   isRestaurantChosen: boolean;
   isOrderSent: boolean;
+  recentOrders: Array<string>;
   @ViewChild("stepper") stepper: MatStepper;
 
 
@@ -32,6 +34,7 @@ export class OrderComponent implements OnInit{
     this.order = "";
     this.isRestaurantChosen = false;
     this.isOrderSent = false;
+    this.recentOrders = [];
 
   }
 
@@ -39,15 +42,16 @@ export class OrderComponent implements OnInit{
     this.pollService.getLatestPoll().subscribe(
       (poll:Array<PollFace>)=>{
         if(poll){
-          if(this.authService.isAdmin){
+          this.authService.getAdmins$().subscribe((admin) => {
             poll[0].options.forEach(
               (po:PollOption)=>{
-                if(po.uidVotes.includes(this.authService.getUid())){
+                if(po.uidVotes.filter(uid =>  admin["uids"].includes(uid)).length > 0){
                   this.chosenOptions.push(po);
                 }
               }
             );
-          }
+          });
+          
         }
       }
     );
@@ -60,6 +64,19 @@ export class OrderComponent implements OnInit{
     this.isOrderSent = false;
     this.chosenOption = option;
     this.isRestaurantChosen = true;
+
+    this.transactionService.getTransactions$().subscribe((transactions)=>{
+      let temp: Array<string> = [];
+      transactions
+        .filter((transaction)=> transaction.uid == this.authService.getUid() && transaction.restaurant == this.chosenOption.name)
+        .forEach(transaction=>{
+          if(temp.indexOf(transaction.order) === -1){
+            temp.push(transaction.order);
+          }
+        });
+        this.recentOrders = temp;
+    });
+    
     stepper.next();
   }
 

@@ -1,20 +1,17 @@
 <mat-grid-list style="width:100%; background-color:#d81e05" cols=20>
   <mat-grid-tile colspan=4 (click)="logoClick()" class="clickable" matTooltip="Home">
-      <img style="max-height: 90%" src="../../assets/scotia.png">
-      <span style="color: white; font-size: 500%">
-        <strong>lunch</strong>
-      </span>
+    <strong style="color: white; position: relative; font-size:55px">Slunch</strong>
   </mat-grid-tile>
-  <mat-grid-tile colspan=11></mat-grid-tile>
-  <mat-grid-tile colspan=3>
-    <button *ngIf="authService.isAdmin" mat-raised-button color="warn" (click)="viewUnprocessedTransactions()">Unprocessed Transactions</button>
+  <mat-grid-tile colspan=9></mat-grid-tile>
+  <mat-grid-tile colspan=5>
+    <button *ngIf="authService.isAdmin" mat-raised-button color="warn" (click)="viewUnprocessedTransactions()">
+      Unprocessed Transactions
+    </button>
   </mat-grid-tile>
-  <div *ngIf="authService.isLoggedIn()">
-    <mat-grid-tile>
-      <img matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="max-height:85%">
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <mat-icon class="clickable" style="color: white; font-size:200%" (click)="authService.logout()" matTooltip="Sign Out">exit_to_app</mat-icon>
-    </mat-grid-tile>
-  </div>
+  <mat-grid-tile>
+    <img *ngIf="authService.isLoggedIn()" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="max-height:85%">
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-icon *ngIf="authService.isLoggedIn()" class="clickable" style="color: white; font-size:200%" (click)="authService.logout()" matTooltip="Sign Out">exit_to_app</mat-icon>
+  </mat-grid-tile>
 </mat-grid-list>
