@@ -1,34 +1,18 @@
 
-<mat-card *ngIf="authService.isAdmin" margin="3em">
-    <mat-grid-list style="width:100%" rowHeight="4:1" cols=10>
-      <mat-grid-tile colspan=3>
-        <div class="left-align-tile">
-          <mat-slide-toggle [(ngModel)]="newPollToggled">
-            New Poll
-          </mat-slide-toggle>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan=7></mat-grid-tile>
-        <mat-grid-tile colspan=3>
-          <div class="left-align-tile">
-            <mat-slide-toggle [(ngModel)]="isOrdering" (change)="toggleOrders()">
-              Allow Orders
-            </mat-slide-toggle>
-          </div>
-        </mat-grid-tile>
-    </mat-grid-list>
-</mat-card>
 
-
-<div *ngIf="!newPollToggled">
-  <div *ngIf="isOrdering">
+<div *ngIf="!stateService.newPollToggled">
+  
+  <div *ngIf="stateService.isOrdering">
     <app-order></app-order>
   </div>
-  <div *ngIf="!isOrdering">
+  
+  <div *ngIf="!stateService.isOrdering">
     <app-poll></app-poll>
   </div>
+
 </div>
-<div *ngIf="newPollToggled">
+
+<div *ngIf="stateService.newPollToggled">
     <div>
         <app-poll-create></app-poll-create>
     </div>

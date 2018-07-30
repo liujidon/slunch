@@ -7,16 +7,22 @@ import { StateFace } from '../interfaces';
 })
 export class StateService {
   db: AngularFirestore;
+  state: StateFace;
+  isOrdering: boolean;
+  newPollToggled: boolean;
 
   constructor(db: AngularFirestore) {
     this.db = db;
-  }
-
-  getState$(){
-    return this.db.doc<StateFace>('state/TMMQosAB4vACxDI9VUFX').valueChanges();
+    this.db.doc<StateFace>('state/TMMQosAB4vACxDI9VUFX').valueChanges().subscribe((state)=>{
+      this.state = state;
+      this.isOrdering = state.allowOrders;
+    });
+    this.newPollToggled = false;
   }
   
   setState(data){
     this.db.doc<StateFace>('state/TMMQosAB4vACxDI9VUFX').set(data);
   }
+
+
 }

@@ -2,16 +2,41 @@
   <mat-grid-tile colspan=4 (click)="logoClick()" class="clickable" matTooltip="Home">
     <strong style="color: white; position: relative; font-size:55px">Slunch</strong>
   </mat-grid-tile>
-  <mat-grid-tile colspan=5>
-    <button *ngIf="authService.isAdmin" mat-raised-button color="warn" (click)="viewUnprocessedTransactions()">
-      Unprocessed Transactions
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile colspan=9></mat-grid-tile>
+  <mat-grid-tile colspan=14></mat-grid-tile>
   <mat-grid-tile>
-    <img *ngIf="authService.isLoggedIn()" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="max-height:85%">
+    <img *ngIf="authService.isLoggedIn()" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="height:50px; width:50px; border-radius: 50%">
   </mat-grid-tile>
   <mat-grid-tile>
     <mat-icon *ngIf="authService.isLoggedIn()" class="clickable" style="color: white; font-size:200%" (click)="authService.logout()" matTooltip="Sign Out">exit_to_app</mat-icon>
   </mat-grid-tile>
 </mat-grid-list>
+
+<mat-accordion *ngIf="authService.isAdmin">
+  <mat-expansion-panel>
+    
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <strong>Admin Controls</strong>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-list>
+      <mat-list-item>
+        <button mat-raised-button color="warn" (click)="viewUnprocessedTransactions()">
+          Unprocessed Transactions
+        </button>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [(ngModel)]="stateService.newPollToggled">
+          New Poll
+        </mat-slide-toggle>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [(ngModel)]="stateService.isOrdering" (change)="toggleOrders()">
+          Allow Orders
+        </mat-slide-toggle>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-expansion-panel>
+</mat-accordion>

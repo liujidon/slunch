@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../providers/auth.service';
 import { Router } from '@angular/router';
+import { StateService } from '../providers/state.service';
+import { StateFace } from '../interfaces';
 
 @Component({
   selector: 'app-header',
@@ -10,12 +12,18 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
 
   authService: AuthService;
+  stateService: StateService;
+  state: StateFace;
+  isOrdering: boolean;
+  @Input() newPollToggled: boolean;
+  
   router: Router;
   username: string;
 
-  constructor(authService: AuthService, router: Router) {
+  constructor(authService: AuthService, stateService: StateService, router: Router) {
     this.authService = authService;
     this.router = router;
+    this.stateService = stateService;
   }
 
   ngOnInit() {
@@ -27,10 +35,26 @@ export class HeaderComponent implements OnInit {
         this.username = "";
       }
     });
+
   }
 
   viewUnprocessedTransactions(){
     this.router.navigate(["unprocessed"]);
+  }
+
+  toggleOrders(){
+    if(this.stateService.state.allowOrders){
+      this.stateService.setState({
+        allowOrders: false,
+        allowPoll: true
+      });
+    }
+    else{
+      this.stateService.setState({
+        allowOrders: true,
+        allowPoll: false
+      });
+    }
   }
 
   logoClick(){
