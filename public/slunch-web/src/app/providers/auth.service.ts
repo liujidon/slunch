@@ -15,14 +15,17 @@ export class AuthService {
   private user: Observable<firebase.User>;
   public userDetails: firebase.User = null;
   public isAdmin: boolean = false;
+  public admins$: Observable<Array<string>>;
+  public db: AngularFirestore;
 
   constructor(private firebaseAuth: AngularFireAuth, private router: Router, db: AngularFirestore) {
+    this.db = db;
     this.user = firebaseAuth.authState;
     this.user.subscribe(
       (user) => {
         if (user) {
           this.userDetails = user;
-          db.doc("admin/awZQPDtQrd1P3AdCw0It").valueChanges().subscribe(
+          this.db.doc("admin/awZQPDtQrd1P3AdCw0It").valueChanges().subscribe(
             (doc: AdminFace)=>{
               if(doc){
                 this.isAdmin = doc.uids.includes(this.userDetails.uid);
@@ -37,6 +40,10 @@ export class AuthService {
       }
     );
 
+  }
+
+  getAdmins$(){
+    return this.db.doc("admin/awZQPDtQrd1P3AdCw0It").valueChanges();
   }
 
   getUsername() {

@@ -4,6 +4,7 @@ import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } fr
 import { Transaction } from '../transaction';
 import { AccountFace } from '../interfaces';
 import { Observable } from 'rxjs';
+import { timeout } from '../../../node_modules/@types/q';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class TransactionService {
   }
 
   getTransactions$(){
-    return this.db.collection<Transaction>("transactions").valueChanges();
+    return this.db.collection<Transaction>("transactions", ref=>ref.orderBy("time", "desc")).valueChanges();
   }
 
   writeTransaction(uid: string, order: string, restaurant: string){
@@ -42,13 +43,14 @@ export class TransactionService {
     t.restaurant = restaurant;
     
     let account = this.accounts[uid];
-    t["firstname"] = account.firstname;
-    t["lastname"] = account.lastname;
-    t["email"] = account.email;
-    t["accountid"] = account.id;
+    t.firstname = account.firstname;
+    t.lastname = account.lastname;
+    t.email = account.email;
+    t.accountid = account.id;
+    t.uid = uid;
 
     let id = this.db.createId();
-    t["id"] = "transactions/" + id;
+    t.id = "transactions/" + id;
 
     this.db.collection<Transaction>("transactions").doc(id).set(JSON.parse(JSON.stringify(t)));
   }
