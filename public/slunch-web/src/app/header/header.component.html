@@ -2,12 +2,12 @@
   <mat-grid-tile colspan=4 (click)="logoClick()" class="clickable" matTooltip="Home">
     <strong style="color: white; position: relative; font-size:55px">Slunch</strong>
   </mat-grid-tile>
-  <mat-grid-tile colspan=9></mat-grid-tile>
   <mat-grid-tile colspan=5>
     <button *ngIf="authService.isAdmin" mat-raised-button color="warn" (click)="viewUnprocessedTransactions()">
       Unprocessed Transactions
     </button>
   </mat-grid-tile>
+  <mat-grid-tile colspan=9></mat-grid-tile>
   <mat-grid-tile>
     <img *ngIf="authService.isLoggedIn()" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="max-height:85%">
   </mat-grid-tile>
