@@ -1,35 +1,43 @@
-<mat-card style="margin:3em">
 
-  <div *ngIf="chosenOptions.length === 0">
-    <h1 style="color: #d81e05">Still undecided!</h1>
-  </div>
-  <div *ngIf="chosenOptions.length > 0">
+<div *ngIf="chosenOptions.length > 0" style="margin:3em">
+  <mat-card-title><strong>Ordering</strong></mat-card-title>
+  <mat-card-content>
+    <mat-vertical-stepper #stepper>
+      <mat-step label="Choose your restaurant">
+        <mat-grid-list cols=6 rowHeight="2:1">
+          <mat-grid-tile *ngFor="let option of chosenOptions">
+            <div style="margin:1em">
+              <img class="clickable" src="{{option.iconUrl}}" (click)="clickRestaurant(option, stepper)">
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-step>
+      <mat-step label="Specify order">
+        <mat-grid-list cols=5 rowHeight="3:1" *ngIf="isRestaurantChosen">
+          <mat-grid-tile>
+            <div>
+              <a target="_blank" href="{{chosenOption?.menuUrl}}" class="clickable" matTooltip="Menu">
+                <img src="{{chosenOption?.iconUrl}}">
+              </a>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field>
+              <textarea matInput placeholder="Order:" [(ngModel)]="order" required></textarea>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <button mat-raised-button [disabled]="order.length <= 0" color="warn" (click)="clickSendOrder(stepper)">Send</button>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-step>
+      <mat-step label="Finish">
+        <span *ngIf="isOrderSent">
+          <strong>{{order}}</strong> from <strong>{{chosenOption?.name}}</strong> was sent!
+        </span>
+      </mat-step>
+    </mat-vertical-stepper>
+  </mat-card-content>
 
-    <mat-card-title>Place your order</mat-card-title>
+</div>
 
-    <mat-grid-list cols=5>
-      <mat-grid-tile *ngFor="let option of chosenOptions">
-        <div style="margin:1em">
-          <img style="max-height: 100%; max-width: 100%" src="{{option.iconUrl}}">
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-  
-    <mat-card-content>
-      <mat-grid-list cols="5" rowHeight="200px">
-        <mat-grid-tile>
-        <mat-form-field>
-          <textarea matInput placeholder="Order instructions"></textarea>
-        </mat-form-field>
-        </mat-grid-tile>
-        <mat-grid-tile>
-        <button mat-raised-button color="primary">Send</button>
-        </mat-grid-tile>
-      </mat-grid-list>
-    </mat-card-content>
-
-  </div>
-
-
-
-</mat-card>

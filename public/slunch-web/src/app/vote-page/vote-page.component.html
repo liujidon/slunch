@@ -1,40 +1,26 @@
-<mat-toolbar style="background-color:#d81e05" fullscreen>  
-  <mat-grid-list style="width:100%" cols=20>
-      <mat-grid-tile colspan=2>
-        <img width="70px" src="../../assets/scotia.jpg">
-      </mat-grid-tile>
-      <mat-grid-tile colspan=8>
-        <h1 style="color: white; font-size: 40px"><strong>Slunch</strong> - {{username}}</h1>
-      </mat-grid-tile>
-      <mat-grid-tile colspan=8>
-      </mat-grid-tile>
-      <mat-grid-tile colspan=1>
-        <mat-icon class="clickable" style="color: white" (click)="authService.logout()" matTooltip="Sign Out">exit_to_app</mat-icon>
-      </mat-grid-tile>
-      <mat-grid-tile colspan=1>
-        <img matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="width: 50px">
-      </mat-grid-tile>
-    </mat-grid-list>
-</mat-toolbar>
 
-<mat-grid-list style="width:100%" cols=20>
-  <mat-grid-tile colspan=3>
-    <mat-slide-toggle *ngIf="authService.isAdmin" [(ngModel)]="newPollToggled">
-      New Poll
-    </mat-slide-toggle>
+<mat-grid-list *ngIf="authService.isAdmin" style="width:100%" rowHeight="2:1" cols=20 style="padding-top: 3em">
+  <mat-grid-tile colspan=2>
+    <div class="left-align-tile">
+      <mat-slide-toggle [(ngModel)]="newPollToggled">
+        New Poll
+      </mat-slide-toggle>
+    </div>
   </mat-grid-tile>
-  <mat-grid-tile colspan=3>
-    <mat-slide-toggle *ngIf="authService.isAdmin" [(ngModel)]="orderToggled" (change)="toggleOrders()">
-      Allow Orders
-    </mat-slide-toggle>
-  </mat-grid-tile>
+    <mat-grid-tile colspan=3>
+      <div class="left-align-tile">
+        <mat-slide-toggle [(ngModel)]="isOrdering" (change)="toggleOrders()">
+          Allow Orders
+        </mat-slide-toggle>
+      </div>
+    </mat-grid-tile>
 </mat-grid-list>
 
 <div *ngIf="!newPollToggled">
-  <div *ngIf="stateService.allowOrders()">
+  <div *ngIf="isOrdering">
     <app-order></app-order>
   </div>
-  <div *ngIf="stateService.allowPoll()">
+  <div *ngIf="!isOrdering">
     <app-poll></app-poll>
   </div>
 </div>

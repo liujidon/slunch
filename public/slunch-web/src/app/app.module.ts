@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AngularFireModule } from 'angularfire2';
@@ -55,9 +54,12 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthService } from './providers/auth.service';
 import { AuthGuardService } from './providers/auth-guard.service';
 import { StateService } from './providers/state.service';
+import { TransactionService } from './providers/transaction.service';
 import { VotePageComponent } from './vote-page/vote-page.component';
 import { OrderComponent } from './order/order.component';
 import { PollCreateComponent } from './poll-create/poll-create.component';
+import { HeaderComponent } from './header/header.component';
+import { UnprocessedComponent } from './unprocessed/unprocessed.component';
 
 @NgModule({
   exports: [
@@ -108,7 +110,9 @@ export class MaterialModule {}
     PollComponent,
     PollOptionComponent,
     OrderComponent,
-    PollCreateComponent
+    PollCreateComponent,
+    HeaderComponent,
+    UnprocessedComponent
   ],
   imports: [
     BrowserModule,
@@ -120,7 +124,7 @@ export class MaterialModule {}
     MaterialModule,
     FormsModule,
   ],
-  providers: [AuthService, AuthGuardService, StateService],
+  providers: [AuthService, AuthGuardService, StateService, TransactionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

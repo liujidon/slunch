@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../providers/auth.service';
 import { StateService } from '../providers/state.service';
 import { StateFace } from '../interfaces';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-vote-page',
@@ -9,12 +10,12 @@ import { StateFace } from '../interfaces';
   styleUrls: ['./vote-page.component.css']
 })
 export class VotePageComponent implements OnInit {
-  title = 'Slunch';
-  username = '';
-  orderToggled: boolean;
+
   @Input() newPollToggled: boolean;
   authService: AuthService;
   stateService: StateService;
+  state: StateFace;
+  isOrdering: boolean;
 
   constructor(authService: AuthService, stateService: StateService) {
     this.authService = authService;
@@ -22,29 +23,28 @@ export class VotePageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.username = this.authService.getUsername();
-    this.stateService.getStateObservable().subscribe(
-      (state:StateFace)=>{this.orderToggled = state.allowOrders;}
-    );
-  }
-
-  setNewOrderToggle(b: boolean){
-    this.newPollToggled = b;
+    this.stateService.getState$().subscribe((state)=>{
+      this.state = state;
+      this.isOrdering = state.allowOrders;
+    });
+    this.newPollToggled = false;
   }
 
   toggleOrders(){
-    if(this.orderToggled){
-      this.stateService.setState({
-        allowOrders: true,
-        allowPoll: false
-      });
-    }
-    else{
+    if(this.state.allowOrders){
       this.stateService.setState({
         allowOrders: false,
         allowPoll: true
       });
     }
+    else{
+      this.stateService.setState({
+        allowOrders: true,
+        allowPoll: false
+      });
+    }
   }
+
+
 
 }

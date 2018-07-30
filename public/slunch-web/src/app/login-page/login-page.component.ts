@@ -13,7 +13,9 @@ export class LoginPageComponent implements OnInit {
     email: '',
     password: ''
   };
-  constructor(private authService: AuthService, private router: Router) { }
+  
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit() {
   }

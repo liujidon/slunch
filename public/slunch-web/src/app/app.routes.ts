@@ -2,8 +2,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { VotePageComponent } from './vote-page/vote-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { AuthService } from './providers/auth.service';
 import { AuthGuardService } from './providers/auth-guard.service';
+import { UnprocessedComponent } from './unprocessed/unprocessed.component';
 
 const appRoutes: Routes = [
   {
@@ -14,6 +14,10 @@ const appRoutes: Routes = [
     path: 'vote',
     canActivate: [AuthGuardService],
     component: VotePageComponent
+  },
+  {
+    path: 'unprocessed',
+    component: UnprocessedComponent
   }
 ];
 

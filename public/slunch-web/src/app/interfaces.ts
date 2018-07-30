@@ -1,4 +1,5 @@
 import { PollOption } from './poll-option';
+import { Transaction } from './transaction';
 
 export interface StateFace{
     allowPoll: boolean,
@@ -15,3 +16,11 @@ export interface PollFace{
     createtime: any;
     options: PollOption[];
 }
+
+export interface AccountFace{
+    uid: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    balance: number;
+  }
