@@ -16,3 +16,30 @@ exports.addMessage = functions.https.onRequest((req, res) => {
     return res.redirect(303, snapshot.ref.toString());
   });
 });
+
+
+// Listen for updates to any `transactions` document.
+exports.updateAccountBalance = functions.firestore
+    .document('transactions/{transactionId}')
+    .onUpdate((change, context) => {
+      // Retrieve the current transaction 
+      const transaction = change.after.data();
+      const previousTransaction = change.before.data();
+      console.log("Transaction update: ", transaction);
+
+      let processed = transaction.processed;
+      if (processed == null || !processed || transaction.accountid == null)
+        return;
+      if(transaction.price == previousTransaction.price)
+        return;
+      let account = admin.firestore().ref(transaction.accountid);
+      return account.get().then(doc => {
+          return doc.balance - transaction.price;
+      }).then(newbalance => {
+          account.update({
+              balance: newbalance,
+          }).then(() => {
+            console.log("Balance updated to %.2f for %s", newbalance, transaction.accountid);
+          });
+      });
+    });
