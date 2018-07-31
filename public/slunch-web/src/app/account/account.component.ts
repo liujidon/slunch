@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../providers/auth.service';
 import { AccountFace } from '../interfaces';
 import { TransactionService } from '../providers/transaction.service';
 import { AngularFirestore } from '../../../node_modules/angularfire2/firestore';
 import { Transaction } from '../transaction';
+import { MatTableDataSource, MatSort, MatPaginator, MatSortable } from '@angular/material';
 
 @Component({
   selector: 'app-account',
@@ -16,9 +17,11 @@ export class AccountComponent implements OnInit {
   transactionService: TransactionService;
   account: AccountFace;
   db: AngularFirestore;
-  orders: Array<Transaction>;
-  displayedColumns: Array<string> = ["time", "restaurant", "order", "price", "processed"]
+  transactions: MatTableDataSource<Transaction>;
+  displayedColumns: Array<string> = ["time", "description", "detail", "credit", "debit", "status"]
   addAmount: string;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
 
   constructor(db: AngularFirestore, authService: AuthService, transactionService: TransactionService) {
@@ -43,14 +46,19 @@ export class AccountComponent implements OnInit {
     );
 
     this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions=>{
-      this.orders = transactions.filter(transaction=>transaction.uid == this.authService.getUid());
+      this.transactions = new MatTableDataSource(transactions.filter(transaction=>transaction.uid == this.authService.getUid()));
+      this.transactions.sort = this.sort;
+      this.transactions.paginator = this.paginator;
+
+      this.transactions.sort.start = "desc";
+
     });
 
   }
   
   
   addMoney(){
-    this.transactionService.writeTransaction(this.authService.getUid(), "", "", -parseFloat(this.addAmount));
+    this.transactionService.writeTransaction(this.authService.getUid(), "Deposit", "", parseFloat(this.addAmount), true);
     this.addAmount = "";
   }
 

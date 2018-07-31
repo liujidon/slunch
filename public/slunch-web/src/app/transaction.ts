@@ -3,22 +3,24 @@ export class Transaction{
 
     id: string;
     time: any;
-    restaurant: string;
-    order: string;
+    description: string;
+    detail: string;
     price: number;
-    processed: boolean;
+    status: string;
     accountid: string;
     uid: string;
     firstname: string;
     lastname: string;
     email: string;
+    isDeposit: boolean;
 
     constructor(){
         this.time = new Date();
-        this.processed = false;
-        this.order = "";
+        this.status = "new";
+        this.detail = "";
         this.price = 0;
-        this.restaurant = "";
+        this.isDeposit = false;
+        this.description = "";
         this.id = "";
         this.accountid = "";
         this.uid = "";

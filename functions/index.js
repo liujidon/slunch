@@ -23,7 +23,14 @@ exports.updateAccountBalance = functions.firestore
     let account = admin.firestore().doc(transaction.accountid);
 
     return account.get().then(doc => {
-      let spending = transaction.price - previousTransaction.price;
+      let spending = 0;
+      if(previousTransaction.processed === transaction.processed){
+        spending = transaction.price - previousTransaction.price;
+      }
+      else{
+        spending = transaction.price;
+      }
+      
       let newBalance = doc.data().balance - spending;
       console.log("New balance: ", newBalance);
       return account.update({

@@ -1,6 +1,6 @@
 
 <mat-card *ngIf="chosenOptions.length > 0" style="margin:3em">
-  <mat-card-title><strong>Ordering</strong></mat-card-title>
+  <mat-card-title>Ordering</mat-card-title>
   <mat-card-content>
     <mat-vertical-stepper #stepper>
       <mat-step label="Choose your restaurant">
@@ -13,7 +13,7 @@
         </mat-grid-list>
       </mat-step>
       <mat-step label="Specify order">
-        <mat-grid-list cols=5 rowHeight="3:1" *ngIf="isRestaurantChosen">
+        <mat-grid-list cols=5 rowHeight="2:1" *ngIf="isRestaurantChosen">
           <mat-grid-tile>
             <div>
               <a target="_blank" href="{{chosenOption?.menuUrl}}" class="clickable" matTooltip="Menu">
@@ -23,8 +23,7 @@
           </mat-grid-tile>
           <mat-grid-tile>
             <mat-form-field>
-              <textarea matInput placeholder="Order:" [(ngModel)]="order" required [matAutocomplete]="auto">
-              </textarea>
+              <textarea matInput placeholder="Order:" [(ngModel)]="order" required [matAutocomplete]="auto"></textarea>
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-optgroup [label]="'Recent Orders'">
                   <mat-option *ngFor="let o of recentOrders" [value]="o">

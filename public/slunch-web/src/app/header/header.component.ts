@@ -3,6 +3,7 @@ import { AuthService } from '../providers/auth.service';
 import { Router } from '@angular/router';
 import { StateService } from '../providers/state.service';
 import { StateFace } from '../interfaces';
+import { TransactionService } from '../providers/transaction.service';
 
 @Component({
   selector: 'app-header',
@@ -13,17 +14,20 @@ export class HeaderComponent implements OnInit {
 
   authService: AuthService;
   stateService: StateService;
+  transactionService: TransactionService;
   state: StateFace;
   isOrdering: boolean;
   @Input() newPollToggled: boolean;
+  numUnprocessed: number;
   
   router: Router;
   username: string;
 
-  constructor(authService: AuthService, stateService: StateService, router: Router) {
+  constructor(authService: AuthService, transactionService: TransactionService, stateService: StateService, router: Router) {
     this.authService = authService;
     this.router = router;
     this.stateService = stateService;
+    this.transactionService = transactionService;
   }
 
   ngOnInit() {
@@ -36,19 +40,10 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-  }
+    this.transactionService.getTransactions$().subscribe((transactions)=>{
+      this.numUnprocessed = transactions.filter(transaction=>transaction.status != "done").length;
+    });
 
-  viewUnprocessedTransactions(){
-    this.router.navigate(["unprocessed"]);
-  }
-
-  onTabChange(event){
-    if(event.index == 0){
-      this.router.navigate(["vote"]);
-    }
-    else if(event.index == 1){
-      this.router.navigate(["account"]);
-    }
   }
 
   toggleOrders(){

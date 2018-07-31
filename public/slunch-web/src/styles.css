@@ -17,3 +17,11 @@ mat-grid-tile div img {
   max-width:100%;
   max-height:100%;
 }
+
+.green{
+  color: green;
+}
+
+.red{
+  color: red;
+}

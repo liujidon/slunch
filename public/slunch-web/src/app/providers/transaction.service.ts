@@ -34,14 +34,15 @@ export class TransactionService {
   }
 
   getTransactions$(){
-    return this.db.collection<Transaction>("transactions", ref=>ref.orderBy("time", "desc")).valueChanges();
+    return this.db.collection<Transaction>("transactions").valueChanges();
   }
 
-  writeTransaction(uid: string, order: string, restaurant: string, price: number){
+  writeTransaction(uid: string, description: string, detail: string,  price: number, isDeposit: boolean){
     let t = new Transaction();
-    t.order = order;
-    t.restaurant = restaurant;
     
+    t.description = description;
+    t.detail = detail;
+
     let account = this.accounts[uid];
     t.firstname = account.firstname;
     t.lastname = account.lastname;
@@ -49,6 +50,7 @@ export class TransactionService {
     t.accountid = account.id;
     t.uid = uid;
     t.price = price;
+    t.isDeposit = isDeposit;
 
     let id = this.db.createId();
     t.id = "transactions/" + id;

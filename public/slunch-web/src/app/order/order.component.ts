@@ -72,10 +72,10 @@ export class OrderComponent implements OnInit{
     this.transactionService.getTransactions$().subscribe((transactions)=>{
       let temp: Array<string> = [];
       transactions
-        .filter((transaction)=> transaction.uid == this.authService.getUid() && transaction.restaurant == this.chosenOption.name)
+        .filter((transaction)=> transaction.uid == this.authService.getUid() && transaction.description == this.chosenOption.name)
         .forEach(transaction=>{
-          if(temp.indexOf(transaction.order) === -1){
-            temp.push(transaction.order);
+          if(temp.indexOf(transaction.detail) === -1){
+            temp.push(transaction.detail);
           }
         });
         this.recentOrders = temp;
@@ -85,7 +85,7 @@ export class OrderComponent implements OnInit{
   }
 
   clickSendOrder(stepper: MatStepper){
-    this.transactionService.writeTransaction(this.authService.getUid(), this.order, this.chosenOption.name, 0);
+    this.transactionService.writeTransaction(this.authService.getUid(), this.chosenOption.name, this.order, 0, false);
     this.isOrderSent = true;
     stepper.next();
     this.isRestaurantChosen = false;

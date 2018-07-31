@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TransactionService } from '../providers/transaction.service';
 import { Transaction } from '../transaction';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Router } from '../../../node_modules/@angular/router';
+import { MatTableDataSource, MatSort, MatPaginator, MatSortable } from '@angular/material';
 
 @Component({
   selector: 'app-unprocessed',
@@ -12,10 +13,17 @@ import { Router } from '../../../node_modules/@angular/router';
 export class UnprocessedComponent implements OnInit {
 
   transactionService: TransactionService;
-  unprocessedTransactions: Array<Transaction>;
+  unprocessedTransactions: MatTableDataSource<Transaction>;
   router: Router;
   db: AngularFirestore;
   price: string;
+  displayedColumns: Array<string> = [
+    "time", "name", "description", "detail", 
+    "price", "status", "acknowledge", "confirm"
+  ];
+
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(transactionService: TransactionService, db: AngularFirestore, router: Router) {
     this.transactionService = transactionService;
@@ -26,9 +34,12 @@ export class UnprocessedComponent implements OnInit {
   ngOnInit() {
 
     this.transactionService.getTransactions$().subscribe((transactions)=>{
-      this.unprocessedTransactions = transactions.filter((transaction)=>{
-        return !transaction.processed
-      });
+      this.unprocessedTransactions = new MatTableDataSource(transactions.filter(transaction=>transaction.status != "done"));
+      this.unprocessedTransactions.paginator = this.paginator;
+      this.unprocessedTransactions.sort = this.sort;
+
+      this.unprocessedTransactions.sort.start = "desc";
+
     });
 
   }
@@ -37,13 +48,23 @@ export class UnprocessedComponent implements OnInit {
     this.router.navigate(["vote"]);
   }
 
-  confirmPurchase(t: Transaction){
+  confirmTransaction(t: Transaction){
     let p: any = t.price;
+    if(t.isDeposit){
+      p = -parseFloat(p);
+    }
+    else{
+      p = parseFloat(p);
+    }
     let data = {
-      processed: true,
-      price: parseFloat(p)
+      status: "done",
+      price: p
     };
     this.transactionService.updateTransaction(t, data);
+  }
+
+  acknowledgeTransaction(t: Transaction){
+    this.transactionService.updateTransaction(t, {status: "ack"});
   }
 
 }
