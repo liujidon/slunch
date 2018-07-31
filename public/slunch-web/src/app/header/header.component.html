@@ -22,7 +22,7 @@
   </mat-grid-tile>
 </mat-grid-list>
 
-<mat-accordion *ngIf="authService.isAdmin">
+<mat-accordion *ngIf="authService.isAdmin && authService.isLoggedIn()">
   <mat-expansion-panel style="margin-left: 3em; margin-right: 3em;">
     
         <mat-expansion-panel-header>
