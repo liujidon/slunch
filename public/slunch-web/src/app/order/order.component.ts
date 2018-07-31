@@ -6,6 +6,7 @@ import { PollOption } from '../poll-option';
 import { MatStepper } from '@angular/material';
 import { TransactionService } from '../providers/transaction.service';
 import { Transaction } from '../transaction';
+import { Router } from '../../../node_modules/@angular/router';
 
 
 @Component({
@@ -14,6 +15,8 @@ import { Transaction } from '../transaction';
   styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit{
+
+  router: Router;
   pollService: PollService;
   authService: AuthService;
   chosenOptions: Array<PollOption>;
@@ -26,7 +29,7 @@ export class OrderComponent implements OnInit{
   @ViewChild("stepper") stepper: MatStepper;
 
 
-  constructor(pollService: PollService, authService: AuthService, transactionService: TransactionService) {
+  constructor(pollService: PollService, authService: AuthService, transactionService: TransactionService, router: Router) {
     this.pollService = pollService;
     this.authService = authService;
     this.chosenOptions = [];
@@ -35,6 +38,7 @@ export class OrderComponent implements OnInit{
     this.isRestaurantChosen = false;
     this.isOrderSent = false;
     this.recentOrders = [];
+    this.router = router;
 
   }
 
@@ -81,7 +85,7 @@ export class OrderComponent implements OnInit{
   }
 
   clickSendOrder(stepper: MatStepper){
-    this.transactionService.writeTransaction(this.authService.getUid(), this.order, this.chosenOption.name);
+    this.transactionService.writeTransaction(this.authService.getUid(), this.order, this.chosenOption.name, 0);
     this.isOrderSent = true;
     stepper.next();
     this.isRestaurantChosen = false;

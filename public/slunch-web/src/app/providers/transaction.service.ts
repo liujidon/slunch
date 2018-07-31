@@ -37,7 +37,7 @@ export class TransactionService {
     return this.db.collection<Transaction>("transactions", ref=>ref.orderBy("time", "desc")).valueChanges();
   }
 
-  writeTransaction(uid: string, order: string, restaurant: string){
+  writeTransaction(uid: string, order: string, restaurant: string, price: number){
     let t = new Transaction();
     t.order = order;
     t.restaurant = restaurant;
@@ -48,11 +48,17 @@ export class TransactionService {
     t.email = account.email;
     t.accountid = account.id;
     t.uid = uid;
+    t.price = price;
 
     let id = this.db.createId();
     t.id = "transactions/" + id;
 
     this.db.collection<Transaction>("transactions").doc(id).set(JSON.parse(JSON.stringify(t)));
+
+  }
+
+  updateTransaction(t: Transaction, data: any){
+    this.db.doc(t.id).update(data);
   }
 
 

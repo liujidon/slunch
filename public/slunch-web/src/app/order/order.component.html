@@ -42,6 +42,8 @@
       <mat-step label="Finish">
         <span *ngIf="isOrderSent">
           <strong>{{order}}</strong> from <strong>{{chosenOption?.name}}</strong> was sent!
+          <br><br>
+          <button (click)="router.navigate(['account'])" mat-raised-button color="warn">View account and transactions</button>
         </span>
       </mat-step>
     </mat-vertical-stepper>

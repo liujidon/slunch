@@ -1,0 +1,79 @@
+
+
+
+<mat-card style="margin: 3em">
+  <mat-card-title>
+    Balance
+  </mat-card-title>
+  <mat-card-content>
+    <h2 [ngClass]="account?.balance > 20 ? 'green':'red'">
+      ${{account?.balance}}
+    </h2>
+
+
+    <mat-accordion>
+        <mat-expansion-panel style="width:50%; align-content: left;">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Add money
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-grid-list rowHeight="3:1" cols=2>
+              <mat-grid-tile>
+                <mat-form-field>
+                  <input matInput [(ngModel)]="addAmount" placeholder="Amount">
+                </mat-form-field>
+              </mat-grid-tile>
+              <mat-grid-tile>
+                <button mat-raised-button color="warn" (click)="addMoney()">Confirm</button>
+              </mat-grid-tile>
+            </mat-grid-list>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+  </mat-card-content>
+
+  <mat-divider></mat-divider>
+  <br><br>
+
+  <mat-card-title>
+    Transactions
+  </mat-card-title>
+  <mat-card-content>
+    
+    <mat-table [dataSource]="orders" matSort>
+      <ng-container matColumnDef="time">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row?.time}}</mat-cell>
+      </ng-container>
+      
+      <ng-container matColumnDef="restaurant">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Restaurant</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row?.restaurant}}</mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="order">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Order</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row?.order}}</mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="price">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
+        <mat-cell *matCellDef="let row" [ngClass]="row.price < 0 ? 'green' : 'red'">{{row?.price}}</mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="processed">
+        <mat-header-cell *matHeaderCellDef>Processed</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row?.processed}}</mat-cell>
+      </ng-container>
+    
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    
+    </mat-table>
+  </mat-card-content>
+
+  
+</mat-card>
+
+

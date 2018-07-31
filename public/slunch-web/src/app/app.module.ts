@@ -60,6 +60,7 @@ import { OrderComponent } from './order/order.component';
 import { PollCreateComponent } from './poll-create/poll-create.component';
 import { HeaderComponent } from './header/header.component';
 import { UnprocessedComponent } from './unprocessed/unprocessed.component';
+import { AccountComponent } from './account/account.component';
 
 @NgModule({
   exports: [
@@ -112,7 +113,8 @@ export class MaterialModule {}
     OrderComponent,
     PollCreateComponent,
     HeaderComponent,
-    UnprocessedComponent
+    UnprocessedComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,

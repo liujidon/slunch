@@ -42,6 +42,15 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(["unprocessed"]);
   }
 
+  onTabChange(event){
+    if(event.index == 0){
+      this.router.navigate(["vote"]);
+    }
+    else if(event.index == 1){
+      this.router.navigate(["account"]);
+    }
+  }
+
   toggleOrders(){
     if(this.stateService.state.allowOrders){
       this.stateService.setState({

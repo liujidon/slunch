@@ -5,7 +5,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 import { Observable } from 'rxjs/Observable';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { AdminFace } from '../interfaces';
+import { AdminFace, AccountFace } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,7 @@ export class AuthService {
   constructor(private firebaseAuth: AngularFireAuth, private router: Router, db: AngularFirestore) {
     this.db = db;
     this.user = firebaseAuth.authState;
+    
     this.user.subscribe(
       (user) => {
         if (user) {

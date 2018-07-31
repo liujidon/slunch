@@ -34,7 +34,7 @@ exports.updateAccountBalance = functions.firestore
         return;
       let account = admin.firestore().ref(transaction.accountid);
       return account.get().then(doc => {
-          return doc.balance - transaction.price;
+        return doc.balance - transaction.price;
       }).then(newbalance => {
           account.update({
               balance: newbalance,

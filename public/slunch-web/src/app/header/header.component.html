@@ -2,7 +2,11 @@
   <mat-grid-tile colspan=4 (click)="logoClick()" class="clickable" matTooltip="Home">
     <strong style="color: white; position: relative; font-size:55px">Slunch</strong>
   </mat-grid-tile>
-  <mat-grid-tile colspan=14></mat-grid-tile>
+  <mat-grid-tile colspan=5>
+    <button mat-raised-button color="warn" (click)="router.navigate(['vote'])">Vote/Order</button>
+    <button mat-raised-button color="warn" (click)="router.navigate(['account'])">Account</button>
+  </mat-grid-tile>
+  <mat-grid-tile colspan=7></mat-grid-tile>
   <mat-grid-tile>
     <img *ngIf="authService.isLoggedIn()" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="height:50px; width:50px; border-radius: 50%">
   </mat-grid-tile>

@@ -37,10 +37,13 @@ export class UnprocessedComponent implements OnInit {
     this.router.navigate(["vote"]);
   }
 
-
-  confirmClick(t: Transaction){
-    let price:number = parseFloat(this.price);
-    this.db.doc(t.id).update({price: price, processed: true});
+  confirmPurchase(t: Transaction){
+    let p: any = t.price;
+    let data = {
+      processed: true,
+      price: parseFloat(p)
+    };
+    this.transactionService.updateTransaction(t, data);
   }
 
 }

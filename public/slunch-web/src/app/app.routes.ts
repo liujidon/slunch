@@ -4,6 +4,7 @@ import { VotePageComponent } from './vote-page/vote-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthGuardService } from './providers/auth-guard.service';
 import { UnprocessedComponent } from './unprocessed/unprocessed.component';
+import { AccountComponent } from './account/account.component';
 
 const appRoutes: Routes = [
   {
@@ -18,6 +19,10 @@ const appRoutes: Routes = [
   {
     path: 'unprocessed',
     component: UnprocessedComponent
+  },
+  {
+    path: 'account',
+    component: AccountComponent
   }
 ];
 

@@ -23,4 +23,4 @@ export interface AccountFace{
     lastname: string;
     email: string;
     balance: number;
-  }
+}
