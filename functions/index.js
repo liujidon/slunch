@@ -13,8 +13,8 @@ exports.updateAccountBalance = functions.firestore
     const previousTransaction = change.before.data();
     console.log("Transaction update: ", transaction);
 
-    let processed = transaction.processed;
-    if (processed === null || !processed || transaction.accountid === null)
+    let status = transaction.status;
+    if (status === null || status !== "done" || transaction.accountid === null)
       return null;
     if (transaction.price === previousTransaction.price)
       return null;
@@ -24,13 +24,13 @@ exports.updateAccountBalance = functions.firestore
 
     return account.get().then(doc => {
       let spending = 0;
-      if(previousTransaction.processed === transaction.processed){
+      if(previousTransaction.status === transaction.status){
         spending = transaction.price - previousTransaction.price;
       }
       else{
         spending = transaction.price;
       }
-      
+
       let newBalance = doc.data().balance - spending;
       console.log("New balance: ", newBalance);
       return account.update({
