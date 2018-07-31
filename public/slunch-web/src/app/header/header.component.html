@@ -3,14 +3,14 @@
     <strong style="color: white; position: relative; font-size:55px">Slunch</strong>
   </mat-grid-tile>
   <mat-grid-tile colspan=2>
-    <button mat-raised-button color="warn" (click)="router.navigate(['vote'])">Vote/Order</button>
+    <button *ngIf="authService.isLoggedIn()" mat-raised-button color="warn" (click)="router.navigate(['vote'])">Vote/Order</button>
   </mat-grid-tile>
   <mat-grid-tile colspan=2>
-    <button mat-raised-button color="warn" (click)="router.navigate(['account'])">Account</button>
+    <button *ngIf="authService.isLoggedIn()" mat-raised-button color="warn" (click)="router.navigate(['account'])">Account</button>
   </mat-grid-tile>
   <mat-grid-tile colspan=5></mat-grid-tile>
   <mat-grid-tile colspan=4>
-    <button *ngIf="authService.isAdmin" mat-raised-button color="warn" [matBadge]="numUnprocessed" matBadgePosition="after" [matBadgeColor]="numUnprocessed == 0 ? 'primary':'accent'" (click)="router.navigate(['unprocessed'])">
+    <button *ngIf="authService.isAdmin && authService.isLoggedIn()" mat-raised-button color="warn" [matBadge]="numUnprocessed" matBadgePosition="after" [matBadgeColor]="numUnprocessed == 0 ? 'primary':'accent'" (click)="router.navigate(['unprocessed'])">
       Unprocessed Transactions
     </button>
   </mat-grid-tile>
