@@ -38,3 +38,24 @@ exports.updateAccountBalance = functions.firestore
       });
     });
   });
+
+exports.setupNewUser = functions.auth.user().onCreate((user) => {
+  console.log("Setting up new user: ", user);
+  let firstname = "";
+  let lastname = "";
+  if(user.displayName !== null) {
+    let splitName = user.displayName.split(' ');
+    if(splitName.length > 0)
+      firstname = splitName[0];
+    if(splitName.length > 1)
+      lastname = splitName[1];
+  }
+  var account = {
+    balance: 0,
+    email: user.email,
+    uid: user.uid,
+    firstname: firstname,
+    lastname: lastname
+  };
+  return admin.firestore().collection('accounts').add(account);
+});
