@@ -15,10 +15,12 @@ export class UnprocessedComponent implements OnInit {
   unprocessedTransactions: Array<Transaction>;
   router: Router;
   db: AngularFirestore;
+  price: string;
 
   constructor(transactionService: TransactionService, db: AngularFirestore, router: Router) {
     this.transactionService = transactionService;
     this.router = router;
+    this.db = db;
   }
 
   ngOnInit() {
@@ -36,10 +38,9 @@ export class UnprocessedComponent implements OnInit {
   }
 
 
-
-
-  confirmClick(o: Transaction){
-    
+  confirmClick(t: Transaction){
+    let price:number = parseFloat(this.price);
+    this.db.doc(t.id).update({price: price, processed: true});
   }
 
 }

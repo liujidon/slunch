@@ -3,7 +3,7 @@
   <mat-card-title><strong>{{poll.topic}} Poll</strong></mat-card-title>
   <mat-card-content>
     <mat-grid-list cols="2" rowHeight="2:1">
-      <mat-grid-tile class="clickable" color="warn" *ngFor="let option of poll.options" (click)="updateVote(option)">
+      <mat-grid-tile class="clickable" style="border-style: solid; border-width: 1px;"  *ngFor="let option of poll.options" (click)="updateVote(option)">
         <app-poll-option style="width: 100%" [pollOption]="option"></app-poll-option>
       </mat-grid-tile>
     </mat-grid-list>
