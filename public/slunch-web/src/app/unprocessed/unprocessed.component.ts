@@ -5,6 +5,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Router } from '../../../node_modules/@angular/router';
 import { MatTableDataSource, MatSort, MatPaginator, MatSortable } from '@angular/material';
 import { StateService } from '../providers/state.service';
+import { AuthService } from '../providers/auth.service';
 
 @Component({
   selector: 'app-unprocessed',
@@ -15,6 +16,7 @@ export class UnprocessedComponent implements OnInit {
 
   transactionService: TransactionService;
   stateService: StateService;
+  authService: AuthService;
   unprocessedTransactions: MatTableDataSource<Transaction>;
   router: Router;
   db: AngularFirestore;
@@ -27,9 +29,10 @@ export class UnprocessedComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(transactionService: TransactionService, stateService: StateService, db: AngularFirestore, router: Router) {
+  constructor(transactionService: TransactionService, stateService: StateService, authService: AuthService, db: AngularFirestore, router: Router) {
     this.transactionService = transactionService;
     this.stateService = stateService;
+    this.authService = authService;
     this.router = router;
     this.db = db;
   }
@@ -68,7 +71,11 @@ export class UnprocessedComponent implements OnInit {
   }
 
   acknowledgeTransaction(t: Transaction){
-    this.transactionService.updateTransaction(t, {status: "ack"});
+    let data = {
+      status: "ack",
+      ackedBy: this.authService.getUsername()
+    }
+    this.transactionService.updateTransaction(t, data);
   }
 
 }
