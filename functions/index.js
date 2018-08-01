@@ -43,6 +43,9 @@ exports.setupNewUser = functions.auth.user().onCreate((user) => {
   console.log("Setting up new user: ", user);
   let firstname = "";
   let lastname = "";
+  
+  firstname = user.email.split("@")[0];
+  
   if(user.displayName !== null) {
     let splitName = user.displayName.split(' ');
     if(splitName.length > 0)

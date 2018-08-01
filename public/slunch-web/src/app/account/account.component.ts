@@ -18,7 +18,7 @@ export class AccountComponent implements OnInit {
   account: AccountFace;
   db: AngularFirestore;
   transactions: MatTableDataSource<Transaction>;
-  displayedColumns: Array<string> = ["time", "description", "detail", "credit", "debit", "status"]
+  displayedColumns: Array<string> = ["time", "description", "detail", "debit", "credit", "status"]
   addAmount: string;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -33,15 +33,10 @@ export class AccountComponent implements OnInit {
   ngOnInit() {
 
     this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
-      (docChangeActions) => {
-        let accounts = {};
-        docChangeActions.forEach((docChangeAction)=>{
-          let accountDoc = docChangeAction.payload.doc;
-          let account = accountDoc.data();
-          account["id"] = "accounts/" + accountDoc.id;
-          accounts[accountDoc.get("uid")] = account;
-        });
-        this.account = accounts[this.authService.getUid()];
+      docChangeActions => {
+        this.account = docChangeActions.filter(docChangeAction=>{
+          return docChangeAction.payload.doc.get("uid") == this.authService.getUid();
+        })[0].payload.doc.data();
       }
     );
 
@@ -49,7 +44,6 @@ export class AccountComponent implements OnInit {
       this.transactions = new MatTableDataSource(transactions.filter(transaction=>transaction.uid == this.authService.getUid()));
       this.transactions.sort = this.sort;
       this.transactions.paginator = this.paginator;
-
       
       if(this.sort.sortables.get("time")){
         this.sort.start = "desc";

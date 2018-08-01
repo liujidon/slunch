@@ -4,7 +4,7 @@
   </mat-grid-tile>
   <mat-grid-tile colspan=13></mat-grid-tile>
   <mat-grid-tile>
-    <img *ngIf="authService.isLoggedIn()" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="height:50px; width:50px; border-radius: 50%">
+    <img *ngIf="authService.isLoggedIn() && authService.userDetails.photoURL" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="height:50px; width:50px; border-radius: 50%">
   </mat-grid-tile>
   <mat-grid-tile>
     <mat-icon *ngIf="authService.isLoggedIn()" class="clickable" style="color: white; font-size:200%" (click)="authService.logout()"

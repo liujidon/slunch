@@ -83,8 +83,7 @@ export class AuthService {
   }
 
   logout() {
-    this.firebaseAuth.auth.signOut()
-      .then((res) => this.router.navigate(['/']));
+    this.firebaseAuth.auth.signOut().then((res) => this.router.navigate(['/']));
   }
 
   isLoggedIn() {

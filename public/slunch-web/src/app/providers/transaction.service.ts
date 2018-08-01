@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction, QueryDocumentSnapshot } from 'angularfire2/firestore';
 import { Transaction } from '../transaction';
 import { AccountFace } from '../interfaces';
 import { Observable } from 'rxjs';
@@ -13,7 +13,7 @@ export class TransactionService {
 
   authService: AuthService;
   db: AngularFirestore;
-  accounts: any;
+  account: any;
 
   constructor(authService: AuthService, db: AngularFirestore) {
     this.authService = authService;
@@ -21,13 +21,11 @@ export class TransactionService {
 
     this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       (docChangeActions) => {
-        this.accounts = {};
-        docChangeActions.forEach((docChangeAction)=>{
-          let accountDoc = docChangeAction.payload.doc;
-          let account = accountDoc.data();
-          account["id"] = "accounts/" + accountDoc.id;
-          this.accounts[accountDoc.get("uid")] = account;
-        });
+        let accountQ: QueryDocumentSnapshot<AccountFace> = docChangeActions
+          .filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.authService.getUid())[0]
+          .payload.doc;
+        this.account = accountQ.data();
+        this.account["id"] = accountQ.id;
       }
     );
    
@@ -43,11 +41,11 @@ export class TransactionService {
     t.description = description;
     t.detail = detail;
 
-    let account = this.accounts[uid];
+    let account = this.account;
     t.firstname = account.firstname;
     t.lastname = account.lastname;
     t.email = account.email;
-    t.accountid = account.id;
+    t.accountid = "accounts/" + account.id;
     t.uid = uid;
     t.price = price;
     t.isDeposit = isDeposit;

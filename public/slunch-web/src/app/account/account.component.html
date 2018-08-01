@@ -55,20 +55,20 @@
         <mat-cell *matCellDef="let o">{{o?.detail}}</mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="credit">
-        <mat-header-cell *matHeaderCellDef>Credit</mat-header-cell>
+      <ng-container matColumnDef="debit">
+        <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
         <mat-cell *matCellDef="let o">
-          <span style="color: red" *ngIf="o.price >= 0">
-            {{o.price}}
+          <span *ngIf="o.price > 0" class="red">
+            {{o.price | currency}}
           </span>
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="debit">
-        <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
+      <ng-container matColumnDef="credit">
+        <mat-header-cell *matHeaderCellDef>Credit</mat-header-cell>
         <mat-cell *matCellDef="let o">
-          <span style="color: green" *ngIf="o.price < 0">
-            {{-1*o.price}}
+          <span *ngIf="o.price <= 0" class="green">
+            {{(-1*o.price) | currency}}
           </span>
         </mat-cell>
       </ng-container>
