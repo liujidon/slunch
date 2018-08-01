@@ -1,9 +1,10 @@
 <mat-card style="margin:3em">
+
     <mat-card-title>
         Unprocessed Transactions
     </mat-card-title>
-    <mat-card-content>
 
+    <mat-card-content>
         <mat-table [dataSource]="unprocessedTransactions" matSort matSortDirection="desc">
             <ng-container matColumnDef="time">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
@@ -60,7 +61,6 @@
 
         </mat-table>
         <mat-paginator [pageSizeOptions]="[10, 20, 50]"></mat-paginator>
-
     </mat-card-content>
 
     <button (click)="backClick()" mat-raised-button color="warn">Back</button>

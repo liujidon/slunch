@@ -4,6 +4,7 @@ import { Transaction } from '../transaction';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Router } from '../../../node_modules/@angular/router';
 import { MatTableDataSource, MatSort, MatPaginator, MatSortable } from '@angular/material';
+import { StateService } from '../providers/state.service';
 
 @Component({
   selector: 'app-unprocessed',
@@ -13,6 +14,7 @@ import { MatTableDataSource, MatSort, MatPaginator, MatSortable } from '@angular
 export class UnprocessedComponent implements OnInit {
 
   transactionService: TransactionService;
+  stateService: StateService;
   unprocessedTransactions: MatTableDataSource<Transaction>;
   router: Router;
   db: AngularFirestore;
@@ -25,8 +27,9 @@ export class UnprocessedComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(transactionService: TransactionService, db: AngularFirestore, router: Router) {
+  constructor(transactionService: TransactionService, stateService: StateService, db: AngularFirestore, router: Router) {
     this.transactionService = transactionService;
+    this.stateService = stateService;
     this.router = router;
     this.db = db;
   }
@@ -37,8 +40,9 @@ export class UnprocessedComponent implements OnInit {
       this.unprocessedTransactions = new MatTableDataSource(transactions.filter(transaction=>transaction.status != "done"));
       this.unprocessedTransactions.paginator = this.paginator;
       this.unprocessedTransactions.sort = this.sort;
-
-      this.unprocessedTransactions.sort.start = "desc";
+      
+      this.sort.start = "desc";
+      this.sort.disableClear = true;
 
     });
 

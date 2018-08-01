@@ -2,49 +2,28 @@
   <mat-grid-tile colspan=4 (click)="logoClick()" class="clickable" matTooltip="Home">
     <strong style="color: white; position: relative; font-size:55px">Slunch</strong>
   </mat-grid-tile>
-  <mat-grid-tile colspan=2>
-    <button *ngIf="authService.isLoggedIn()" mat-raised-button color="warn" (click)="router.navigate(['vote'])">Vote/Order</button>
-  </mat-grid-tile>
-  <mat-grid-tile colspan=2>
-    <button *ngIf="authService.isLoggedIn()" mat-raised-button color="warn" (click)="router.navigate(['account'])">Account</button>
-  </mat-grid-tile>
-  <mat-grid-tile colspan=5></mat-grid-tile>
-  <mat-grid-tile colspan=4>
-    <button *ngIf="authService.isAdmin && authService.isLoggedIn()" mat-raised-button color="warn" [matBadge]="numUnprocessed" matBadgePosition="after" [matBadgeColor]="numUnprocessed == 0 ? 'primary':'accent'" (click)="router.navigate(['unprocessed'])">
-      Unprocessed Transactions
-    </button>
-  </mat-grid-tile>
+  <mat-grid-tile colspan=13></mat-grid-tile>
   <mat-grid-tile>
     <img *ngIf="authService.isLoggedIn()" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="height:50px; width:50px; border-radius: 50%">
   </mat-grid-tile>
   <mat-grid-tile>
-    <mat-icon *ngIf="authService.isLoggedIn()" class="clickable" style="color: white; font-size:200%" (click)="authService.logout()" matTooltip="Sign Out">exit_to_app</mat-icon>
+    <mat-icon *ngIf="authService.isLoggedIn()" class="clickable" style="color: white; font-size:200%" (click)="authService.logout()"
+      matTooltip="Sign Out">exit_to_app</mat-icon>
   </mat-grid-tile>
 </mat-grid-list>
 
-<mat-accordion *ngIf="authService.isAdmin && authService.isLoggedIn()">
-  <mat-expansion-panel style="margin-left: 3em; margin-right: 3em;">
-    
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Admin Controls
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-    
-        <mat-list>
-          <mat-list-item>
-            <mat-slide-toggle [(ngModel)]="stateService.isOrdering" (change)="toggleOrders()">
-              Allow Orders
-            </mat-slide-toggle>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-slide-toggle [(ngModel)]="stateService.newPollToggled">
-              New Poll
-            </mat-slide-toggle>
-          </mat-list-item>
-        </mat-list>
-    
-    
-
-  </mat-expansion-panel>
-</mat-accordion>
+<nav *ngIf="authService.isLoggedIn()" mat-tab-nav-bar>
+  <a mat-tab-link (click)="router.navigate(['vote'])">Vote/Order</a>
+  <a mat-tab-link (click)="router.navigate(['account'])">Account</a>
+  <a mat-tab-link *ngIf="authService.isAdmin" (click)="router.navigate(['unprocessed'])">
+    <p>
+      <span [matBadge]="numUnprocessed" matBadgeOverlap="false" [matBadgeColor]="numUnprocessed == 0 ? 'primary':'warn'">Admin</span>
+    </p>
+  </a>
+  <span mat-tab-link *ngIf="authService.isAdmin" (click)="toggleOrders()">
+    <mat-slide-toggle [(ngModel)]="stateService.isOrdering ">Allow Orders</mat-slide-toggle>
+  </span>
+  <span mat-tab-link *ngIf="authService.isAdmin">
+    <mat-slide-toggle [(ngModel)]="stateService.newPollToggled">New Poll</mat-slide-toggle>
+  </span>
+</nav>

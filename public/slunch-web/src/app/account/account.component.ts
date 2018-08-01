@@ -50,7 +50,16 @@ export class AccountComponent implements OnInit {
       this.transactions.sort = this.sort;
       this.transactions.paginator = this.paginator;
 
-      this.transactions.sort.start = "desc";
+      
+      if(this.sort.sortables.get("time")){
+        this.sort.start = "desc";
+        this.sort.disableClear = true;
+        if(this.sort.direction != "desc"){
+          this.sort.sort(this.sort.sortables.get("time"));
+        }
+      }
+      
+      
 
     });
 
