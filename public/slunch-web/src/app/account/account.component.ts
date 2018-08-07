@@ -34,9 +34,11 @@ export class AccountComponent implements OnInit {
 
     this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
-        this.account = docChangeActions.filter(docChangeAction=>{
-          return docChangeAction.payload.doc.get("uid") == this.authService.getUid();
-        })[0].payload.doc.data();
+        
+        let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.authService.getUid())
+        if(temp.length > 0){
+          this.account = temp[0].payload.doc.data();
+        }
       }, ()=>console.log("ERROR: AccountComponent line 35")
     );
 

@@ -18,16 +18,6 @@ export class TransactionService {
   constructor(authService: AuthService, db: AngularFirestore) {
     this.authService = authService;
     this.db = db;
-
-    this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
-      (docChangeActions) => {
-        let accountQ: QueryDocumentSnapshot<AccountFace> = docChangeActions
-          .filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.authService.getUid())[0]
-          .payload.doc;
-        this.account = accountQ.data();
-        this.account["id"] = accountQ.id;
-      }, ()=>console.log("ERROR: TransactionService line 22")
-    );
    
   }
 
@@ -36,24 +26,37 @@ export class TransactionService {
   }
 
   writeTransaction(uid: string, description: string, detail: string,  price: number, isDeposit: boolean){
-    let t = new Transaction();
+
+    this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
+      (docChangeActions) => {
+        let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.authService.getUid())
+        if(temp.length > 0){
+          let accountDoc = temp[0].payload.doc;
+          let account = accountDoc.data();
+          let t = new Transaction();
     
-    t.description = description;
-    t.detail = detail;
+          t.description = description;
+          t.detail = detail;
+          t.firstname = account.firstname;
+          t.lastname = account.lastname;
+          t.email = account.email;
+          t.accountid = "accounts/" + accountDoc.id;
+          t.uid = uid;
+          t.price = price;
+          t.isDeposit = isDeposit;
 
-    let account = this.account;
-    t.firstname = account.firstname;
-    t.lastname = account.lastname;
-    t.email = account.email;
-    t.accountid = "accounts/" + account.id;
-    t.uid = uid;
-    t.price = price;
-    t.isDeposit = isDeposit;
+          let id = this.db.createId();
+          t.id = "transactions/" + id;
 
-    let id = this.db.createId();
-    t.id = "transactions/" + id;
+          this.db.collection<Transaction>("transactions").doc(id).set(JSON.parse(JSON.stringify(t)));
 
-    this.db.collection<Transaction>("transactions").doc(id).set(JSON.parse(JSON.stringify(t)));
+        }
+      }, ()=>console.log("ERROR: TransactionService line 22")
+    );
+
+
+
+    
 
   }
 

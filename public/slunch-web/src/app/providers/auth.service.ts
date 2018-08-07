@@ -55,7 +55,12 @@ export class AuthService {
   }
 
   getUid(){
-    return this.userDetails.uid;
+    if(this.userDetails){
+      return this.userDetails.uid;
+    }
+    else{
+      return null;
+    }
   }
 
   signup(email: string, password: string) {
