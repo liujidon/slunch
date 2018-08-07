@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
-import { PollService } from '../poll.service';
+import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';
 import { PollFace } from '../interfaces';
 import { PollOption } from '../poll-option';

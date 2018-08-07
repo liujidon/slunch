@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PollService } from '../poll.service';
+import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';
 import { Poll } from '../poll';
 import { PollOption } from '../poll-option';
