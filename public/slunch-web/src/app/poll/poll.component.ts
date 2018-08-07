@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Poll } from '../poll';
 import { PollOption } from '../poll-option';
-import { PollService } from '../poll.service';
+import { PollService } from '../providers/poll.service';
 import { Observable } from 'rxjs';
 import { AuthService } from '../providers/auth.service';
 
