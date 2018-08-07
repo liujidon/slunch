@@ -16,7 +16,7 @@ export class StateService {
     this.db.doc<StateFace>('state/TMMQosAB4vACxDI9VUFX').valueChanges().subscribe((state)=>{
       this.state = state;
       this.isOrdering = state.allowOrders;
-    });
+    }, ()=>console.log("ERROR: StateService line 16"));
     this.newPollToggled = false;
   }
   

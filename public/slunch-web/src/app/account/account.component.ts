@@ -37,7 +37,7 @@ export class AccountComponent implements OnInit {
         this.account = docChangeActions.filter(docChangeAction=>{
           return docChangeAction.payload.doc.get("uid") == this.authService.getUid();
         })[0].payload.doc.data();
-      }
+      }, ()=>console.log("ERROR: AccountComponent line 35")
     );
 
     this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions=>{
@@ -52,10 +52,7 @@ export class AccountComponent implements OnInit {
           this.sort.sort(this.sort.sortables.get("time"));
         }
       }
-      
-      
-
-    });
+    }, ()=>console.log("ERROR: TransactionsComponent line 43"));
 
   }
   

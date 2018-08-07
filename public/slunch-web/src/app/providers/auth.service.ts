@@ -31,7 +31,7 @@ export class AuthService {
               if(doc){
                 this.isAdmin = doc.uids.includes(this.userDetails.uid);
               }
-            }
+            }, ()=>console.log("ERROR: AuthService line 29")
           )
           console.log(this.userDetails);          
           this.router.navigate(['vote']);

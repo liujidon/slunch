@@ -4,6 +4,7 @@ import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction, Que
 import { Transaction } from '../transaction';
 import { AccountFace } from '../interfaces';
 import { Observable } from 'rxjs';
+import { } from 'rxjs/add/observable/empty'
 import { timeout } from '../../../node_modules/@types/q';
 
 @Injectable({
@@ -26,13 +27,15 @@ export class TransactionService {
           .payload.doc;
         this.account = accountQ.data();
         this.account["id"] = accountQ.id;
-      }
+      }, ()=>console.log("ERROR: TransactionService line 22")
     );
    
   }
 
   getTransactions$(){
-    return this.db.collection<Transaction>("transactions").valueChanges();
+    if(this.authService.isLoggedIn){
+      return this.db.collection<Transaction>("transactions").valueChanges();
+    }
   }
 
   writeTransaction(uid: string, description: string, detail: string,  price: number, isDeposit: boolean){

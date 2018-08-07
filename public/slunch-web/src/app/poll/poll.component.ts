@@ -23,7 +23,7 @@ export class PollComponent implements OnInit {
     this.pollService.getLatestPoll()
       .subscribe(poll => {
         this.poll = poll[0];
-      });
+      }, ()=>console.log("ERROR: PollComponent line 23"));
   }
 
   getPollOptions(): void {

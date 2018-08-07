@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit {
 
     this.transactionService.getTransactions$().subscribe((transactions)=>{
       this.numUnprocessed = transactions.filter(transaction=>transaction.status != "done").length;
-    });
+    }, ()=>console.log("ERROR: HeaderComponent line 43"));
 
   }
 

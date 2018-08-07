@@ -54,11 +54,11 @@ export class OrderComponent implements OnInit{
                 }
               }
             );
-          });
+          },()=>console.log("ERROR: OrderComponent line 49"));
           
         }
       }
-    );
+    ), ()=>console.log("ERROR: OrderComponent line 46");
 
 
   }
