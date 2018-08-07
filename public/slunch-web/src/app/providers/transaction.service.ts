@@ -5,7 +5,6 @@ import { Transaction } from '../transaction';
 import { AccountFace } from '../interfaces';
 import { Observable } from 'rxjs';
 import { } from 'rxjs/add/observable/empty'
-import { timeout } from '../../../node_modules/@types/q';
 
 @Injectable({
   providedIn: 'root'
@@ -33,9 +32,7 @@ export class TransactionService {
   }
 
   getTransactions$(){
-    if(this.authService.isLoggedIn){
       return this.db.collection<Transaction>("transactions").valueChanges();
-    }
   }
 
   writeTransaction(uid: string, description: string, detail: string,  price: number, isDeposit: boolean){
