@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PollOption } from './poll-option';
-import { Poll } from './poll';
+import { PollOption } from '../poll-option';
+import { Poll } from '../poll';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
 
