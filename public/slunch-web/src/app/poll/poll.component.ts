@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Poll } from '../poll';
 import { PollOption } from '../poll-option';
 import { PollService } from '../providers/poll.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../providers/auth.service';
 
 @Component({
@@ -10,24 +10,25 @@ import { AuthService } from '../providers/auth.service';
   templateUrl: './poll.component.html',
   styleUrls: ['./poll.component.css']
 })
-export class PollComponent implements OnInit {
+export class PollComponent implements OnInit, OnDestroy {
   poll: Poll;
-  pollOptions$: Observable<PollOption[]>;
+
+  latestPollSubscription: Subscription;
 
   constructor(public pollService: PollService, public authService: AuthService) {
     this.poll = new Poll("");
   }
 
   ngOnInit() {
-    this.getPollOptions();
-    this.pollService.getLatestPoll()
+    this.latestPollSubscription = this.pollService.getLatestPoll()
       .subscribe(poll => {
         this.poll = poll[0];
       }, ()=>console.log("ERROR: PollComponent line 23"));
   }
 
-  getPollOptions(): void {
-    this.pollOptions$ = this.pollService.getPollOptions();
+  ngOnDestroy(){
+    console.log("PollComponent unsubscribing");
+    this.latestPollSubscription.unsubscribe();
   }
 
 

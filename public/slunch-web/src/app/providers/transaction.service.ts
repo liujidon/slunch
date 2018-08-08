@@ -27,34 +27,35 @@ export class TransactionService {
 
   writeTransaction(uid: string, description: string, detail: string,  price: number, isDeposit: boolean){
 
-    this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
-      (docChangeActions) => {
-        let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.authService.getUid())
-        if(temp.length > 0){
-          let accountDoc = temp[0].payload.doc;
-          let account = accountDoc.data();
-          let t = new Transaction();
-    
-          t.description = description;
-          t.detail = detail;
-          t.firstname = account.firstname;
-          t.lastname = account.lastname;
-          t.email = account.email;
-          t.accountid = "accounts/" + accountDoc.id;
-          t.uid = uid;
-          t.price = price;
-          t.isDeposit = isDeposit;
 
-          let id = this.db.createId();
-          t.id = "transactions/" + id;
+    this.db.collection<AccountFace>("accounts").ref.get().then(snap=>{
+       let filteredDocs = snap.docs.filter(doc=>doc.get("uid") == this.authService.getUid())
+       
+       let doc = null;
+       if(filteredDocs.length > 0){
+         doc = filteredDocs[0];
+       }
 
-          this.db.collection<Transaction>("transactions").doc(id).set(JSON.parse(JSON.stringify(t)));
+       if(doc != null){
+         let t = new Transaction();
+         t.description = description;
+         t.detail = detail;
+         t.uid = uid;
+         t.price = price;
+         t.isDeposit = isDeposit;
+         
+         t.firstname = doc.get("firstname");
+         t.lastname = doc.get("lastname");
+         t.email = doc.get("email");
+         t.accountid = "accounts/" + doc.id;
+         
+         let id = this.db.createId();
+         t.id = "transactions/" + id;
+         
+         this.db.collection<Transaction>("transactions").doc(id).set(JSON.parse(JSON.stringify(t)));
+       }
 
-        }
-      }, ()=>console.log("ERROR: TransactionService line 22")
-    );
-
-
+    });
 
     
 

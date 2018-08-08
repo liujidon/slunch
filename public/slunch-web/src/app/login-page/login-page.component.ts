@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../providers/auth.service';
+import { ServiceHandlerService } from '../providers/service-handler.service';
 
 @Component({
   selector: 'app-login-page',
@@ -14,7 +15,7 @@ export class LoginPageComponent implements OnInit {
     password: ''
   };
   
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router, private serviceHandlerService:ServiceHandlerService) {
   }
 
   ngOnInit() {
@@ -23,6 +24,7 @@ export class LoginPageComponent implements OnInit {
   signInWithGoogle() {
     this.authService.signInWithGoogle()
       .then((res) => {
+        this.serviceHandlerService.subscribe();
         //this.router.navigate(['vote'])
       })
       .catch((err) => console.log(err));
@@ -32,6 +34,7 @@ export class LoginPageComponent implements OnInit {
     this.authService.signInRegular(this.user.email, this.user.password)
       .then((res) => {
         console.log(res);
+        this.serviceHandlerService.subscribe();
         //this.router.navigate(['vote']);
       })
       .catch((err) => console.log('error: ' + err));

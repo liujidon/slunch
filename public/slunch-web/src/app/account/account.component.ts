@@ -1,17 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { AuthService } from '../providers/auth.service';
 import { AccountFace } from '../interfaces';
 import { TransactionService } from '../providers/transaction.service';
 import { AngularFirestore } from '../../../node_modules/angularfire2/firestore';
 import { Transaction } from '../transaction';
 import { MatTableDataSource, MatSort, MatPaginator, MatSortable } from '@angular/material';
+import { Subscription } from '../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css']
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
 
   authService: AuthService;
   transactionService: TransactionService;
@@ -23,6 +24,9 @@ export class AccountComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  accountsSubscription: Subscription;
+  transactionsSubscription: Subscription;
+
 
   constructor(db: AngularFirestore, authService: AuthService, transactionService: TransactionService) {
     this.authService = authService;
@@ -32,7 +36,7 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {
 
-    this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
+    this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
         
         let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.authService.getUid())
@@ -42,7 +46,7 @@ export class AccountComponent implements OnInit {
       }, ()=>console.log("ERROR: AccountComponent line 35")
     );
 
-    this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions=>{
+    this.transactionsSubscription = this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions=>{
       this.transactions = new MatTableDataSource(transactions.filter(transaction=>transaction.uid == this.authService.getUid()));
       this.transactions.sort = this.sort;
       this.transactions.paginator = this.paginator;
@@ -56,6 +60,12 @@ export class AccountComponent implements OnInit {
       }
     }, ()=>console.log("ERROR: TransactionsComponent line 43"));
 
+  }
+
+  ngOnDestroy(){
+    console.log("AccountComponent unsubscribing");
+    this.accountsSubscription.unsubscribe();
+    this.transactionsSubscription.unsubscribe();
   }
   
   

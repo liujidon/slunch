@@ -61,6 +61,9 @@ import { PollCreateComponent } from './poll-create/poll-create.component';
 import { HeaderComponent } from './header/header.component';
 import { UnprocessedComponent } from './unprocessed/unprocessed.component';
 import { AccountComponent } from './account/account.component';
+import { HeaderPlainComponent } from './header-plain/header-plain.component';
+import { PollService } from './providers/poll.service';
+import { ServiceHandlerService } from './providers/service-handler.service';
 
 @NgModule({
   exports: [
@@ -114,7 +117,8 @@ export class MaterialModule {}
     PollCreateComponent,
     HeaderComponent,
     UnprocessedComponent,
-    AccountComponent
+    AccountComponent,
+    HeaderPlainComponent
   ],
   imports: [
     BrowserModule,
@@ -126,7 +130,14 @@ export class MaterialModule {}
     MaterialModule,
     FormsModule,
   ],
-  providers: [AuthService, AuthGuardService, StateService, TransactionService],
+  providers: [
+    AuthService,
+    AuthGuardService,
+    StateService,
+    TransactionService,
+    PollService,
+    ServiceHandlerService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

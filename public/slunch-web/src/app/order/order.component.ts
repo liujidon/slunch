@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';
 import { PollFace } from '../interfaces';
@@ -7,6 +7,7 @@ import { MatStepper } from '@angular/material';
 import { TransactionService } from '../providers/transaction.service';
 import { Transaction } from '../transaction';
 import { Router } from '../../../node_modules/@angular/router';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { Router } from '../../../node_modules/@angular/router';
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.css']
 })
-export class OrderComponent implements OnInit{
+export class OrderComponent implements OnInit, OnDestroy {
 
   router: Router;
   pollService: PollService;
@@ -27,6 +28,9 @@ export class OrderComponent implements OnInit{
   isOrderSent: boolean;
   recentOrders: Array<string>;
   @ViewChild("stepper") stepper: MatStepper;
+
+  latestPollSubscription: Subscription;
+  adminSubscription: Subscription;
 
 
   constructor(pollService: PollService, authService: AuthService, transactionService: TransactionService, router: Router) {
@@ -43,10 +47,10 @@ export class OrderComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.pollService.getLatestPoll().subscribe(
+    this.latestPollSubscription = this.pollService.getLatestPoll().subscribe(
       (poll:Array<PollFace>)=>{
         if(poll){
-          this.authService.getAdmins$().subscribe((admin) => {
+          this.adminSubscription = this.authService.getAdmins$().subscribe((admin) => {
             poll[0].options.forEach(
               (po:PollOption)=>{
                 if(po.uidVotes.filter(uid =>  admin["uids"].includes(uid)).length > 0){
@@ -63,13 +67,19 @@ export class OrderComponent implements OnInit{
 
   }
 
+  ngOnDestroy(){
+    console.log("OrderComponent unsubscribing")
+    this.latestPollSubscription.unsubscribe();
+    this.adminSubscription.unsubscribe();
+  }
+
   clickRestaurant(option: PollOption, stepper: MatStepper){
     this.order = "";
     this.isOrderSent = false;
     this.chosenOption = option;
     this.isRestaurantChosen = true;
 
-    this.transactionService.getTransactions$().subscribe((transactions)=>{
+    let transactionSubscription: Subscription = this.transactionService.getTransactions$().subscribe((transactions)=>{
       let temp: Array<string> = [];
       transactions
         .filter((transaction)=> transaction.uid == this.authService.getUid() && transaction.description == this.chosenOption.name)
@@ -82,6 +92,8 @@ export class OrderComponent implements OnInit{
     });
     
     stepper.next();
+
+    transactionSubscription.unsubscribe();
   }
 
   clickSendOrder(stepper: MatStepper){

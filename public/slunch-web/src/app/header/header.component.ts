@@ -1,16 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AuthService } from '../providers/auth.service';
 import { Router } from '@angular/router';
 import { StateService } from '../providers/state.service';
 import { StateFace } from '../interfaces';
 import { TransactionService } from '../providers/transaction.service';
+import { Subscription } from '../../../node_modules/rxjs';
+import { ServiceHandlerService } from '../providers/service-handler.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   authService: AuthService;
   stateService: StateService;
@@ -22,8 +24,15 @@ export class HeaderComponent implements OnInit {
   
   router: Router;
   username: string;
+  transactionsSubscription: Subscription;
 
-  constructor(authService: AuthService, transactionService: TransactionService, stateService: StateService, router: Router) {
+  constructor(
+    private serviceHandlerService: ServiceHandlerService,
+    authService: AuthService,
+    transactionService: TransactionService,
+    stateService: StateService,
+    router: Router
+  ) {
     this.authService = authService;
     this.router = router;
     this.stateService = stateService;
@@ -40,10 +49,15 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-    this.transactionService.getTransactions$().subscribe((transactions)=>{
+    this.transactionsSubscription = this.transactionService.getTransactions$().subscribe((transactions)=>{
       this.numUnprocessed = transactions.filter(transaction=>transaction.status != "done").length;
     }, ()=>console.log("ERROR: HeaderComponent line 43"));
 
+  }
+
+  ngOnDestroy(){
+    console.log("HeaderComponent unsubscribing");
+    this.transactionsSubscription.unsubscribe();
   }
 
   toggleOrders(){
@@ -63,6 +77,11 @@ export class HeaderComponent implements OnInit {
 
   logoClick(){
     this.router.navigate(["vote"]);
+  }
+
+  logout(){
+    this.serviceHandlerService.unsubscribe();
+    this.authService.logout();
   }
 
 }

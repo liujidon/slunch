@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { TransactionService } from '../providers/transaction.service';
 import { Transaction } from '../transaction';
 import { AngularFirestore } from 'angularfire2/firestore';
@@ -6,13 +6,14 @@ import { Router } from '../../../node_modules/@angular/router';
 import { MatTableDataSource, MatSort, MatPaginator, MatSortable } from '@angular/material';
 import { StateService } from '../providers/state.service';
 import { AuthService } from '../providers/auth.service';
+import { Subscription } from '../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-unprocessed',
   templateUrl: './unprocessed.component.html',
   styleUrls: ['./unprocessed.component.css']
 })
-export class UnprocessedComponent implements OnInit {
+export class UnprocessedComponent implements OnInit, OnDestroy {
 
   transactionService: TransactionService;
   stateService: StateService;
@@ -29,6 +30,8 @@ export class UnprocessedComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  transactionsSubscription: Subscription;
+
   constructor(transactionService: TransactionService, stateService: StateService, authService: AuthService, db: AngularFirestore, router: Router) {
     this.transactionService = transactionService;
     this.stateService = stateService;
@@ -39,7 +42,7 @@ export class UnprocessedComponent implements OnInit {
 
   ngOnInit() {
 
-    this.transactionService.getTransactions$().subscribe((transactions)=>{
+    this.transactionsSubscription = this.transactionService.getTransactions$().subscribe((transactions)=>{
       this.unprocessedTransactions = new MatTableDataSource(transactions.filter(transaction=>transaction.status != "done"));
       this.unprocessedTransactions.paginator = this.paginator;
       this.unprocessedTransactions.sort = this.sort;
@@ -47,8 +50,13 @@ export class UnprocessedComponent implements OnInit {
       this.sort.start = "desc";
       this.sort.disableClear = true;
 
-    });
+    }, ()=>console.log("ERROR: UnprocessedComponent line 42"));
 
+  }
+
+  ngOnDestroy(){
+    console.log("UnprocessedComponents unsubscribing");
+    this.transactionsSubscription.unsubscribe();
   }
 
   backClick(){
