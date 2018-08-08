@@ -28,8 +28,10 @@ export class StateService {
   }
 
   unsubscribe(){
-    console.log("StateService unsubscribing");
-    this.stateSubscription.unsubscribe();
+    if(this.stateSubscription){
+      console.log("StateService unsubscribing");
+      this.stateSubscription.unsubscribe();
+    }
   }
   
   setState(data){

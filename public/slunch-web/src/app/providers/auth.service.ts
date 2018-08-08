@@ -51,8 +51,10 @@ export class AuthService {
   }
 
   unsubscribe(){
-    console.log("AuthService unsubscribing")
-    this.adminSubscription.unsubscribe();
+    if(this.adminSubscription){
+      console.log("AuthService unsubscribing")
+      this.adminSubscription.unsubscribe();
+    }
   }
 
   getAdmins$(){

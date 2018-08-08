@@ -44,6 +44,7 @@ export class LoginPageComponent implements OnInit {
     this.authService.signUpRegular(this.user.email, this.user.password)
       .then((res) => {
         console.log(res);
+        this.serviceHandlerService.subscribe();
       //  this.router.navigate(['vote']);
       })
       .catch((err) => console.log('error: ' + err));
