@@ -16,9 +16,14 @@
         <mat-grid-list cols=5 rowHeight="2:1" *ngIf="isRestaurantChosen">
           <mat-grid-tile>
             <div>
-              <a target="_blank" href="{{chosenOption?.menuUrl}}" class="clickable" matTooltip="Menu">
-                <img src="{{chosenOption?.iconUrl}}">
-              </a>
+              <mat-grid-list cols=2>
+                <mat-grid-tile>
+                  <img src="{{chosenOption?.iconUrl}}">
+                </mat-grid-tile>
+                <mat-grid-tile>
+                  <a target="_blank" href="{{chosenOption?.menuUrl}}" class="clickable">Menu</a>
+                </mat-grid-tile>
+              </mat-grid-list>
             </div>
           </mat-grid-tile>
           <mat-grid-tile>

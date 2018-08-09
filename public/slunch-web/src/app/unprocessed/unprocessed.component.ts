@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TransactionService } from '../providers/transaction.service';
 import { Transaction } from '../transaction';
 import { AngularFirestore } from 'angularfire2/firestore';
@@ -21,10 +21,16 @@ export class UnprocessedComponent implements OnInit {
   price: string;
   displayedColumns: Array<string> = [
     "time", "name", "description", "detail", 
-    "price", "status", "acknowledge", "confirm"
+    "price", "status", "acknowledge", "ordered", "confirm"
   ];
 
-  constructor(transactionService: TransactionService, stateService: StateService, authService: AuthService, db: AngularFirestore, router: Router) {
+  constructor(
+    transactionService: TransactionService,
+    stateService: StateService,
+    authService: AuthService,
+    db: AngularFirestore,
+    router: Router
+  ) {
     this.transactionService = transactionService;
     this.stateService = stateService;
     this.authService = authService;
@@ -53,6 +59,14 @@ export class UnprocessedComponent implements OnInit {
       price: p,
       completedBy: this.authService.getUsername()
     };
+    this.transactionService.updateTransaction(t, data);
+  }
+
+  confirmOrdered(t: Transaction){
+    let data = {
+      status: "ordered",
+      orderedBy: this.authService.getUsername()
+    }
     this.transactionService.updateTransaction(t, data);
   }
 

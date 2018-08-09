@@ -30,7 +30,7 @@
             <ng-container matColumnDef="price">
                 <mat-header-cell *matHeaderCellDef>Price</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <input style="width: 30%" [(ngModel)]="o.price">
+                    <input *ngIf="o.ackedBy" style="width: 30%" [(ngModel)]="o.price">
                 </mat-cell>
             </ng-container>
 
@@ -38,6 +38,7 @@
                 <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
                 <mat-cell *matCellDef="let o">
                     <mat-icon class="clickable" matTooltip="Complete: {{o?.completedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
+                    <mat-icon class="clickable" matTooltip="Ordered: {{o?.orderedBy}}" *ngIf="o.status == 'ordered'" style="color: green">done</mat-icon>
                     <mat-icon class="clickable" matTooltip="Received: {{o?.ackedBy}}" *ngIf="o.status == 'ack'" style="color: blue">done</mat-icon>
                     <mat-icon class="clickable" matTooltip="Pending" *ngIf="o.status == 'new'" style="color: red">warning</mat-icon>
                 </mat-cell>
@@ -47,6 +48,13 @@
                 <mat-header-cell *matHeaderCellDef>Acknowledge</mat-header-cell>
                 <mat-cell *matCellDef="let o">
                     <button mat-raised-button color="primary" (click)="acknowledgeTransaction(o)">Ack</button>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="ordered">
+                <mat-header-cell *matHeaderCellDef>Ordered</mat-header-cell>
+                <mat-cell *matCellDef="let o">
+                    <button *ngIf="!o.isDeposit" mat-raised-button color="accent" (click)="confirmOrdered(o)">Ordered</button>
                 </mat-cell>
             </ng-container>
 

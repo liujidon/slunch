@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { StateService } from '../providers/state.service';
 import { StateFace } from '../interfaces';
 import { TransactionService } from '../providers/transaction.service';
-import { Subscription } from '../../../node_modules/rxjs';
 import { ServiceHandlerService } from '../providers/service-handler.service';
 
 @Component({
@@ -46,6 +45,10 @@ export class HeaderComponent implements OnInit {
         this.username = "";
       }
     });
+
+    if(!this.serviceHandlerService.subscribed){
+      this.serviceHandlerService.subscribe();
+    }
 
   }
 

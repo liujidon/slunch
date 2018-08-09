@@ -1,18 +1,20 @@
 <mat-grid-list style="width:100%; background-color:#d81e05" cols=20>
-  <mat-grid-tile colspan=4 (click)="logoClick()" class="clickable" matTooltip="Home">
+  <mat-grid-tile colspan=4>
     <strong style="color: white; position: relative; font-size:55px">Slunch</strong>
   </mat-grid-tile>
-  <mat-grid-tile colspan=13></mat-grid-tile>
-  <mat-grid-tile>
-    <img *ngIf="authService.isLoggedIn() && authService.userDetails.photoURL" matTooltip="{{username}}" src={{authService.userDetails.photoURL}} style="height:50px; width:50px; border-radius: 50%">
+  <mat-grid-tile colspan=10></mat-grid-tile>
+  <mat-grid-tile colspan=4>
+    <strong style="color: white; position: relative; font-size:15px">
+      {{authService.getUsername()}}: {{authService.account?.balance | currency}}
+    </strong>
   </mat-grid-tile>
   <mat-grid-tile>
-    <mat-icon *ngIf="authService.isLoggedIn()" class="clickable" style="color: white; font-size:200%" (click)="logout()"
+    <mat-icon class="clickable" style="color: white; font-size:200%" (click)="logout()"
       matTooltip="Sign Out">exit_to_app</mat-icon>
   </mat-grid-tile>
 </mat-grid-list>
 
-<nav *ngIf="authService.isLoggedIn()" mat-tab-nav-bar>
+<nav mat-tab-nav-bar>
   <a mat-tab-link (click)="router.navigate(['vote'])">Vote/Order</a>
   <a mat-tab-link (click)="router.navigate(['account'])">Account</a>
   <a mat-tab-link *ngIf="authService.isAdmin" (click)="router.navigate(['unprocessed'])">

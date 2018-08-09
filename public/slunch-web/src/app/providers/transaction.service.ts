@@ -88,5 +88,9 @@ export class TransactionService {
     this.db.doc(t.id).update(data);
   }
 
+  cancelTransaction(t: Transaction){
+    this.db.doc(t.id).delete();
+  }
+
 
 }

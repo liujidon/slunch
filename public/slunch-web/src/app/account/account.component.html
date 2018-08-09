@@ -78,9 +78,17 @@
       <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
         <mat-cell *matCellDef="let o">
-          <mat-icon class="clickable" matTooltip="Complete: {{o?.completedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
-          <mat-icon class="clickable" matTooltip="Received: {{o?.ackedBy}}" *ngIf="o.status == 'ack'" style="color: blue">done</mat-icon>
-          <mat-icon class="clickable" matTooltip="Pending" *ngIf="o.status == 'new'" style="color: red">warning</mat-icon>
+            <mat-icon class="clickable" matTooltip="Complete: {{o?.completedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
+            <mat-icon class="clickable" matTooltip="Ordered: {{o?.orderedBy}}" *ngIf="o.status == 'ordered'" style="color: green">done</mat-icon>
+            <mat-icon class="clickable" matTooltip="Received: {{o?.ackedBy}}" *ngIf="o.status == 'ack'" style="color: blue">done</mat-icon>
+            <mat-icon class="clickable" matTooltip="Pending" *ngIf="o.status == 'new'" style="color: red">warning</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="cancel">
+        <mat-header-cell *matHeaderCellDef>Cancel</mat-header-cell>
+        <mat-cell *matCellDef="let o">
+          <button *ngIf="o.status == 'new' || o.status == 'ack'" mat-raised-button color="warn" (click)="transactionService.cancelTransaction(o)">Cancel</button>
         </mat-cell>
       </ng-container>
 

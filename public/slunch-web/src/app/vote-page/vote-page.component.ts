@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { StateService } from '../providers/state.service';
-import { ServiceHandlerService } from '../providers/service-handler.service';
 
 @Component({
   selector: 'app-vote-page',
@@ -11,14 +10,12 @@ export class VotePageComponent implements OnInit {
 
   stateService: StateService;
 
-  constructor(stateService: StateService, private serviceHandlerService: ServiceHandlerService) {
+  constructor(stateService: StateService) {
     this.stateService = stateService;
   }
 
   ngOnInit() {
-    if(!this.serviceHandlerService.subscribed){
-      this.serviceHandlerService.subscribe();
-    }
+    
   }
 
   
