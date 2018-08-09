@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AuthService } from '../providers/auth.service';
 import { StateService } from '../providers/state.service';
+import { ServiceHandlerService } from '../providers/service-handler.service';
 
 @Component({
   selector: 'app-vote-page',
@@ -9,15 +9,16 @@ import { StateService } from '../providers/state.service';
 })
 export class VotePageComponent implements OnInit {
 
-  authService: AuthService;
   stateService: StateService;
 
-  constructor(authService: AuthService, stateService: StateService) {
-    this.authService = authService;
+  constructor(stateService: StateService, private serviceHandlerService: ServiceHandlerService) {
     this.stateService = stateService;
   }
 
   ngOnInit() {
+    if(!this.serviceHandlerService.subscribed){
+      this.serviceHandlerService.subscribe();
+    }
   }
 
   

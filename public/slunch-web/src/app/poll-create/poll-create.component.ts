@@ -14,14 +14,12 @@ export class PollCreateComponent implements OnInit {
 
   newPoll: Poll;
   newOption: string;
-  pollOptions$: Observable<PollOption[]>;
 
   constructor(public pollService: PollService, public authService: AuthService) {
     this.newPoll = new Poll("");
   }
 
   ngOnInit() {
-    this.pollOptions$ = this.pollService.getPollOptions();
   }
 
   onOptionChange(po: PollOption) {

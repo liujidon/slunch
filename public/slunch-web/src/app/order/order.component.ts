@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.css']
 })
-export class OrderComponent implements OnInit, OnDestroy {
+export class OrderComponent implements OnInit {
 
   router: Router;
   pollService: PollService;
@@ -29,14 +29,9 @@ export class OrderComponent implements OnInit, OnDestroy {
   recentOrders: Array<string>;
   @ViewChild("stepper") stepper: MatStepper;
 
-  latestPollSubscription: Subscription;
-  adminSubscription: Subscription;
-
-
   constructor(pollService: PollService, authService: AuthService, transactionService: TransactionService, router: Router) {
     this.pollService = pollService;
     this.authService = authService;
-    this.chosenOptions = [];
     this.transactionService = transactionService;
     this.order = "";
     this.isRestaurantChosen = false;
@@ -47,30 +42,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.latestPollSubscription = this.pollService.getLatestPoll().subscribe(
-      (poll:Array<PollFace>)=>{
-        if(poll){
-          this.adminSubscription = this.authService.getAdmins$().subscribe((admin) => {
-            poll[0].options.forEach(
-              (po:PollOption)=>{
-                if(po.uidVotes.filter(uid =>  admin["uids"].includes(uid)).length > 0){
-                  this.chosenOptions.push(po);
-                }
-              }
-            );
-          },()=>console.log("ERROR: OrderComponent line 49"));
-          
-        }
-      }
-    ), ()=>console.log("ERROR: OrderComponent line 46");
 
-
-  }
-
-  ngOnDestroy(){
-    console.log("OrderComponent unsubscribing")
-    this.latestPollSubscription.unsubscribe();
-    this.adminSubscription.unsubscribe();
   }
 
   clickRestaurant(option: PollOption, stepper: MatStepper){
@@ -78,22 +50,8 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.isOrderSent = false;
     this.chosenOption = option;
     this.isRestaurantChosen = true;
-
-    let transactionSubscription: Subscription = this.transactionService.getTransactions$().subscribe((transactions)=>{
-      let temp: Array<string> = [];
-      transactions
-        .filter((transaction)=> transaction.uid == this.authService.getUid() && transaction.description == this.chosenOption.name)
-        .forEach(transaction=>{
-          if(temp.indexOf(transaction.detail) === -1){
-            temp.push(transaction.detail);
-          }
-        });
-        this.recentOrders = temp;
-    });
-    
+    this.recentOrders = this.transactionService.getRecentOrders(this.chosenOption.name);
     stepper.next();
-
-    transactionSubscription.unsubscribe();
   }
 
   clickSendOrder(stepper: MatStepper){

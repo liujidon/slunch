@@ -2,26 +2,52 @@ import { Injectable } from '@angular/core';
 import { PollOption } from '../poll-option';
 import { Poll } from '../poll';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PollService {
   db: AngularFirestore;
+  authService: AuthService;
   private pollCollection;
+  pollOptions$: Observable<PollOption[]>;
 
-  constructor(db: AngularFirestore) {
+  latestPollSubscription: Subscription;
+  latestPoll: Poll;
+
+  constructor(db: AngularFirestore, authService: AuthService) {
       this.db = db;
+      this.authService = authService;
       this.pollCollection = db.collection<Poll>('poll');
+      this.pollOptions$ = db.collection<PollOption>('poll-options').valueChanges();
   }
 
-  getPollOptions(): Observable<PollOption[]> {
-    return this.db.collection<PollOption>('poll-options').valueChanges();
+  subscribe(){
+    console.log("PollService latestPollSubscription subscribing");
+    this.latestPollSubscription = this.db.collection<Poll>('poll', ref => ref.orderBy('createtime', 'desc').limit(1)).valueChanges().subscribe(pollArray=>{
+      this.latestPoll = pollArray[0];
+    });
+
   }
 
-  getLatestPoll(): Observable<any[]> {
-    return this.db.collection<Poll>('poll', ref => ref.orderBy('createtime', 'desc').limit(1)).valueChanges();
+  unsubscribe(){
+    if(this.latestPollSubscription){
+      console.log("PollService latestPollSubscription unsubscribing");
+      this.latestPollSubscription.unsubscribe();
+    }
+
+  }
+
+  getAdminSelectedOptions(){
+    if(this.latestPoll){
+      return this.latestPoll.options.filter(po=>po.uidVotes.filter(uid=>this.authService.adminUids.includes(uid)).length > 0);
+    }
+    else{
+      return [];
+    }
+    
   }
 
   updatePoll(poll:Poll) {

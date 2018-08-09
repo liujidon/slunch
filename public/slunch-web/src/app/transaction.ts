@@ -9,8 +9,7 @@ export class Transaction{
     status: string;
     accountid: string;
     uid: string;
-    firstname: string;
-    lastname: string;
+    displayName: string;
     email: string;
     isDeposit: boolean;
 
@@ -24,8 +23,7 @@ export class Transaction{
         this.id = "";
         this.accountid = "";
         this.uid = "";
-        this.firstname = "";
-        this.lastname = "";
+        this.displayName = "";
         this.email = "";
 
     }

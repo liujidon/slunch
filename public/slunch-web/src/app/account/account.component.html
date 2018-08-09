@@ -5,8 +5,8 @@
     Balance
   </mat-card-title>
   <mat-card-content>
-    <h2 [ngClass]="account?.balance > 20 ? 'green':'red'">
-      {{account?.balance | currency}}
+    <h2 [ngClass]="authService.account?.balance > 20 ? 'green':'red'">
+      {{authService.account?.balance | currency}}
     </h2>
 
 
@@ -41,9 +41,9 @@
   </mat-card-title>
   <mat-card-content>
 
-    <mat-table [dataSource]="transactions" matSort>
+    <mat-table [dataSource]="transactionService.myTransactionsDS">
       <ng-container matColumnDef="time">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
         <mat-cell *matCellDef="let o">{{o?.time | date: 'short'}}</mat-cell>
       </ng-container>
 
@@ -78,7 +78,7 @@
       <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
         <mat-cell *matCellDef="let o">
-          <mat-icon class="clickable" matTooltip="Complete: {{o?.ackedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
+          <mat-icon class="clickable" matTooltip="Complete: {{o?.completedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
           <mat-icon class="clickable" matTooltip="Received: {{o?.ackedBy}}" *ngIf="o.status == 'ack'" style="color: blue">done</mat-icon>
           <mat-icon class="clickable" matTooltip="Pending" *ngIf="o.status == 'new'" style="color: red">warning</mat-icon>
         </mat-cell>

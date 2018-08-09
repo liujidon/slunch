@@ -17,7 +17,7 @@
   <a mat-tab-link (click)="router.navigate(['account'])">Account</a>
   <a mat-tab-link *ngIf="authService.isAdmin" (click)="router.navigate(['unprocessed'])">
     <p>
-      <span [matBadge]="numUnprocessed" matBadgeOverlap="false" [matBadgeColor]="numUnprocessed == 0 ? 'primary':'warn'">Admin</span>
+      <span [matBadge]="transactionService.numUnprocessed" matBadgeOverlap="false" [matBadgeColor]="transactionService.numUnprocessed == 0 ? 'primary':'warn'">Admin</span>
     </p>
   </a>
   <span mat-tab-link *ngIf="authService.isAdmin" (click)="toggleOrders()">

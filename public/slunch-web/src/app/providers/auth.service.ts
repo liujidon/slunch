@@ -15,11 +15,15 @@ export class AuthService {
 
   private user: Observable<firebase.User>;
   public userDetails: firebase.User = null;
-  public isAdmin: boolean = false;
   public admins$: Observable<Array<string>>;
   public db: AngularFirestore;
 
+  public isAdmin: boolean = false;
+  public adminUids: Array<string>;
+  public account: any;
+
   private adminSubscription: Subscription;
+  private accountsSubscription: Subscription;
 
   constructor(private firebaseAuth: AngularFireAuth, private router: Router, db: AngularFirestore) {
     this.db = db;
@@ -40,25 +44,43 @@ export class AuthService {
   }
 
   subscribe(){
-    console.log("AuthService subscribing");
+
+    console.log("AuthService adminSubscription subscribing");
     this.adminSubscription = this.db.doc("admin/awZQPDtQrd1P3AdCw0It").valueChanges().subscribe(
       (doc: AdminFace)=>{
         if(doc){
-          this.isAdmin = doc.uids.includes(this.userDetails.uid);
+          this.isAdmin = doc.uids.includes(this.getUid());
+          this.adminUids = doc.uids;
         }
-      }, ()=>console.log("ERROR: AuthService line 29")
+      }
     );
+
+    console.log("AuthService accountsSubscription subscribing")
+    this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
+      docChangeActions => {
+        
+        let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.getUid())
+        if(temp.length > 0){
+          let accountDoc = temp[0].payload.doc;
+          this.account = accountDoc.data();
+          this.account.id = accountDoc.id;
+        }
+      }
+    );
+
   }
 
   unsubscribe(){
     if(this.adminSubscription){
-      console.log("AuthService unsubscribing")
+      console.log("AuthService adminSubscription unsubscribing");
       this.adminSubscription.unsubscribe();
     }
-  }
 
-  getAdmins$(){
-    return this.db.doc("admin/awZQPDtQrd1P3AdCw0It").valueChanges();
+    if(this.accountsSubscription){
+      console.log("AuthService accountsSubscription unsubscribing");
+      this.accountsSubscription.unsubscribe();
+    }
+
   }
 
   getUsername() {

@@ -1,11 +1,11 @@
 
-<mat-card *ngIf="chosenOptions.length > 0" style="margin:3em">
+<mat-card *ngIf="pollService.getAdminSelectedOptions().length > 0" style="margin:3em">
   <mat-card-title>Ordering</mat-card-title>
   <mat-card-content>
     <mat-vertical-stepper #stepper>
       <mat-step label="Choose your restaurant">
         <mat-grid-list cols=6 rowHeight="2:1">
-          <mat-grid-tile *ngFor="let option of chosenOptions">
+          <mat-grid-tile *ngFor="let option of pollService.getAdminSelectedOptions()">
             <div style="margin:1em">
               <img class="clickable" src="{{option.iconUrl}}" (click)="clickRestaurant(option, stepper)">
             </div>

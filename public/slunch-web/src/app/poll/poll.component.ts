@@ -10,7 +10,7 @@ import { AuthService } from '../providers/auth.service';
   templateUrl: './poll.component.html',
   styleUrls: ['./poll.component.css']
 })
-export class PollComponent implements OnInit, OnDestroy {
+export class PollComponent implements OnInit {
   poll: Poll;
 
   latestPollSubscription: Subscription;
@@ -20,15 +20,9 @@ export class PollComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.latestPollSubscription = this.pollService.getLatestPoll()
-      .subscribe(poll => {
-        this.poll = poll[0];
-      }, ()=>console.log("ERROR: PollComponent line 23"));
-  }
-
-  ngOnDestroy(){
-    console.log("PollComponent unsubscribing");
-    this.latestPollSubscription.unsubscribe();
+    if(this.pollService.latestPoll){
+      this.poll = this.pollService.latestPoll;
+    }
   }
 
 

@@ -20,16 +20,16 @@ export class StateService {
   }
 
   subscribe(){
-    console.log("StateService subscribing");
+    console.log("StateService stateSubscription subscribing");
     this.stateSubscription = this.db.doc<StateFace>('state/TMMQosAB4vACxDI9VUFX').valueChanges().subscribe((state)=>{
       this.state = state;
       this.isOrdering = state.allowOrders;
-    }, ()=>console.log("ERROR: StateService line 16"));
+    });
   }
 
   unsubscribe(){
     if(this.stateSubscription){
-      console.log("StateService unsubscribing");
+      console.log("StateService stateSubscription unsubscribing");
       this.stateSubscription.unsubscribe();
     }
   }

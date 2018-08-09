@@ -12,7 +12,7 @@ import { ServiceHandlerService } from '../providers/service-handler.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
 
   authService: AuthService;
   stateService: StateService;
@@ -20,11 +20,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   state: StateFace;
   isOrdering: boolean;
   @Input() newPollToggled: boolean;
-  numUnprocessed: number;
   
   router: Router;
   username: string;
-  transactionsSubscription: Subscription;
 
   constructor(
     private serviceHandlerService: ServiceHandlerService,
@@ -49,15 +47,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.transactionsSubscription = this.transactionService.getTransactions$().subscribe((transactions)=>{
-      this.numUnprocessed = transactions.filter(transaction=>transaction.status != "done").length;
-    }, ()=>console.log("ERROR: HeaderComponent line 43"));
-
-  }
-
-  ngOnDestroy(){
-    console.log("HeaderComponent unsubscribing");
-    this.transactionsSubscription.unsubscribe();
   }
 
   toggleOrders(){
