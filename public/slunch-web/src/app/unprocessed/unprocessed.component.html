@@ -54,14 +54,14 @@
             <ng-container matColumnDef="ordered">
                 <mat-header-cell *matHeaderCellDef>Ordered</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button *ngIf="!o.isDeposit" mat-raised-button color="accent" (click)="confirmOrdered(o)">Ordered</button>
+                    <button *ngIf="o.status != 'new' && !o.isDeposit" mat-raised-button color="accent" (click)="confirmOrdered(o)">Ordered</button>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="confirm">
                 <mat-header-cell *matHeaderCellDef>Confirm</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button mat-raised-button color="warn" (click)="confirmTransaction(o)">Confirm</button>
+                    <button *ngIf="o.status != 'new'" mat-raised-button color="warn" (click)="confirmTransaction(o)">Confirm</button>
                 </mat-cell>
             </ng-container>
 

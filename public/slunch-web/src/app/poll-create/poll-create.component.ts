@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';
 import { Poll } from '../poll';
 import { PollOption } from '../poll-option';
-import { Observable } from 'rxjs';
+import { MatSelectionList } from '../../../node_modules/@angular/material';
+import { Router } from '../../../node_modules/@angular/router';
+import { StateService } from '../providers/state.service';
 
 @Component({
   selector: 'app-poll-create',
@@ -13,35 +15,31 @@ import { Observable } from 'rxjs';
 export class PollCreateComponent implements OnInit {
 
   newPoll: Poll;
-  newOption: string;
+  selectedOptions: Array<PollOption> = [];
 
-  constructor(public pollService: PollService, public authService: AuthService) {
+  constructor(public pollService: PollService, public stateService: StateService, public authService: AuthService, public router: Router) {
     this.newPoll = new Poll("");
   }
 
   ngOnInit() {
   }
 
-  onOptionChange(po: PollOption) {
-    let exist = false;
-    for(let i=0; i<this.newPoll.options.length; ++i) {
-      if(po.name === this.newPoll.options[i].name) {
-        exist = true;
-        break;
-      }
-    }
-    if(!exist)
-      this.newPoll.options.push(new PollOption(po.name, po.iconUrl, po.menuUrl));
-  }
-
   createPoll() {
+    
+    this.newPoll.options = this.selectedOptions.map(so=>{
+      so.uidVotes = [];
+      so.votes = [];
+      return so;
+    })
     this.pollService.updatePoll(this.newPoll);
-    this.resetPoll();
-  }
 
-  resetPoll() {
-    this.newPoll = new Poll("");
-    this.newOption = "";
+    // Turn off ordering
+    this.stateService.setState({
+      allowOrders: false,
+      allowPoll: true
+    });
+    
+    this.router.navigate(['vote']);
   }
 
 }

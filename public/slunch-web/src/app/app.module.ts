@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
@@ -129,6 +130,7 @@ export class MaterialModule {}
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
+    FlexLayoutModule
   ],
   providers: [
     AuthService,

@@ -1,30 +1,40 @@
+<app-header></app-header>
+
 <mat-card style="margin:3em">
+  
   <mat-card-title>
     New poll
   </mat-card-title>
-  <mat-grid-list cols=8 rowHeight="80px">
-    <mat-grid-tile colspan=2>
+
+  <mat-card-content>
+    <div fxLayout="column">
+      <div>
         <mat-form-field>
           <input matInput placeholder="Topic" [(ngModel)]="newPoll.topic">
         </mat-form-field>
-    </mat-grid-tile>
-    <mat-grid-tile colspan=2>
-      <mat-form-field>
-        <mat-select [(ngModel)]="newOption" (ngModelChange)="onOptionChange($event)" placeholder="Option">
-          <mat-option *ngFor="let op of pollService.pollOptions$ | async" [value]="op">{{op.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </mat-grid-tile>
-    <mat-grid-tile colspan=6>
-      <span style="text-align: left" *ngFor="let option of newPoll.options">
-        {{option.name}} &nbsp;
-      </span>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <button mat-raised-button color="primary" (click)="createPoll()">Create</button>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <button mat-raised-button color="warn" (click)="resetPoll()">Clear</button>
-    </mat-grid-tile>
-  </mat-grid-list>
-  </mat-card>
+      </div>
+      <div fxFlex="40" fxLayout="row" fxLayoutGap="10px">
+        <div>
+          <button disabled="{{selectedOptions.length < 1}}" mat-raised-button color="primary" (click)="createPoll()">
+            Create
+          </button>
+        </div>
+        <div>
+          <button mat-raised-button (click)="selectedOptions = []" color="warn">
+            Clear
+          </button>
+        </div>
+      </div>
+      <div>
+        <mat-selection-list [(ngModel)]="selectedOptions">
+          <mat-list-option *ngFor="let option of (pollService.pollOptions$ | async)" [value]="option">
+            {{option.name}}  
+            <img matListAvatar src="{{option.iconUrl}}">
+          </mat-list-option>
+        </mat-selection-list>
+      </div>
+    </div>
+    
+  </mat-card-content>
+
+</mat-card>

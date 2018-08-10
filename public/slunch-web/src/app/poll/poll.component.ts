@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Poll } from '../poll';
 import { PollOption } from '../poll-option';
 import { PollService } from '../providers/poll.service';
-import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../providers/auth.service';
 
 @Component({
@@ -11,18 +9,11 @@ import { AuthService } from '../providers/auth.service';
   styleUrls: ['./poll.component.css']
 })
 export class PollComponent implements OnInit {
-  poll: Poll;
-
-  latestPollSubscription: Subscription;
 
   constructor(public pollService: PollService, public authService: AuthService) {
-    this.poll = new Poll("");
   }
 
   ngOnInit() {
-    if(this.pollService.latestPoll){
-      this.poll = this.pollService.latestPoll;
-    }
   }
 
 
@@ -43,7 +34,7 @@ export class PollComponent implements OnInit {
     else
       option.uidVotes.push(uid);
 
-    this.pollService.updatePoll(this.poll);
+    this.pollService.updatePoll(this.pollService.latestPoll);
   }
 
 }

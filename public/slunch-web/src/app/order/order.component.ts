@@ -17,28 +17,24 @@ import { Subscription } from 'rxjs';
 })
 export class OrderComponent implements OnInit {
 
-  router: Router;
-  pollService: PollService;
-  authService: AuthService;
   chosenOptions: Array<PollOption>;
   chosenOption: PollOption;
-  transactionService: TransactionService;
   order: string;
   isRestaurantChosen: boolean;
   isOrderSent: boolean;
   recentOrders: Array<string>;
   @ViewChild("stepper") stepper: MatStepper;
 
-  constructor(pollService: PollService, authService: AuthService, transactionService: TransactionService, router: Router) {
-    this.pollService = pollService;
-    this.authService = authService;
-    this.transactionService = transactionService;
+  constructor(
+    public pollService: PollService,
+    public authService: AuthService,
+    public transactionService: TransactionService,
+    public router: Router
+  ) {
     this.order = "";
     this.isRestaurantChosen = false;
     this.isOrderSent = false;
     this.recentOrders = [];
-    this.router = router;
-
   }
 
   ngOnInit() {

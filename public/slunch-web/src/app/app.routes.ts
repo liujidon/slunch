@@ -5,6 +5,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthGuardService } from './providers/auth-guard.service';
 import { UnprocessedComponent } from './unprocessed/unprocessed.component';
 import { AccountComponent } from './account/account.component';
+import { PollCreateComponent } from './poll-create/poll-create.component';
 
 const appRoutes: Routes = [
   {
@@ -19,6 +20,10 @@ const appRoutes: Routes = [
   {
     path: 'unprocessed',
     component: UnprocessedComponent
+  },
+  {
+    path: 'new-poll',
+    component: PollCreateComponent
   },
   {
     path: 'account',

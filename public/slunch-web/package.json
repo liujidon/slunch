@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^6.0.9",
+    "@angular/flex-layout": "^6.0.0-beta.17",
     "@angular/cdk": "^6.4.0",
     "@angular/common": "^6.0.3",
     "@angular/compiler": "^6.0.3",

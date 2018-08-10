@@ -1,32 +1,33 @@
 
+
 <mat-card *ngIf="pollService.getAdminSelectedOptions().length > 0" style="margin:3em">
   <mat-card-title>Ordering</mat-card-title>
   <mat-card-content>
     <mat-vertical-stepper #stepper>
+
       <mat-step label="Choose your restaurant">
-        <mat-grid-list cols=6 rowHeight="2:1">
-          <mat-grid-tile *ngFor="let option of pollService.getAdminSelectedOptions()">
-            <div style="margin:1em">
-              <img class="clickable" src="{{option.iconUrl}}" (click)="clickRestaurant(option, stepper)">
-            </div>
-          </mat-grid-tile>
-        </mat-grid-list>
+        <div fxLayout="row" fxLayoutAlign=" center" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm=" start" fxLayoutGap="20px">
+          <div *ngFor="let option of pollService.getAdminSelectedOptions()">
+            <img style="max-width: 150px" class="clickable" src="{{option.iconUrl}}" (click)="clickRestaurant(option, stepper)">
+          </div>
+        </div>
       </mat-step>
+
       <mat-step label="Specify order">
-        <mat-grid-list cols=5 rowHeight="2:1" *ngIf="isRestaurantChosen">
-          <mat-grid-tile>
-            <div>
-              <mat-grid-list cols=2>
-                <mat-grid-tile>
-                  <img src="{{chosenOption?.iconUrl}}">
-                </mat-grid-tile>
-                <mat-grid-tile>
-                  <a target="_blank" href="{{chosenOption?.menuUrl}}" class="clickable">Menu</a>
-                </mat-grid-tile>
-              </mat-grid-list>
-            </div>
-          </mat-grid-tile>
-          <mat-grid-tile>
+        <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="30px" *ngIf="isRestaurantChosen">
+          <div>
+            <a href="{{chosenOption?.menuUrl}}" target="_blank">
+              <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign=" center">
+                <div>
+                  <img style="max-width: 150px" src="{{chosenOption?.iconUrl}}">
+                </div>
+                <div>
+                  Menu
+                </div>
+              </div>
+            </a>
+          </div>
+          <div>
             <mat-form-field>
               <textarea matInput placeholder="Order:" [(ngModel)]="order" required [matAutocomplete]="auto"></textarea>
               <mat-autocomplete #auto="matAutocomplete">
@@ -37,19 +38,28 @@
                 </mat-optgroup>
               </mat-autocomplete>
             </mat-form-field>
-          </mat-grid-tile>
-          <mat-grid-tile>
-            <button mat-raised-button [disabled]="order.length <= 0" color="warn" (click)="clickSendOrder(stepper)">Send</button>
-          </mat-grid-tile>
-        </mat-grid-list>
+          </div>
+          <div>
+            <button mat-raised-button [disabled]="order.length <= 0" color="warn" (click)="clickSendOrder(stepper)">
+              Send
+            </button>
+          </div>
+        </div>
       </mat-step>
+
       <mat-step label="Finish">
-        <span *ngIf="isOrderSent">
-          <strong>{{order}}</strong> from <strong>{{chosenOption?.name}}</strong> was sent!
-          <br><br>
-          <button (click)="router.navigate(['account'])" mat-raised-button color="warn">View account and transactions</button>
-        </span>
+        <div *ngIf="isOrderSent" fxLayout="column" fxLayoutGap="10px">
+          <div>
+            <strong>{{order}}</strong> from <strong>{{chosenOption?.name}}</strong> was sent!
+          </div>
+          <div>
+            <button (click)="router.navigate(['account'])" mat-raised-button color="warn">
+              View account and transactions
+            </button>
+          </div>
+        </div>
       </mat-step>
+
     </mat-vertical-stepper>
   </mat-card-content>
 

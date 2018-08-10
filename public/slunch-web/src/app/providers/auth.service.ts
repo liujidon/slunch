@@ -84,10 +84,15 @@ export class AuthService {
   }
 
   getUsername() {
-    if(this.userDetails.displayName != null)
-      return this.userDetails.displayName;
-    else
-      return this.userDetails.email;
+    if(this.userDetails){
+      if(this.userDetails.displayName != null)
+        return this.userDetails.displayName;
+      else
+        return this.userDetails.email;
+    }
+    else{
+      return "";
+    }
   }
 
   getUid(){
