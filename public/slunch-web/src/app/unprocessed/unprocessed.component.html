@@ -30,7 +30,7 @@
             <ng-container matColumnDef="price">
                 <mat-header-cell *matHeaderCellDef>Price</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <input *ngIf="o.ackedBy" style="width: 30%" [(ngModel)]="o.price">
+                    <input *ngIf="(o.isDeposit && o.status == 'ack') || (!o.isDeposit && o.status == 'ordered')" style="width: 30%" [(ngModel)]="o.price">
                 </mat-cell>
             </ng-container>
 
@@ -54,14 +54,14 @@
             <ng-container matColumnDef="ordered">
                 <mat-header-cell *matHeaderCellDef>Ordered</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button *ngIf="o.status != 'new' && !o.isDeposit" mat-raised-button color="accent" (click)="confirmOrdered(o)">Ordered</button>
+                    <button *ngIf="(!o.isDeposit && o.status != 'new')" mat-raised-button color="accent" (click)="confirmOrdered(o)">Ordered</button>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="confirm">
                 <mat-header-cell *matHeaderCellDef>Confirm</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button *ngIf="o.status != 'new'" mat-raised-button color="warn" (click)="confirmTransaction(o)">Confirm</button>
+                    <button *ngIf="(o.isDeposit && o.status == 'ack') || (!o.isDeposit && o.status == 'ordered')" mat-raised-button color="warn" (click)="confirmTransaction(o)">Confirm</button>
                 </mat-cell>
             </ng-container>
 
