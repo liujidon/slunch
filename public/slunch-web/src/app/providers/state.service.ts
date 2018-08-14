@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreDocument, DocumentData } from 'angularfire2/firestore';
+import { AngularFirestore } from 'angularfire2/firestore';
 import { StateFace } from '../interfaces';
-import { Subscription } from '../../../node_modules/rxjs';
+import { Subscription } from 'rxjs';
+
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,7 @@ export class StateService {
 
   subscribe(){
     console.log("StateService stateSubscription subscribing");
-    this.stateSubscription = this.db.doc<StateFace>('state/TMMQosAB4vACxDI9VUFX').valueChanges().subscribe((state)=>{
+    this.stateSubscription = this.db.doc<StateFace>(environment.stateRef).valueChanges().subscribe((state)=>{
       this.state = state;
       this.isOrdering = state.allowOrders;
     });
@@ -35,7 +37,7 @@ export class StateService {
   }
   
   setState(data){
-    this.db.doc<StateFace>('state/TMMQosAB4vACxDI9VUFX').set(data);
+    this.db.doc<StateFace>(environment.stateRef).set(data);
   }
 
 

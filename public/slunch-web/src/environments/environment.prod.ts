@@ -1,11 +1,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyBGqFrqSO8rsKPIgIMbOQCLZvxRCMlTYRY",
-    authDomain: "slunch-voter-dev.firebaseapp.com",
-    databaseURL: "https://slunch-voter-dev.firebaseio.com",
-    projectId: "slunch-voter-dev",
-    storageBucket: "slunch-voter-dev.appspot.com",
-    messagingSenderId: "1066268706966"
-  }
+    apiKey: "AIzaSyDO0rUj3dVALgl0O84KD3F_lewzeoR21O8",
+    authDomain: "slunch-voter.firebaseapp.com",
+    databaseURL: "https://slunch-voter.firebaseio.com",
+    projectId: "slunch-voter",
+    storageBucket: "slunch-voter.appspot.com",
+    messagingSenderId: "363377262427"
+  },
+  adminRef: "admin/awZQPDtQrd1P3AdCw0It",
+  stateRef: "state/TMMQosAB4vACxDI9VUFX"
 };

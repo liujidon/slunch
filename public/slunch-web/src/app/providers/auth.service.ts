@@ -6,7 +6,9 @@ import * as firebase from 'firebase';
 import { Observable } from 'rxjs/Observable';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AdminFace, AccountFace } from '../interfaces';
-import { Subscription } from '../../../node_modules/rxjs';
+import { Subscription } from 'rxjs';
+
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +48,7 @@ export class AuthService {
   subscribe(){
 
     console.log("AuthService adminSubscription subscribing");
-    this.adminSubscription = this.db.doc("admin/awZQPDtQrd1P3AdCw0It").valueChanges().subscribe(
+    this.adminSubscription = this.db.doc(environment.adminRef).valueChanges().subscribe(
       (doc: AdminFace)=>{
         if(doc){
           this.isAdmin = doc.uids.includes(this.getUid());
