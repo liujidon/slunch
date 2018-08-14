@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../providers/auth.service';
 import { TransactionService } from '../providers/transaction.service';
-import { AngularFirestore } from '../../../node_modules/angularfire2/firestore';
-import { Transaction } from '../transaction';
+import { AngularFirestore } from 'angularfire2/firestore';
 
 @Component({
   selector: 'app-account',

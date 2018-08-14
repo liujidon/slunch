@@ -3,8 +3,7 @@ import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';
 import { Poll } from '../poll';
 import { PollOption } from '../poll-option';
-import { MatSelectionList } from '../../../node_modules/@angular/material';
-import { Router } from '../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 import { StateService } from '../providers/state.service';
 
 @Component({
@@ -35,8 +34,7 @@ export class PollCreateComponent implements OnInit {
 
     // Turn off ordering
     this.stateService.setState({
-      allowOrders: false,
-      allowPoll: true
+      allowOrders: false
     });
     
     this.router.navigate(['vote']);

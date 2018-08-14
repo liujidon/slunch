@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction, QueryDocumentSnapshot } from 'angularfire2/firestore';
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Transaction } from '../transaction';
-import { AccountFace } from '../interfaces';
 import { Subscription } from 'rxjs';
-import { } from 'rxjs/add/observable/empty'
-import { MatTableDataSource } from '../../../node_modules/@angular/material';
+import { MatTableDataSource } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
