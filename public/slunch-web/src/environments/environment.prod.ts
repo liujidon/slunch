@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   firebase: {
     apiKey: "AIzaSyDO0rUj3dVALgl0O84KD3F_lewzeoR21O8",
     authDomain: "slunch-voter.firebaseapp.com",
