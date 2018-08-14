@@ -7,5 +7,7 @@ export const environment = {
     projectId: "slunch-voter",
     storageBucket: "slunch-voter.appspot.com",
     messagingSenderId: "363377262427"
-  }
+  },
+  adminRef: "admin/awZQPDtQrd1P3AdCw0It",
+  stateRef: "state/TMMQosAB4vACxDI9VUFX"
 };
