@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "slunch-voter"
+    "default": "slunch-voter-dev",
+    "dev": "slunch-voter-dev",
+    "prod": "slunch-voter"
   }
 }
