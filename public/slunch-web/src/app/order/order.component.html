@@ -15,7 +15,7 @@
 
       <mat-step label="Specify order">
 
-        <div fxLayout="row wrap" fxLayoutAlign=" center">
+        <div fxLayout="row wrap" *ngIf="chosenOption" fxLayoutAlign=" center">
 
           <div style="margin:30px">
             <a href="{{chosenOption?.menuUrl}}" target="_blank">
