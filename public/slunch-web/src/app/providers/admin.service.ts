@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AccountFace } from '../interfaces';
-import { Subscription } from '../../../node_modules/rxjs';
-import { environment } from '../../environments/environment';
-import { MatTableDataSource, MatTab } from '../../../node_modules/@angular/material';
+import { Subscription } from 'rxjs';
+import { MatTableDataSource, MatTab } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'

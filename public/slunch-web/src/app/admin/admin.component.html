@@ -65,14 +65,95 @@
                 </mat-cell>
             </ng-container>
 
-            <mat-header-row *matHeaderRowDef="transactionColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: transactionColumns;"></mat-row>
+            <mat-header-row *matHeaderRowDef="unprocessedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: unprocessedColumns;"></mat-row>
 
         </mat-table>
-        <mat-paginator #transactionPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #unprocessedPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
     </mat-card-content>
 
 </mat-card>
+
+
+
+<mat-card style="margin:3em">
+    <mat-card-title>
+        Today's Transactions
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+        <div style="padding:10px">
+            <h3>
+                Position:
+                <span [ngClass]="getTodayPosition()>=0?'green':'red'">
+                    {{getTodayPosition() | currency}}
+                </span>
+            </h3>
+        </div>
+
+        <mat-table #todaySort="matSort" [dataSource]="transactionService.todayTransactionsDS" matSort>
+            <ng-container matColumnDef="time">
+                <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
+                <mat-cell *matCellDef="let o">{{o?.time | date: 'short'}}</mat-cell>
+                <mat-footer-cell *matFooterCellDef>
+                    <strong>Total</strong>
+                </mat-footer-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                <mat-cell *matCellDef="let o">{{o?.displayName}}</mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                <mat-cell *matCellDef="let o">{{o?.description}}</mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="detail">
+                <mat-header-cell *matHeaderCellDef>Detail</mat-header-cell>
+                <mat-cell *matCellDef="let o">{{o?.detail}}</mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="debit">
+                <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
+                <mat-cell *matCellDef="let o">
+                    <span *ngIf="o.price >= 0" class="red">
+                        {{o.price | currency}}
+                    </span>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef>
+                    <strong class="red">{{getTotalDebit() | currency}}</strong>
+                </mat-footer-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="credit">
+                <mat-header-cell *matHeaderCellDef mat-sort-header="price">Credit</mat-header-cell>
+                <mat-cell *matCellDef="let o">
+                    <span *ngIf="o.price < 0" class="green">
+                        {{(-1*o.price) | currency}}
+                    </span>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef>
+                    <strong class="green">{{-1*getTotalCredit() | currency}}</strong>
+                </mat-footer-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="todayColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: todayColumns;"></mat-row>
+            <mat-footer-row *matFooterRowDef="todayColumns"></mat-footer-row>
+
+        </mat-table>
+        <mat-paginator #todayPaginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons></mat-paginator>
+
+    </mat-card-content>
+
+</mat-card>
+
+
 
 <mat-card style="margin:3em">
     <mat-card-title>

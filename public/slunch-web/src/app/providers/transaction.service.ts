@@ -17,8 +17,12 @@ export class TransactionService {
   allTransactions: Array<Transaction>;
   myTransactions: Array<Transaction>;
   unprocessedTransactions: Array<Transaction>;
+  todayTransactions: Array<Transaction>;
+
   myTransactionsDS: MatTableDataSource<Transaction>;
   unprocessedTransactionsDS: MatTableDataSource<Transaction>;
+  todayTransactionsDS: MatTableDataSource<Transaction>;
+
   numUnprocessed: number;
 
   constructor(authService: AuthService, db: AngularFirestore) {
@@ -36,8 +40,18 @@ export class TransactionService {
       this.myTransactions = transactions.filter(transaction=>transaction.uid == this.authService.getUid());
       this.numUnprocessed = this.unprocessedTransactions.length;
 
+      this.todayTransactions = transactions.filter(transaction=>{
+        let today:Date = new Date();
+        today.setMilliseconds(0);
+        today.setSeconds(0);
+        today.setMinutes(0);
+        today.setHours(0);
+        return new Date(transaction.time) >= today;
+      });
+      
       this.unprocessedTransactionsDS = new MatTableDataSource(this.unprocessedTransactions.sort((a,b)=>a.time>=b.time?-1:1));
       this.myTransactionsDS = new MatTableDataSource(this.myTransactions.sort((a,b)=>a.time>=b.time?-1:1));
+      this.todayTransactionsDS = new MatTableDataSource(this.todayTransactions.sort((a,b)=>a.time>=b.time?-1:1))
     });
 
   }
