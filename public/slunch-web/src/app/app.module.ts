@@ -66,6 +66,7 @@ import { PollService } from './providers/poll.service';
 import { ServiceHandlerService } from './providers/service-handler.service';
 import { AdminComponent } from './admin/admin.component';
 import { AdminService } from './providers/admin.service';
+import { SortPipe } from './pipes/sort.pipe';
 
 @NgModule({
   exports: [
@@ -120,7 +121,8 @@ export class MaterialModule {}
     HeaderComponent,
     AccountComponent,
     HeaderPlainComponent,
-    AdminComponent
+    AdminComponent,
+    SortPipe
   ],
   imports: [
     BrowserModule,

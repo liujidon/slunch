@@ -27,7 +27,7 @@
       </div>
       <div>
         <mat-selection-list [(ngModel)]="selectedOptions">
-          <mat-list-option *ngFor="let option of (pollService.pollOptions$ | async)" [value]="option">
+          <mat-list-option *ngFor="let option of (pollService.pollOptions$ | async | sort:'name':'asc')" [value]="option">
             {{option.name}}  
             <img matListAvatar src="{{option.iconUrl}}">
           </mat-list-option>
