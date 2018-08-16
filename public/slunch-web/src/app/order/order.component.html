@@ -39,6 +39,11 @@
                     {{o}}
                   </mat-option>
                 </mat-optgroup>
+                <mat-optgroup [label]="'Popular Orders'">
+                  <mat-option *ngFor="let o of popularOrders" [value]="o">
+                    {{o}}
+                  </mat-option>
+                </mat-optgroup>
               </mat-autocomplete>
             </mat-form-field>
           </div>

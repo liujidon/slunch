@@ -8,7 +8,7 @@
 
     <div fxLayout="column">
       <div>
-        <h2 [ngClass]="authService.account?.balance > 20 ? 'green':'red'">
+        <h2 [ngClass]="authService.account?.balance > 0 ? 'green':'red'">
           {{authService.account?.balance | currency}}
         </h2>
       </div>
@@ -54,7 +54,7 @@
         <ng-container matColumnDef="debit">
           <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
           <mat-cell *matCellDef="let o">
-            <span *ngIf="o.price > 0" class="red">
+            <span *ngIf="o.price >= 0" class="red">
               {{o.price | currency}}
             </span>
           </mat-cell>
@@ -63,7 +63,7 @@
         <ng-container matColumnDef="credit">
           <mat-header-cell *matHeaderCellDef>Credit</mat-header-cell>
           <mat-cell *matCellDef="let o">
-            <span *ngIf="o.price <= 0" class="green">
+            <span *ngIf="o.price < 0" class="green">
               {{(-1*o.price) | currency}}
             </span>
           </mat-cell>

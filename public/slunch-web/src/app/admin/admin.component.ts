@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TransactionService } from '../providers/transaction.service';
 import { StateService } from '../providers/state.service';
 import { AuthService } from '../providers/auth.service';
 import { Router } from '@angular/router';
 import { Transaction } from '../transaction';
+import { MatPaginator } from '@angular/material';
+import { AdminService } from '../providers/admin.service';
+import { totalmem } from 'os';
 
 @Component({
   selector: 'app-admin',
@@ -13,23 +16,32 @@ import { Transaction } from '../transaction';
 export class AdminComponent implements OnInit {
 
   price: string;
-  displayedColumns: Array<string> = [
+  transactionColumns: Array<string> = [
     "time", "name", "description", "detail", 
     "price", "status", "acknowledge", "ordered", "confirm"
   ];
+  accountsColumns: Array<string> = [
+    "email", "balance", "name"
+  ]
+
+  @ViewChild("transactionPaginator") transactionPaginator: MatPaginator;
+  @ViewChild("accountPaginator") accountPaginator: MatPaginator;
 
   constructor(
     public transactionService: TransactionService,
     public stateService: StateService,
     public authService: AuthService,
     public router: Router,
+    public adminService: AdminService
   ) { }
 
   ngOnInit() {
-  }
-
-  backClick(){
-    this.router.navigate(["vote"]);
+    if(this.transactionService.unprocessedTransactionsDS){
+      this.transactionService.unprocessedTransactionsDS.paginator = this.transactionPaginator;
+    }
+    if(this.adminService.accountsDS){
+      this.adminService.accountsDS.paginator = this.accountPaginator;
+    }
   }
 
   confirmTransaction(t: Transaction){
@@ -62,6 +74,16 @@ export class AdminComponent implements OnInit {
       ackedBy: this.authService.getUsername()
     }
     this.transactionService.updateTransaction(t, data);
+  }
+
+  getTotalBalance(){
+    if(this.adminService.accounts){
+      return this.adminService.accounts.map(account => account.balance).reduce((total, balance) => total + balance, 0);
+    }
+    else{
+      return 0;
+    }
+    
   }
 
 }

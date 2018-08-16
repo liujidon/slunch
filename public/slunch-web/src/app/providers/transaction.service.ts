@@ -54,10 +54,28 @@ export class TransactionService {
     let orders:Array<string> = [];
     this.myTransactions.filter(t=>t.description == restaurant).forEach(t=>{
       if(orders.indexOf(t.detail) === -1){
-        orders.push(t.detail);
+        orders.push(t.detail.toLowerCase());
       }
     });
-    return orders;
+    return orders.slice(0,3);
+  }
+
+  getPopularOrders(restaurant:string):Array<string>{
+    let d:any = {};
+    this.allTransactions.filter(t=>t.description == restaurant).forEach(t=>{
+      if(d[t.detail.toLowerCase()]){
+        d[t.detail.toLowerCase()] = d[t.detail.toLowerCase()] + 1
+      }
+      else{
+        d[t.detail.toLowerCase()] = 1
+      }
+    });
+    
+    let orders:Array<any> = Object.keys(d).map(key=>{
+      return {"name":key, "n":d[key]}
+    }).sort((a,b)=>a.n>=b.n?-1:1);
+
+    return orders.map(x=>x.name).slice(0,3);
   }
 
 

@@ -1,10 +1,9 @@
 <app-header></app-header>
-<mat-card style="margin:3em">
 
+<mat-card style="margin:3em">
     <mat-card-title>
         Unprocessed Transactions
     </mat-card-title>
-
     <mat-card-content>
         <mat-table [dataSource]="transactionService.unprocessedTransactionsDS">
             <ng-container matColumnDef="time">
@@ -61,17 +60,54 @@
             <ng-container matColumnDef="confirm">
                 <mat-header-cell *matHeaderCellDef>Confirm</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button *ngIf="(o.isDeposit && o.status == 'ack') || (!o.isDeposit && o.status == 'ordered')" mat-raised-button color="warn" (click)="confirmTransaction(o)">Confirm</button>
+                    <button *ngIf="(o.isDeposit && o.status == 'ack') || (!o.isDeposit && o.status == 'ordered')" mat-raised-button color="warn"
+                        (click)="confirmTransaction(o)">Confirm</button>
                 </mat-cell>
             </ng-container>
 
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <mat-header-row *matHeaderRowDef="transactionColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: transactionColumns;"></mat-row>
 
         </mat-table>
-        <mat-paginator [pageSizeOptions]="[10, 20, 50]"></mat-paginator>
+        <mat-paginator #transactionPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
     </mat-card-content>
 
-    <button (click)="backClick()" mat-raised-button color="warn">Back</button>
+</mat-card>
+
+<mat-card style="margin:3em">
+    <mat-card-title>
+        Accounts
+    </mat-card-title>
+    <mat-card-content>
+        <mat-table [dataSource]="adminService.accountsDS">
+            <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+                <mat-cell *matCellDef="let o">{{o?.email}}</mat-cell>
+                <mat-footer-cell *matFooterCellDef>
+                    <strong>Total</strong>
+                </mat-footer-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="balance">
+                <mat-header-cell *matHeaderCellDef>Balance</mat-header-cell>
+                <mat-cell *matCellDef="let o">{{o?.balance | currency}}</mat-cell>
+                <mat-footer-cell *matFooterCellDef>
+                    <strong>{{getTotalBalance() | currency}}</strong>
+                </mat-footer-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                <mat-cell *matCellDef="let o">{{o?.firstname}} {{o?.lastname}}</mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="accountsColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: accountsColumns;"></mat-row>
+            <mat-footer-row *matFooterRowDef="accountsColumns"></mat-footer-row>
+
+        </mat-table>
+        <mat-paginator #accountPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+    </mat-card-content>
 
 </mat-card>

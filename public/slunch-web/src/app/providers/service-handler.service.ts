@@ -3,29 +3,22 @@ import { StateService } from './state.service';
 import { AuthService } from './auth.service';
 import { TransactionService } from './transaction.service';
 import { PollService } from './poll.service';
+import { AdminService } from './admin.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceHandlerService {
 
-  authService: AuthService;
-  stateService: StateService;
-  transactionService: TransactionService;
-  pollService: PollService;
   subscribed: boolean = false;
 
   constructor(
-    authService: AuthService,
-    stateService: StateService,
-    transactionService: TransactionService,
-    pollService: PollService
-  ) {
-    this.authService = authService;
-    this.stateService = stateService;
-    this.transactionService = transactionService;
-    this.pollService = pollService;
-  }
+    private authService: AuthService,
+    private stateService: StateService,
+    private transactionService: TransactionService,
+    private pollService: PollService,
+    private adminService: AdminService
+  ) { }
 
   subscribe(){
     this.subscribed = true;
@@ -33,6 +26,7 @@ export class ServiceHandlerService {
     this.stateService.subscribe();
     this.transactionService.subscribe();
     this.pollService.subscribe();
+    this.adminService.subscribe();
   }
 
   unsubscribe(){
@@ -41,6 +35,7 @@ export class ServiceHandlerService {
     this.stateService.unsubscribe();
     this.transactionService.unsubscribe();
     this.pollService.unsubscribe();
+    this.adminService.unsubscribe();
   }
 
 }

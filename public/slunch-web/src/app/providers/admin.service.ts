@@ -4,6 +4,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { AccountFace } from '../interfaces';
 import { Subscription } from '../../../node_modules/rxjs';
 import { environment } from '../../environments/environment';
+import { MatTableDataSource, MatTab } from '../../../node_modules/@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ import { environment } from '../../environments/environment';
 export class AdminService {
 
   accounts: Array<AccountFace>;
+  accountsDS: MatTableDataSource<AccountFace>;
   accountsSubscription: Subscription;
 
   constructor(public authService: AuthService, public db:AngularFirestore) { }
@@ -19,6 +21,7 @@ export class AdminService {
     console.log("AdminService accountSubscription subscribing");
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").valueChanges().subscribe(accounts => {
       this.accounts = accounts;
+      this.accountsDS = new MatTableDataSource(accounts);
     });
   }
 

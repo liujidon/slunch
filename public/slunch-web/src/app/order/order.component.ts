@@ -23,6 +23,7 @@ export class OrderComponent implements OnInit {
   isRestaurantChosen: boolean;
   isOrderSent: boolean;
   recentOrders: Array<string>;
+  popularOrders: Array<string>;
   @ViewChild("stepper") stepper: MatStepper;
 
   constructor(
@@ -35,6 +36,7 @@ export class OrderComponent implements OnInit {
     this.isRestaurantChosen = false;
     this.isOrderSent = false;
     this.recentOrders = [];
+    this.popularOrders = [];
   }
 
   ngOnInit() {
@@ -47,6 +49,7 @@ export class OrderComponent implements OnInit {
     this.chosenOption = option;
     this.isRestaurantChosen = true;
     this.recentOrders = this.transactionService.getRecentOrders(this.chosenOption.name);
+    this.popularOrders = this.transactionService.getPopularOrders(this.chosenOption.name);
     stepper.next();
   }
 
