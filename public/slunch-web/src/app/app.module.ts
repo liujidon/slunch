@@ -60,11 +60,12 @@ import { VotePageComponent } from './vote-page/vote-page.component';
 import { OrderComponent } from './order/order.component';
 import { PollCreateComponent } from './poll-create/poll-create.component';
 import { HeaderComponent } from './header/header.component';
-import { UnprocessedComponent } from './unprocessed/unprocessed.component';
 import { AccountComponent } from './account/account.component';
 import { HeaderPlainComponent } from './header-plain/header-plain.component';
 import { PollService } from './providers/poll.service';
 import { ServiceHandlerService } from './providers/service-handler.service';
+import { AdminComponent } from './admin/admin.component';
+import { AdminService } from './providers/admin.service';
 
 @NgModule({
   exports: [
@@ -117,9 +118,9 @@ export class MaterialModule {}
     OrderComponent,
     PollCreateComponent,
     HeaderComponent,
-    UnprocessedComponent,
     AccountComponent,
-    HeaderPlainComponent
+    HeaderPlainComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -138,7 +139,8 @@ export class MaterialModule {}
     StateService,
     TransactionService,
     PollService,
-    ServiceHandlerService
+    ServiceHandlerService,
+    AdminService
   ],
   bootstrap: [AppComponent]
 })

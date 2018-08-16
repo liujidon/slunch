@@ -1,23 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { TransactionService } from '../providers/transaction.service';
-import { Transaction } from '../transaction';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Router } from '../../../node_modules/@angular/router';
 import { StateService } from '../providers/state.service';
 import { AuthService } from '../providers/auth.service';
+import { Router } from '@angular/router';
+import { Transaction } from '../transaction';
 
 @Component({
-  selector: 'app-unprocessed',
-  templateUrl: './unprocessed.component.html',
-  styleUrls: ['./unprocessed.component.css']
+  selector: 'app-admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.css']
 })
-export class UnprocessedComponent implements OnInit {
+export class AdminComponent implements OnInit {
 
-  transactionService: TransactionService;
-  stateService: StateService;
-  authService: AuthService;
-  router: Router;
-  db: AngularFirestore;
   price: string;
   displayedColumns: Array<string> = [
     "time", "name", "description", "detail", 
@@ -25,21 +19,13 @@ export class UnprocessedComponent implements OnInit {
   ];
 
   constructor(
-    transactionService: TransactionService,
-    stateService: StateService,
-    authService: AuthService,
-    db: AngularFirestore,
-    router: Router
-  ) {
-    this.transactionService = transactionService;
-    this.stateService = stateService;
-    this.authService = authService;
-    this.router = router;
-    this.db = db;
-  }
+    public transactionService: TransactionService,
+    public stateService: StateService,
+    public authService: AuthService,
+    public router: Router,
+  ) { }
 
   ngOnInit() {
-
   }
 
   backClick(){
