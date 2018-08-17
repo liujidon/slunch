@@ -16,7 +16,6 @@ export class HeaderComponent implements OnInit {
 
   state: StateFace;
   isOrdering: boolean;
-  @Input() newPollToggled: boolean;
   username: string;
 
   constructor(

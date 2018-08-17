@@ -1,0 +1,7 @@
+.option:hover {
+    opacity: 0.5;
+}
+
+.option:active {
+    opacity: 1;
+}
