@@ -12,13 +12,11 @@ export class StateService {
   db: AngularFirestore;
   state: StateFace;
   isOrdering: boolean;
-  newPollToggled: boolean;
 
   private stateSubscription: Subscription;
 
   constructor(db: AngularFirestore) {
     this.db = db;
-    this.newPollToggled = false;
   }
 
   subscribe(){

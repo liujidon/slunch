@@ -1,19 +1,9 @@
-
-<app-header></app-header>
-<div *ngIf="!stateService.newPollToggled">
-  
-  <div *ngIf="stateService.isOrdering">
-    <app-order></app-order>
-  </div>
-  
-  <div *ngIf="!stateService.isOrdering">
-    <app-poll></app-poll>
-  </div>
-
+<app-header>
+</app-header>
+<div *ngIf="stateService.isOrdering">
+  <app-order></app-order>
 </div>
 
-<div *ngIf="stateService.newPollToggled">
-    <div>
-        <app-poll-create></app-poll-create>
-    </div>
+<div *ngIf="!stateService.isOrdering">
+  <app-poll></app-poll>
 </div>
