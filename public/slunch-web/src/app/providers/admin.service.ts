@@ -10,7 +10,7 @@ import { MatTableDataSource, MatTab } from '@angular/material';
 })
 export class AdminService {
 
-  accounts: Array<AccountFace>;
+  accounts: Array<AccountFace> = [];
   accountsDS: MatTableDataSource<AccountFace>;
   accountsSubscription: Subscription;
 

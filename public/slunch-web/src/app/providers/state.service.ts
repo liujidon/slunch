@@ -35,7 +35,7 @@ export class StateService {
   }
   
   setState(data){
-    this.db.doc<StateFace>(environment.stateRef).set(data);
+    this.db.doc<StateFace>(environment.stateRef).update(data);
   }
 
 

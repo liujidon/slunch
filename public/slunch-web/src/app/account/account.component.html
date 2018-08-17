@@ -12,86 +12,90 @@
           {{authService.account?.balance | currency}}
         </h2>
       </div>
-      <div fxLayout="row" fxLayoutAlign=" center">
-        <div fxFlex="22">
-          <mat-form-field>
-            <input matInput [(ngModel)]="addAmount" placeholder="Add money">
-          </mat-form-field>
-        </div>
-        <div fxFlex="10">
-          <button mat-raised-button color="warn" (click)="addMoney()">Confirm</button>
-        </div>
+      <div>
+        <table>
+          <tr>
+            <td style="padding:5px">
+              <mat-form-field>
+                <input matInput [(ngModel)]="addAmount" placeholder="Add money">
+              </mat-form-field>
+            </td>
+            <td style="padding:5px">
+              <button mat-raised-button color="warn" (click)="addMoney()">Confirm</button>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
 
   </mat-card-content>
-  </mat-card>
+</mat-card>
 
 
-  <mat-card style="margin: 3em">
+<mat-card style="margin: 3em">
 
-    <mat-card-title>
-      Transactions
-    </mat-card-title>
-    <mat-card-content>
+  <mat-card-title>
+    Transactions
+  </mat-card-title>
+  <mat-card-content>
 
-      <mat-table [dataSource]="transactionService.myTransactionsDS">
-        <ng-container matColumnDef="time">
-          <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
-          <mat-cell *matCellDef="let o">{{o?.time | date: 'short'}}</mat-cell>
-        </ng-container>
+    <mat-table [dataSource]="transactionService.myTransactionsDS">
+      <ng-container matColumnDef="time">
+        <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
+        <mat-cell *matCellDef="let o">{{o?.time | date: 'short'}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="description">
-          <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-          <mat-cell *matCellDef="let o">{{o?.description}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+        <mat-cell *matCellDef="let o">{{o?.description}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="detail">
-          <mat-header-cell *matHeaderCellDef>Detail</mat-header-cell>
-          <mat-cell *matCellDef="let o">{{o?.detail}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="detail">
+        <mat-header-cell *matHeaderCellDef>Detail</mat-header-cell>
+        <mat-cell *matCellDef="let o">{{o?.detail}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="debit">
-          <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
-          <mat-cell *matCellDef="let o">
-            <span *ngIf="o.price >= 0" class="red">
-              {{o.price | currency}}
-            </span>
-          </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="debit">
+        <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
+        <mat-cell *matCellDef="let o">
+          <span *ngIf="o.price >= 0" class="red">
+            {{o.price | currency}}
+          </span>
+        </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="credit">
-          <mat-header-cell *matHeaderCellDef>Credit</mat-header-cell>
-          <mat-cell *matCellDef="let o">
-            <span *ngIf="o.price < 0" class="green">
-              {{(-1*o.price) | currency}}
-            </span>
-          </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="credit">
+        <mat-header-cell *matHeaderCellDef>Credit</mat-header-cell>
+        <mat-cell *matCellDef="let o">
+          <span *ngIf="o.price < 0" class="green">
+            {{(-1*o.price) | currency}}
+          </span>
+        </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
-          <mat-cell *matCellDef="let o">
-              <mat-icon class="clickable" matTooltip="Complete: {{o?.completedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
-              <mat-icon class="clickable" matTooltip="Ordered: {{o?.orderedBy}}" *ngIf="o.status == 'ordered'" style="color: green">done</mat-icon>
-              <mat-icon class="clickable" matTooltip="Received: {{o?.ackedBy}}" *ngIf="o.status == 'ack'" style="color: blue">done</mat-icon>
-              <mat-icon class="clickable" matTooltip="Pending" *ngIf="o.status == 'new'" style="color: red">warning</mat-icon>
-          </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+        <mat-cell *matCellDef="let o">
+          <mat-icon class="clickable" matTooltip="Complete: {{o?.completedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
+          <mat-icon class="clickable" matTooltip="Ordered: {{o?.orderedBy}}" *ngIf="o.status == 'ordered'" style="color: green">done</mat-icon>
+          <mat-icon class="clickable" matTooltip="Received: {{o?.ackedBy}}" *ngIf="o.status == 'ack'" style="color: blue">done</mat-icon>
+          <mat-icon class="clickable" matTooltip="Pending" *ngIf="o.status == 'new'" style="color: red">warning</mat-icon>
+        </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="cancel">
-          <mat-header-cell *matHeaderCellDef>Cancel</mat-header-cell>
-          <mat-cell *matCellDef="let o">
-            <button *ngIf="o.status == 'new' || o.status == 'ack'" mat-raised-button color="warn" (click)="transactionService.cancelTransaction(o)">Cancel</button>
-          </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="cancel">
+        <mat-header-cell *matHeaderCellDef>Cancel</mat-header-cell>
+        <mat-cell *matCellDef="let o">
+          <button *ngIf="o.status == 'new' || o.status == 'ack'" mat-raised-button color="warn" (click)="transactionService.cancelTransaction(o)">Cancel</button>
+        </mat-cell>
+      </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-      </mat-table>
-      <mat-paginator [pageSizeOptions]="[10, 20, 50]"></mat-paginator>
-    </mat-card-content>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]"></mat-paginator>
+  </mat-card-content>
 
 
 </mat-card>

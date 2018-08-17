@@ -1,9 +1,31 @@
-<app-header>
-</app-header>
+<app-header></app-header>
+
 <div *ngIf="stateService.isOrdering">
   <app-order></app-order>
 </div>
-
 <div *ngIf="!stateService.isOrdering">
   <app-poll></app-poll>
+</div>
+
+<div *ngIf="sentSuggestions < 1" style="margin:3em">
+  <table>
+    <tr>
+      <td style="padding:5px">
+        <mat-form-field appearance="outline" matTooltip="Will be used in future considerations">
+          <mat-label>New Suggestion?</mat-label>
+          <input matInput placeholder="Enter restaurant" [(ngModel)]="newOption">
+        </mat-form-field>
+      </td>
+      <td style="padding:5px">
+        <button mat-raised-button color="warn" [disabled]="newOption.length <= 0" (click)="sendSuggestion()">
+          Send
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>
+<div *ngIf="sentSuggestions >= 1" style="margin:3em">
+  <h3>
+    Thanks for the suggestion!
+  </h3>
 </div>

@@ -6,8 +6,8 @@
       <mat-step label="Choose your restaurant">
 
         <div fxLayout="row wrap" fxLayoutAlign=" center">
-          <div class="option" style="margin:20px" *ngFor="let option of pollService.getAdminSelectedOptions()">
-            <img style="max-width: 150px" class="clickable" src="{{option.iconUrl}}" (click)="clickRestaurant(option, stepper)">
+          <div class="option" style="margin:20px" *ngFor="let o of pollService.getAdminSelectedOptions()">
+            <img style="max-width: 150px" [matTooltip]="o?.name" class="clickable" src="{{o?.iconUrl}}" (click)="clickRestaurant(o, stepper)">
           </div>
         </div>
 

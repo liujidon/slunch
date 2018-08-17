@@ -4,24 +4,21 @@ import { Poll } from '../poll';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from './auth.service';
+import { MatTableDataSource } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PollService {
-  db: AngularFirestore;
-  authService: AuthService;
-  private pollCollection;
-  pollOptions$: Observable<PollOption[]>;
+
+  pollOptions: Array<PollOption> = [];
+  pollOptionsDS: MatTableDataSource<PollOption>;
+  pollOptionsSubscription: Subscription;
 
   latestPollSubscription: Subscription;
   latestPoll: Poll;
 
-  constructor(db: AngularFirestore, authService: AuthService) {
-      this.db = db;
-      this.authService = authService;
-      this.pollCollection = db.collection<Poll>('poll');
-      this.pollOptions$ = db.collection<PollOption>('poll-options').valueChanges();
+  constructor(public db: AngularFirestore, public authService: AuthService) {
   }
 
   subscribe(){
@@ -30,12 +27,28 @@ export class PollService {
       this.latestPoll = pollArray[0];
     });
 
+    console.log("PollService pollOptionsSubscription subscribing");
+    this.pollOptionsSubscription = this.db.collection<PollOption>('poll-options').snapshotChanges().subscribe(docChangeActions=>{
+      this.pollOptions = docChangeActions.map(docChangeAction=>{
+        let doc:any = docChangeAction.payload.doc;
+        let po = doc.data();
+        po.id = doc.id;
+        return po;
+      }, PollOption);
+      this.pollOptionsDS = new MatTableDataSource(this.pollOptions.sort((a, b) => a.name < b.name ? -1 : 1));
+    });
+
   }
 
   unsubscribe(){
     if(this.latestPollSubscription){
       console.log("PollService latestPollSubscription unsubscribing");
       this.latestPollSubscription.unsubscribe();
+    }
+
+    if(this.pollOptionsSubscription){
+      console.log("PollService pollOptionsSubscription unsubscribing");
+      this.pollOptionsSubscription.unsubscribe();
     }
 
   }
@@ -53,7 +66,28 @@ export class PollService {
   updatePoll(poll:Poll) {
     if(poll.id == null)
       poll.id = this.db.createId();
-    this.pollCollection.doc(poll.id).set(JSON.parse(JSON.stringify(poll)));
+      this.db.collection<Poll>('poll').doc(poll.id).set(JSON.parse(JSON.stringify(poll)));
+  }
+
+
+  updatePollOption(po:PollOption){
+    this.db.doc("poll-options/"+po.id).update(po);
+  }
+
+  writePollOption(name: string){
+    let po: any;
+    let id: string = this.db.createId();
+    po = {
+      name:name,
+      iconUrl:"../../assets/default.png",
+      menuUrl:"http://www.google.com",
+      id:id
+    }
+    this.db.collection<PollOption>("poll-options").doc(id).set(JSON.parse(JSON.stringify(po)));
+  }
+
+  deletePollOption(po:PollOption){
+    this.db.doc("poll-options/"+po.id).delete();
   }
 
 }

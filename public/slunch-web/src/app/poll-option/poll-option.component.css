@@ -1,7 +1,4 @@
+
 .option:hover {
     background-color: lightblue;
-}
-
-.option:active {
-    background-color: rgb(138, 182, 197);
-}
+  }
