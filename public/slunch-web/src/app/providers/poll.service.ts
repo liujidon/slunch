@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { PollOption } from '../poll-option';
 import { Poll } from '../poll';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable, Subscription } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MatTableDataSource } from '@angular/material';
+import { Subscription } from 'rxjs'
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -79,7 +80,7 @@ export class PollService {
     let id: string = this.db.createId();
     po = {
       name:name,
-      iconUrl:"../../assets/default.png",
+      iconUrl: environment.defaultIconUrl,
       menuUrl:"http://www.google.com",
       id:id
     }

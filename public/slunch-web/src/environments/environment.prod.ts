@@ -9,5 +9,6 @@ export const environment = {
     messagingSenderId: "363377262427"
   },
   adminRef: "admin/awZQPDtQrd1P3AdCw0It",
-  stateRef: "state/TMMQosAB4vACxDI9VUFX"
+  stateRef: "state/TMMQosAB4vACxDI9VUFX",
+  defaultIconUrl: ""
 };

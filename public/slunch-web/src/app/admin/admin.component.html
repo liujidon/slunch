@@ -221,21 +221,25 @@
             <ng-container matColumnDef="iconUrl">
                 <mat-header-cell *matHeaderCellDef>Icon URL</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <input [value]="o?.iconUrl" [(ngModel)]="o.iconUrl">
+                    <mat-form-field style="width:100px" appearance="outline">
+                        <input matInput style="width: 100px" [value]="o?.iconUrl" [(ngModel)]="o.iconUrl">
+                    </mat-form-field>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="menuUrl">
                 <mat-header-cell *matHeaderCellDef>Menu URL</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <input [value]="o?.menuUrl" [(ngModel)]="o.menuUrl">
+                    <mat-form-field style="width: 100px" appearance="outline">
+                        <input matInput style="width: 100px" [value]="o?.menuUrl" [(ngModel)]="o.menuUrl">
+                    </mat-form-field>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="refresh">
                 <mat-header-cell *matHeaderCellDef>Refresh</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button mat-raised-button (click)="updatePollOption(o)">
+                    <button color="primary" mat-raised-button (click)="updatePollOption(o)">
                         Refresh
                     </button>
                 </mat-cell>
@@ -244,7 +248,7 @@
             <ng-container matColumnDef="delete">
                 <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button mat-raised-button color="warn" (click)="deletePollOption(o)">
+                    <button mat-raised-button (click)="deletePollOption(o)">
                         Delete
                     </button>
                 </mat-cell>

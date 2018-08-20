@@ -21,7 +21,7 @@
               </mat-form-field>
             </td>
             <td style="padding:5px">
-              <button mat-raised-button color="warn" (click)="addMoney()">Confirm</button>
+              <button [disabled]="!(addAmount > 0)" mat-raised-button color="warn" (click)="addMoney()">Confirm</button>
             </td>
           </tr>
         </table>
