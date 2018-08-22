@@ -15,10 +15,23 @@ before_script:
   - npm install -g firebase-tools
   - npm install -g @angular/cli
 
-script:
-  - ng build --prod --aot
+deploy:
+  script:
+    - ng build --prod --aot
+  after_success:
+    - cd ../..
+    - firebase use prod
+    - firebase deploy --token $FIREBASE_TOKEN
+  on:
+    branch: master
 
-after_success:
-  - cd ../..
-  - firebase use prod
-  - firebase deploy --token $FIREBASE_TOKEN
+deploy:
+  script:
+    - ng build --aot
+  after_success:
+    - cd ../..
+    - firebase use dev
+    - firebase deploy --token $FIREBASE_TOKEN_DEV
+  on:
+    branch: dev
+  

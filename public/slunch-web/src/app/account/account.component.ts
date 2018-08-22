@@ -15,7 +15,7 @@ export class AccountComponent implements OnInit {
   db: AngularFirestore;
   
   displayedColumns: Array<string> = ["time", "description", "detail", "debit", "credit", "status", "cancel"];
-  addAmount: string;
+  addAmount: number;
 
   constructor(db: AngularFirestore, authService: AuthService, transactionService: TransactionService) {
     this.authService = authService;
@@ -29,8 +29,8 @@ export class AccountComponent implements OnInit {
   
   
   addMoney(){
-    this.transactionService.writeTransaction(this.authService.getUid(), "Deposit", "", parseFloat(this.addAmount), true);
-    this.addAmount = "";
+    this.transactionService.writeTransaction(this.authService.getUid(), "Deposit", "", this.addAmount, true);
+    this.addAmount = 0;
   }
 
 }
