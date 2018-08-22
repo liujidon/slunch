@@ -45,10 +45,10 @@ export class AdminComponent implements OnInit {
     public adminService: AdminService,
     public pollService: PollService
   ) {
-    this.router.onSameUrlNavigation = "ignore";
   }
 
   ngOnInit() {
+
     if (this.transactionService.unprocessedTransactionsDS) {
       this.transactionService.unprocessedTransactionsDS.paginator = this.unprocessedPaginator;
     }
@@ -62,12 +62,8 @@ export class AdminComponent implements OnInit {
     if (this.pollService.pollOptionsDS) {
       this.pollService.pollOptionsDS.paginator = this.optionPaginator;
     }
-  }
 
-  ngOnChanges(){
-    console.log("Change happened");
   }
-
 
   confirmTransaction(t: Transaction) {
     let p: any = t.price;
@@ -103,7 +99,11 @@ export class AdminComponent implements OnInit {
 
   getTotalDebit() {
     if (this.transactionService.todayTransactions) {
-      return this.transactionService.todayTransactions.filter(t => t.price >= 0).map(t => t.price).reduce((acc, v) => acc + v, 0);
+      return this.transactionService.todayTransactions.filter(t => t.price >= 0).map(t => {
+        let v: any = t.price;
+        if(typeof(v) == "string") return 0;
+        else return v;
+      }).reduce((acc, v) => acc + v, 0);
     }
     else {
       return 0;
@@ -112,7 +112,11 @@ export class AdminComponent implements OnInit {
 
   getTotalCredit() {
     if (this.transactionService.todayTransactions) {
-      return this.transactionService.todayTransactions.filter(t => t.price < 0).map(t => t.price).reduce((acc, v) => acc + v, 0);
+      return this.transactionService.todayTransactions.filter(t => t.price < 0).map(t => {
+        let v: any = t.price;
+        if(typeof(v) == "string") return 0;
+        else return v;
+      }).reduce((acc, v) => acc + v, 0);
     }
     else {
       return 0;
@@ -121,7 +125,11 @@ export class AdminComponent implements OnInit {
 
   getTodayPosition() {
     if (this.transactionService.todayTransactions) {
-      return -1 * this.transactionService.todayTransactions.map(t => t.price).reduce((acc, v) => acc + v, 0);
+      return -1 * this.transactionService.todayTransactions.map(t => {
+        let v: any = t.price;
+        if(typeof(v) == "string") return 0;
+        else return v;
+      }).reduce((acc, v) => acc + v, 0);
     }
     else {
       return 0;

@@ -30,9 +30,9 @@
             </a>
           </div>
 
-          <div style="margin:30px">
-            <mat-form-field>
-              <textarea matInput placeholder="Order:" [(ngModel)]="order" required [matAutocomplete]="auto"></textarea>
+          <div style="margin:30px; width: 100%">
+            <mat-form-field style="width: 100%">
+              <textarea #orderField matInput placeholder="Order:" [(ngModel)]="order" required [matAutocomplete]="auto"></textarea>
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-optgroup [label]="'Recent Orders'">
                   <mat-option *ngFor="let o of recentOrders" [value]="o">

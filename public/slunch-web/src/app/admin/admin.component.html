@@ -1,10 +1,12 @@
 <app-header></app-header>
 
-<mat-card style="margin:3em" *ngIf="transactionService.unprocessedTransactions.length > 0">
-    <mat-card-title>
-        Unprocessed Transactions
-    </mat-card-title>
-    <mat-card-content>
+<mat-accordion multi="true">
+
+    <mat-expansion-panel style="margin:3em" [disabled]="transactionService.unprocessedTransactions.length == 0" [expanded]="transactionService.unprocessedTransactions.length > 0">
+        <mat-expansion-panel-header>
+            <mat-panel-title>Unprocessed Transactions</mat-panel-title>
+        </mat-expansion-panel-header>
+
         <mat-table [dataSource]="transactionService.unprocessedTransactionsDS">
             <ng-container matColumnDef="time">
                 <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
@@ -71,26 +73,18 @@
         </mat-table>
         <mat-paginator #unprocessedPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
 
-    </mat-card-content>
-
-</mat-card>
+    </mat-expansion-panel>
 
 
-
-<mat-card style="margin:3em">
-    <mat-card-title>
-        Today's Transactions
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-        <div style="padding:10px">
-            <h3>
-                Position:
+    <mat-expansion-panel style="margin:3em">
+        <mat-expansion-panel-header>
+            <mat-panel-title>Today's Transactions</mat-panel-title>
+            <mat-panel-description>
                 <span [ngClass]="getTodayPosition()>=0?'green':'red'">
                     {{getTodayPosition() | currency}}
                 </span>
-            </h3>
-        </div>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
 
         <div *ngIf="transactionService.todayTransactions.length > 0">
             <mat-table #todaySort="matSort" [dataSource]="transactionService.todayTransactionsDS" matSort>
@@ -152,17 +146,20 @@
             <mat-paginator #todayPaginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons></mat-paginator>
         </div>
 
-    </mat-card-content>
-
-</mat-card>
+    </mat-expansion-panel>
 
 
 
-<mat-card style="margin:3em" *ngIf="adminService.accounts.length > 0">
-    <mat-card-title>
-        Accounts
-    </mat-card-title>
-    <mat-card-content>
+    <mat-expansion-panel style="margin:3em">
+        <mat-expansion-panel-header>
+            <mat-panel-title>User Accounts</mat-panel-title>
+            <mat-panel-description>
+                <span [ngClass]="getTodayPosition()>=0?'green':'red'">
+                    {{getTotalBalance() | currency}}
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
         <mat-table [dataSource]="adminService.accountsDS">
             <ng-container matColumnDef="email">
                 <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
@@ -192,16 +189,14 @@
 
         </mat-table>
         <mat-paginator #accountPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
-    </mat-card-content>
 
-</mat-card>
+    </mat-expansion-panel>
 
 
-<mat-card style="margin:3em">
-    <mat-card-title>
-        Options
-    </mat-card-title>
-    <mat-card-content>
+    <mat-expansion-panel style="margin:3em">
+        <mat-expansion-panel-header>
+            <mat-panel-title>Food Options</mat-panel-title>
+        </mat-expansion-panel-header>
 
         <mat-table [dataSource]="pollService.pollOptionsDS">
             <ng-container matColumnDef="name">
@@ -259,6 +254,7 @@
 
         </mat-table>
         <mat-paginator #optionPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
-    </mat-card-content>
 
-</mat-card>
+    </mat-expansion-panel>
+
+</mat-accordion>
