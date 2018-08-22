@@ -4,14 +4,13 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Transaction } from '../transaction';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material';
+import { GridOptions, ColumnApi, GridApi, ColDef } from 'ag-grid';
+import { FormatterService } from './formatter.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionService {
-
-  authService: AuthService;
-  db: AngularFirestore;
 
   transactionsSubscription: Subscription;
   allTransactions: Array<Transaction> = [];
@@ -25,10 +24,90 @@ export class TransactionService {
 
   numUnprocessed: number;
 
-  constructor(authService: AuthService, db: AngularFirestore) {
-    this.authService = authService;
-    this.db = db;
+  public unprocessedGridApi: GridApi;
+  public unprocessedGridColumnApi: ColumnApi;
+  public unprocessedGridOptions: GridOptions;
+  public unprocessedColumnDefs: ColDef[];
 
+
+  constructor(
+    public authService: AuthService,
+    public db: AngularFirestore,
+    public formatterService: FormatterService
+  ) {
+
+    this.unprocessedColumnDefs = [
+      { headerName: "Time", field: "time" },
+      { headerName: "Name", field: "displayName" },
+      { headerName: "Description", field: "description" },
+      { headerName: "Detail", field: "detail" },
+      { headerName: "Price", field: "price", editable: true, valueFormatter: formatterService.priceFormatter },
+      {
+        headerName: "Status", field: "status", tooltip: (params => {
+          let o = params.data;
+          if (params.value == "new") return "Pending";
+          else if (params.value == "ack") return "Acked by: " + o.ackedBy;
+          else if (params.value == "ordered") return "Ordered by: " + o.orderedBy;
+          else if (params.value == "done") return "Completed by: " + o.completedBy;
+        })
+      },
+      {
+        headerName: "Acknowledge", onCellClicked: (event) => {
+          let t = event.data;
+          let data = {
+            status: "ack",
+            ackedBy: this.authService.getUsername()
+          }
+          this.updateTransaction(t, data);
+        }
+      },
+      {
+        headerName: "Ordered", onCellClicked: (event) => {
+          let t = event.data;
+          let data = {
+            status: "ordered",
+            orderedBy: this.authService.getUsername()
+          }
+          this.updateTransaction(t, data);
+        }
+      },
+      {
+        headerName: "Confirm", onCellClicked: (event) => {
+          let t = event.data;
+          let p: any = t.price;
+          if (t.isDeposit) {
+            p = -parseFloat(p);
+          }
+          else {
+            p = parseFloat(p);
+          }
+          let data = {
+            status: "done",
+            price: p,
+            completedBy: this.authService.getUsername()
+          };
+          this.updateTransaction(t, data);
+        }
+      }
+    ]
+
+    this.unprocessedGridOptions = {
+      getRowNodeId: (data) => data.time
+    }
+
+  }
+
+  unprocessedOnGridReady(params) {
+    this.unprocessedGridApi = params.api;
+    this.unprocessedGridColumnApi = params.columnApi;
+    this.unprocessedGridUpdate();
+  }
+
+  unprocessedGridUpdate() {
+    if (this.unprocessedGridApi) {
+      this.unprocessedGridApi.setRowData(this.unprocessedTransactions);
+      this.unprocessedGridApi.sizeColumnsToFit();
+    }
   }
 
   subscribe() {
@@ -36,7 +115,10 @@ export class TransactionService {
     console.log("TransactionService transactionsSubscription subscribing");
     this.transactionsSubscription = this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions => {
       this.allTransactions = transactions;
+
       this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
+      this.unprocessedGridUpdate();
+
       this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
       this.numUnprocessed = this.unprocessedTransactions.length;
 

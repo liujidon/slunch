@@ -68,6 +68,7 @@ import { ServiceHandlerService } from './providers/service-handler.service';
 import { AdminComponent } from './admin/admin.component';
 import { AdminService } from './providers/admin.service';
 import { SortPipe } from './pipes/sort.pipe';
+import { FormatterService } from './providers/formatter.service';
 
 @NgModule({
   exports: [
@@ -135,7 +136,7 @@ export class MaterialModule {}
     MaterialModule,
     FormsModule,
     FlexLayoutModule,
-    AgGridModule
+    AgGridModule.withComponents([])
   ],
   providers: [
     AuthService,
@@ -144,7 +145,8 @@ export class MaterialModule {}
     TransactionService,
     PollService,
     ServiceHandlerService,
-    AdminService
+    AdminService,
+    FormatterService
   ],
   bootstrap: [AppComponent]
 })
