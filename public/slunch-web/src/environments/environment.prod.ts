@@ -10,5 +10,5 @@ export const environment = {
   },
   adminRef: "admin/awZQPDtQrd1P3AdCw0It",
   stateRef: "state/TMMQosAB4vACxDI9VUFX",
-  defaultIconUrl: ""
+  defaultIconUrl: "http://www.tasteinsf.com/public/images/default-restaurant-thumbnail-250x244.png"
 };

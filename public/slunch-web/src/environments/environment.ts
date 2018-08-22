@@ -14,7 +14,7 @@ export const environment = {
   },
   adminRef: "admin/zVF84avWHGhKC0QBNiKL",
   stateRef: "state/FFv5YTIgUR0GwqvmkDgw",
-  defaultIconUrl: "https://firebasestorage.googleapis.com/v0/b/slunch-voter-dev.appspot.com/o/default.png?alt=media&token=3632302d-5701-423b-8f3c-ff3755fd2459"
+  defaultIconUrl: "http://www.tasteinsf.com/public/images/default-restaurant-thumbnail-250x244.png"
 };
 
 /*
