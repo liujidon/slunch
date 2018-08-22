@@ -41,7 +41,7 @@ export class TransactionService {
       { headerName: "Name", field: "displayName" },
       { headerName: "Description", field: "description" },
       { headerName: "Detail", field: "detail" },
-      { headerName: "Price", field: "price", editable: true, valueFormatter: formatterService.priceFormatter },
+      { headerName: "Price", field: "price", editable: true },
       {
         headerName: "Status", field: "status", tooltip: (params => {
           let o = params.data;
