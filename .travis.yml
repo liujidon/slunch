@@ -17,20 +17,20 @@ before_script:
 
 script:
   - |
-    if [ $TRAVIS_BRANCH == "master"]; then
+    if [ $TRAVIS_BRANCH == "master" ]; then
       ng build --prod --aot
     fi
-    if [ $TRAVIS_BRANCH == "dev"]; then
+    if [ $TRAVIS_BRANCH == "dev" ]; then
       ng build --aot
     fi
 after_success:
   - |
     cd ../..
-    if [ $TRAVIS_BRANCH == "master"]; then
+    if [ $TRAVIS_BRANCH == "master" ]; then
       firebase use prod
       firebase deploy --token $FIREBASE_TOKEN
     fi
-    if [ $TRAVIS_BRANCH == "dev"]; then
+    if [ $TRAVIS_BRANCH == "dev" ]; then
       firebase use dev
       firebase deploy --token $FIREBASE_TOKEN_DEV
     fi
