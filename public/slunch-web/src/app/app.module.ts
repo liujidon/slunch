@@ -68,7 +68,6 @@ import { ServiceHandlerService } from './providers/service-handler.service';
 import { AdminComponent } from './admin/admin.component';
 import { AdminService } from './providers/admin.service';
 import { SortPipe } from './pipes/sort.pipe';
-import { GridComponent } from './grid/grid.component';
 
 @NgModule({
   exports: [
@@ -107,8 +106,7 @@ import { GridComponent } from './grid/grid.component';
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-  ],
-  declarations: [GridComponent]
+  ]
 })
 export class MaterialModule {}
 
