@@ -30,6 +30,12 @@
             </a>
           </div>
 
+          <div style="margin:30px">
+            <button mat-raised-button [disabled]="order.length <= 0" color="warn" (click)="clickSendOrder(stepper)">
+              Send Order
+            </button>
+          </div>
+
           <div style="margin:30px; width: 100%">
             <mat-form-field style="width: 100%">
               <textarea #orderField matInput placeholder="Order:" [(ngModel)]="order" required [matAutocomplete]="auto"></textarea>
@@ -46,12 +52,6 @@
                 </mat-optgroup>
               </mat-autocomplete>
             </mat-form-field>
-          </div>
-
-          <div style="margin:30px">
-            <button mat-raised-button [disabled]="order.length <= 0" color="warn" (click)="clickSendOrder(stepper)">
-              Send
-            </button>
           </div>
 
 
