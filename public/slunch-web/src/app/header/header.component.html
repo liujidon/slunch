@@ -40,6 +40,11 @@
         <mat-slide-toggle disabled="{{pollService.getAdminSelectedOptions().length < 1}}" [(ngModel)]="stateService.isOrdering">Allow Orders</mat-slide-toggle>
       </span>
     </div>
+    <div>
+      <span mat-tab-link *ngIf="authService.isAdmin" (click)="togglePoll()">
+        <mat-slide-toggle  [(ngModel)]="pollService.allowPoll">Show Poll</mat-slide-toggle>
+      </span>
+    </div>
   </div>
 
 </nav>
