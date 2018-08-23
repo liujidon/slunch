@@ -49,9 +49,6 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.transactionService.unprocessedTransactionsDS) {
-      this.transactionService.unprocessedTransactionsDS.paginator = this.unprocessedPaginator;
-    }
     if (this.adminService.accountsDS) {
       this.adminService.accountsDS.paginator = this.accountPaginator;
     }
