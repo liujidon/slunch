@@ -65,37 +65,7 @@ export class AdminComponent implements OnInit {
 
   }
 
-  confirmTransaction(t: Transaction) {
-    let p: any = t.price;
-    if (t.isDeposit) {
-      p = -parseFloat(p);
-    }
-    else {
-      p = parseFloat(p);
-    }
-    let data = {
-      status: "done",
-      price: p,
-      completedBy: this.authService.getUsername()
-    };
-    this.transactionService.updateTransaction(t, data);
-  }
-
-  confirmOrdered(t: Transaction) {
-    let data = {
-      status: "ordered",
-      orderedBy: this.authService.getUsername()
-    }
-    this.transactionService.updateTransaction(t, data);
-  }
-
-  acknowledgeTransaction(t: Transaction) {
-    let data = {
-      status: "ack",
-      ackedBy: this.authService.getUsername()
-    }
-    this.transactionService.updateTransaction(t, data);
-  }
+  
 
   getTotalDebit() {
     if (this.transactionService.todayTransactions) {

@@ -4,8 +4,11 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Transaction } from '../transaction';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material';
-import { GridOptions, ColumnApi, GridApi, ColDef } from 'ag-grid';
+import { GridOptions } from 'ag-grid/main';
 import { FormatterService } from './formatter.service';
+import { DatePipe } from '@angular/common';
+import { GridButtonGroupComponent } from '../gridElements/grid-button-group/grid-button-group.component';
+import { GridStatusIconComponent } from '../gridElements/grid-status-icon/grid-status-icon.component';
 
 @Injectable({
   providedIn: 'root'
@@ -19,16 +22,11 @@ export class TransactionService {
   todayTransactions: Array<Transaction> = [];
 
   myTransactionsDS: MatTableDataSource<Transaction>;
-  unprocessedTransactionsDS: MatTableDataSource<Transaction>;
   todayTransactionsDS: MatTableDataSource<Transaction>;
 
   numUnprocessed: number;
 
-  public unprocessedGridApi: GridApi;
-  public unprocessedGridColumnApi: ColumnApi;
-  public unprocessedGridOptions: GridOptions;
-  public unprocessedColumnDefs: ColDef[];
-
+  public unprocessedGO: GridOptions;
 
   constructor(
     public authService: AuthService,
@@ -36,78 +34,43 @@ export class TransactionService {
     public formatterService: FormatterService
   ) {
 
-    this.unprocessedColumnDefs = [
-      { headerName: "Time", field: "time" },
-      { headerName: "Name", field: "displayName" },
-      { headerName: "Description", field: "description" },
-      { headerName: "Detail", field: "detail" },
-      { headerName: "Price", field: "price", editable: true },
-      {
-        headerName: "Status", field: "status", tooltip: (params => {
-          let o = params.data;
-          if (params.value == "new") return "Pending";
-          else if (params.value == "ack") return "Acked by: " + o.ackedBy;
-          else if (params.value == "ordered") return "Ordered by: " + o.orderedBy;
-          else if (params.value == "done") return "Completed by: " + o.completedBy;
-        })
+    this.unprocessedGO = {
+      
+      getRowNodeId: (data) => data.time,
+      onGridReady: (params) => {
+        this.unprocessedGO.api = params.api;
+        this.unprocessedGO.columnApi = params.columnApi;
+        this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
+        this.unprocessedGO.columnApi.autoSizeAllColumns();
       },
-      {
-        headerName: "Acknowledge", onCellClicked: (event) => {
-          let t = event.data;
-          let data = {
-            status: "ack",
-            ackedBy: this.authService.getUsername()
+      rowHeight: 60,
+      colWidth: 150,
+      columnDefs: [
+        { headerName: "Time", field: "time", 
+          valueFormatter:(params) => {
+            let pipe = new DatePipe("en-us");
+            return pipe.transform(params.data.time, "short");
           }
-          this.updateTransaction(t, data);
+        },
+        { headerName: "Name", field: "displayName" },
+        { headerName: "Description", field: "description" },
+        { headerName: "Price", field: "price", editable: true, },
+        {
+          headerName: "Status",
+          cellRendererFramework: GridStatusIconComponent,
+          suppressAutoSize: true,
+          width: 110
+        },
+        {
+          headerName: "Control",
+          cellRendererFramework: GridButtonGroupComponent,
+          cellRendererParams: {transactionService: this, authService: authService},
+          width: 280
         }
-      },
-      {
-        headerName: "Ordered", onCellClicked: (event) => {
-          let t = event.data;
-          let data = {
-            status: "ordered",
-            orderedBy: this.authService.getUsername()
-          }
-          this.updateTransaction(t, data);
-        }
-      },
-      {
-        headerName: "Confirm", onCellClicked: (event) => {
-          let t = event.data;
-          let p: any = t.price;
-          if (t.isDeposit) {
-            p = -parseFloat(p);
-          }
-          else {
-            p = parseFloat(p);
-          }
-          let data = {
-            status: "done",
-            price: p,
-            completedBy: this.authService.getUsername()
-          };
-          this.updateTransaction(t, data);
-        }
-      }
-    ]
+      ]
 
-    this.unprocessedGridOptions = {
-      getRowNodeId: (data) => data.time
     }
 
-  }
-
-  unprocessedOnGridReady(params) {
-    this.unprocessedGridApi = params.api;
-    this.unprocessedGridColumnApi = params.columnApi;
-    this.unprocessedGridUpdate();
-  }
-
-  unprocessedGridUpdate() {
-    if (this.unprocessedGridApi) {
-      this.unprocessedGridApi.setRowData(this.unprocessedTransactions);
-      this.unprocessedGridApi.sizeColumnsToFit();
-    }
   }
 
   subscribe() {
@@ -117,7 +80,9 @@ export class TransactionService {
       this.allTransactions = transactions;
 
       this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
-      this.unprocessedGridUpdate();
+      if(this.unprocessedGO.api){
+        this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
+      }
 
       this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
       this.numUnprocessed = this.unprocessedTransactions.length;
@@ -131,7 +96,6 @@ export class TransactionService {
         return new Date(transaction.time) >= today;
       });
 
-      this.unprocessedTransactionsDS = new MatTableDataSource(this.unprocessedTransactions.sort((a, b) => a.time >= b.time ? -1 : 1));
       this.myTransactionsDS = new MatTableDataSource(this.myTransactions.sort((a, b) => a.time >= b.time ? -1 : 1));
       this.todayTransactionsDS = new MatTableDataSource(this.todayTransactions.sort((a, b) => a.time >= b.time ? -1 : 1))
     });
@@ -149,8 +113,9 @@ export class TransactionService {
   getRecentOrders(restaurant: string): Array<string> {
     let orders: Array<string> = [];
     this.myTransactions.filter(t => t.description == restaurant).forEach(t => {
-      if (orders.indexOf(t.detail) === -1) {
-        orders.push(t.detail.toLowerCase());
+      let food = t.detail.toLowerCase();
+      if (orders.indexOf(food) === -1) {
+        orders.push(food);
       }
     });
     return orders.slice(0, 3);
@@ -171,7 +136,7 @@ export class TransactionService {
       return { "name": key, "n": d[key] }
     }).sort((a, b) => a.n >= b.n ? -1 : 1);
 
-    return orders.map(x => x.name).slice(0, 3);
+    return orders.map(x => x.name).slice(0, 5);
   }
 
   writeTransaction(uid: string, description: string, detail: string, price: number, isDeposit: boolean) {

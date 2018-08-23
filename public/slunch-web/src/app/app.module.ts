@@ -69,6 +69,8 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminService } from './providers/admin.service';
 import { SortPipe } from './pipes/sort.pipe';
 import { FormatterService } from './providers/formatter.service';
+import { GridButtonGroupComponent } from './gridElements/grid-button-group/grid-button-group.component';
+import { GridStatusIconComponent } from './gridElements/grid-status-icon/grid-status-icon.component';
 
 @NgModule({
   exports: [
@@ -124,7 +126,9 @@ export class MaterialModule {}
     AccountComponent,
     HeaderPlainComponent,
     AdminComponent,
-    SortPipe
+    SortPipe,
+    GridButtonGroupComponent,
+    GridStatusIconComponent
   ],
   imports: [
     BrowserModule,
@@ -147,6 +151,10 @@ export class MaterialModule {}
     ServiceHandlerService,
     AdminService,
     FormatterService
+  ],
+  entryComponents: [
+    GridButtonGroupComponent,
+    GridStatusIconComponent
   ],
   bootstrap: [AppComponent]
 })
