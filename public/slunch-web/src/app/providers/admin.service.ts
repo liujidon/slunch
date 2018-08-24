@@ -13,7 +13,6 @@ import { CurrencyPipe } from '@angular/common';
 export class AdminService {
 
   accounts: Array<AccountFace> = [];
-  accountsDS: MatTableDataSource<AccountFace>;
   accountsSubscription: Subscription;
 
   accountsGO: GridOptions;
@@ -53,7 +52,7 @@ export class AdminService {
     console.log("AdminService accountSubscription subscribing");
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").valueChanges().subscribe(accounts => {
       this.accounts = accounts;
-      this.accountsDS = new MatTableDataSource(accounts);
+      if(this.accountsGO.api) this.accountsGO.api.setRowData(this.accounts);
     });
   }
 

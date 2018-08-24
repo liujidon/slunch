@@ -73,6 +73,8 @@ import { GridCancelTransactionComponent } from './gridElements/grid-cancel-trans
 import { GridControlStatusComponent } from './gridElements/grid-control-status/grid-control-status.component';
 import { GridStatusComponent } from './gridElements/grid-status/grid-status.component';
 import { GridUpdateTransactionComponent } from './gridElements/grid-update-transaction/grid-update-transaction.component';
+import { GridImageComponent } from './gridElements/grid-image/grid-image.component';
+import { GridPollOptionControlComponent } from './gridElements/grid-poll-option-control/grid-poll-option-control.component';
 
 @NgModule({
   exports: [
@@ -132,7 +134,9 @@ export class MaterialModule {}
     GridCancelTransactionComponent,
     GridControlStatusComponent,
     GridStatusComponent,
-    GridUpdateTransactionComponent
+    GridUpdateTransactionComponent,
+    GridImageComponent,
+    GridPollOptionControlComponent
   ],
   imports: [
     BrowserModule,
@@ -160,7 +164,9 @@ export class MaterialModule {}
     GridCancelTransactionComponent,
     GridControlStatusComponent,
     GridStatusComponent,
-    GridUpdateTransactionComponent
+    GridUpdateTransactionComponent,
+    GridImageComponent,
+    GridPollOptionControlComponent
   ],
   bootstrap: [AppComponent]
 })
