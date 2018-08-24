@@ -11,10 +11,14 @@ export class GridUpdateTransactionComponent {
 
   t: Transaction;
   transactionService: TransactionService;
+  color: string;
+  condition: any;
 
   agInit(params){
     this.t = params.data;
     this.transactionService = params.transactionService;
+    this.color = params.color;
+    this.condition = params.condition;
   }
 
   updateTransaction(t: Transaction){

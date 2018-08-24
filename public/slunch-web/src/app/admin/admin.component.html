@@ -10,6 +10,12 @@
         <ag-grid-angular style="height: 500px;" class="ag-theme-material" [gridOptions]="transactionService.unprocessedGO">
         </ag-grid-angular>
 
+        <div style="margin: 1em">
+            <button mat-raised-button (click)="transactionService.exportUnprocessed()">
+                Export Orders
+            </button>
+        </div>
+
     </mat-expansion-panel>
 
 
