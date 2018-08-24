@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PollOption } from '../poll-option';
 import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';

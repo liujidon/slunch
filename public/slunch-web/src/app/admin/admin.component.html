@@ -53,62 +53,8 @@
             <mat-panel-title>Food Options</mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-table [dataSource]="pollService.pollOptionsDS">
-            <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.name}}</mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="icon">
-                <mat-header-cell *matHeaderCellDef>Icon</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <div fxLayout="column" fxLayoutAlign="center center" style="height: 100px; width: 100px; padding:10px">
-                        <img style="max-height: 100%; max-width: 100%" src="{{o?.iconUrl}}">
-                    </div>
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="iconUrl">
-                <mat-header-cell *matHeaderCellDef>Icon URL</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <mat-form-field style="width:100px" appearance="outline">
-                        <input matInput style="width: 100px" [value]="o?.iconUrl" [(ngModel)]="o.iconUrl">
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="menuUrl">
-                <mat-header-cell *matHeaderCellDef>Menu URL</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <mat-form-field style="width: 100px" appearance="outline">
-                        <input matInput style="width: 100px" [value]="o?.menuUrl" [(ngModel)]="o.menuUrl">
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="refresh">
-                <mat-header-cell *matHeaderCellDef>Refresh</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <button color="primary" mat-raised-button (click)="updatePollOption(o)">
-                        Refresh
-                    </button>
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="delete">
-                <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <button mat-raised-button (click)="deletePollOption(o)">
-                        Delete
-                    </button>
-                </mat-cell>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="optionColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: optionColumns;"></mat-row>
-
-        </mat-table>
-        <mat-paginator #optionPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+        <ag-grid-angular [gridOptions]="pollService.pollOptionsGO" class="ag-theme-material" style="height: 500px">
+        </ag-grid-angular>
 
     </mat-expansion-panel>
 

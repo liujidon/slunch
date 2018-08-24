@@ -1,8 +1,8 @@
-import { Component, AfterViewInit, ViewChild, OnInit, ElementRef } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';
 import { PollOption } from '../poll-option';
-import { MatStepper, MatFormField } from '@angular/material';
+import { MatStepper } from '@angular/material';
 import { TransactionService } from '../providers/transaction.service';
 import { Router } from '@angular/router';
 
