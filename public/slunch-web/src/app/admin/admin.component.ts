@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TransactionService } from '../providers/transaction.service';
 import { StateService } from '../providers/state.service';
 import { AuthService } from '../providers/auth.service';
 import { Router } from '@angular/router';
-import { MatPaginator, MatSort } from '@angular/material';
 import { AdminService } from '../providers/admin.service';
 import { PollService } from '../providers/poll.service';
 import { PollOption } from '../poll-option';
@@ -14,12 +13,6 @@ import { PollOption } from '../poll-option';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-
-  optionColumns: Array<string> = [
-    "name", "icon", "iconUrl", "menuUrl", "refresh", "delete"
-  ];
-
-  @ViewChild("optionPaginator") optionPaginator: MatPaginator;
 
   constructor(
     public transactionService: TransactionService,
@@ -32,10 +25,6 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    if (this.pollService.pollOptionsDS) {
-      this.pollService.pollOptionsDS.paginator = this.optionPaginator;
-    }
 
   }
 

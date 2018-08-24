@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';
 import { Poll } from '../poll';

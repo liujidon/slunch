@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StateService } from '../providers/state.service';
 import { PollService } from '../providers/poll.service';
 
