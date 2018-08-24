@@ -42,35 +42,8 @@
             </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <mat-table [dataSource]="adminService.accountsDS">
-            <ng-container matColumnDef="email">
-                <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.email}}</mat-cell>
-                <mat-footer-cell *matFooterCellDef>
-                    <strong>Total</strong>
-                </mat-footer-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="balance">
-                <mat-header-cell *matHeaderCellDef>Balance</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.balance | currency}}</mat-cell>
-                <mat-footer-cell *matFooterCellDef>
-                    <strong>{{getTotalBalance() | currency}}</strong>
-                </mat-footer-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.firstname}} {{o?.lastname}}</mat-cell>
-                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="accountsColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: accountsColumns;"></mat-row>
-            <mat-footer-row *matFooterRowDef="accountsColumns"></mat-footer-row>
-
-        </mat-table>
-        <mat-paginator #accountPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+        <ag-grid-angular [gridOptions]="adminService.accountsGO" class="ag-theme-material" style="height: 500px">
+        </ag-grid-angular>
 
     </mat-expansion-panel>
 

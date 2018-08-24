@@ -3,7 +3,6 @@ import { TransactionService } from '../providers/transaction.service';
 import { StateService } from '../providers/state.service';
 import { AuthService } from '../providers/auth.service';
 import { Router } from '@angular/router';
-import { Transaction } from '../transaction';
 import { MatPaginator, MatSort } from '@angular/material';
 import { AdminService } from '../providers/admin.service';
 import { PollService } from '../providers/poll.service';
@@ -16,24 +15,9 @@ import { PollOption } from '../poll-option';
 })
 export class AdminComponent implements OnInit {
 
-  unprocessedColumns: Array<string> = [
-    "time", "name", "description", "detail",
-    "price", "status", "acknowledge", "ordered", "confirm"
-  ];
-  accountsColumns: Array<string> = [
-    "email", "balance", "name"
-  ];
-  todayColumns: Array<string> = [
-    "time", "name", "description", "detail", "debit", "credit"
-  ];
   optionColumns: Array<string> = [
     "name", "icon", "iconUrl", "menuUrl", "refresh", "delete"
   ];
-
-  @ViewChild("unprocessedPaginator") unprocessedPaginator: MatPaginator;
-  @ViewChild("accountPaginator") accountPaginator: MatPaginator;
-  @ViewChild("todayPaginator") todayPaginator: MatPaginator;
-  @ViewChild("todaySort") todaySort: MatSort;
 
   @ViewChild("optionPaginator") optionPaginator: MatPaginator;
 
@@ -49,41 +33,10 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.adminService.accountsDS) {
-      this.adminService.accountsDS.paginator = this.accountPaginator;
-    }
     if (this.pollService.pollOptionsDS) {
       this.pollService.pollOptionsDS.paginator = this.optionPaginator;
     }
 
-  }
-
-  
-
-  getTotalDebit() {
-    if (this.transactionService.todayTransactions) {
-      return this.transactionService.todayTransactions.filter(t => t.price >= 0).map(t => {
-        let v: any = t.price;
-        if(typeof(v) == "string") return 0;
-        else return v;
-      }).reduce((acc, v) => acc + v, 0);
-    }
-    else {
-      return 0;
-    }
-  }
-
-  getTotalCredit() {
-    if (this.transactionService.todayTransactions) {
-      return this.transactionService.todayTransactions.filter(t => t.price < 0).map(t => {
-        let v: any = t.price;
-        if(typeof(v) == "string") return 0;
-        else return v;
-      }).reduce((acc, v) => acc + v, 0);
-    }
-    else {
-      return 0;
-    }
   }
 
   getTodayPosition() {

@@ -14,7 +14,6 @@ export class AccountComponent implements OnInit {
   transactionService: TransactionService;
   db: AngularFirestore;
   
-  displayedColumns: Array<string> = ["time", "description", "detail", "debit", "credit", "status", "cancel"];
   addAmount: number;
 
   constructor(db: AngularFirestore, authService: AuthService, transactionService: TransactionService) {

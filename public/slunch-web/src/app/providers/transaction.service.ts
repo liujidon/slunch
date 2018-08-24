@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Transaction } from '../transaction';
 import { Subscription } from 'rxjs';
-import { GridOptions } from 'ag-grid/main';
+import { GridOptions } from 'ag-grid';
 import { FormatterService } from './formatter.service';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { GridControlStatusComponent } from '../gridElements/grid-control-status/grid-control-status.component';

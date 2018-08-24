@@ -4,6 +4,8 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { AccountFace } from '../interfaces';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource, MatTab } from '@angular/material';
+import { GridOptions } from 'ag-grid';
+import { CurrencyPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,38 @@ export class AdminService {
   accountsDS: MatTableDataSource<AccountFace>;
   accountsSubscription: Subscription;
 
-  constructor(public authService: AuthService, public db:AngularFirestore) { }
+  accountsGO: GridOptions;
+
+  constructor(public authService: AuthService, public db:AngularFirestore) {
+
+    this.accountsGO = {
+      onGridReady:(params)=>{
+        this.accountsGO.api = params.api;
+        this.accountsGO.columnApi = params.columnApi;
+        this.accountsGO.api.setRowData(this.accounts);
+        this.accountsGO.columnApi.autoSizeAllColumns();
+      },
+      columnDefs: [
+        {headerName: "Email", field:"email"},
+        {headerName:"Balance", field:"balance", valueFormatter:(params)=>{
+          let pipe = new CurrencyPipe("en-us");
+          return pipe.transform(params.value);
+        }, cellClass:(params)=>{
+          if(params.value > 0) return "green";
+          else return "red";
+        }},
+        {headerName:"Name", valueGetter:(params)=>{
+          return params.data.firstname + " " + params.data.lastname;
+        }}
+      ],
+      animateRows: true,
+      sortingOrder:["desc", "asc", null],
+      enableSorting: true,
+      enableColResize: true,
+      enableFilter: true
+    }
+
+   }
 
   subscribe(){
     console.log("AdminService accountSubscription subscribing");
