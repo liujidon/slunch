@@ -89,9 +89,10 @@ export class AdminComponent implements OnInit {
   getTodayPosition() {
     if (this.transactionService.todayTransactions) {
       return -1 * this.transactionService.todayTransactions.map(t => {
-        let v: any = t.price;
-        if(typeof(v) == "string") return 0;
-        else return v;
+        if(t.status == "done"){
+          return parseFloat(t.price+"");
+        }
+        else return 0;
       }).reduce((acc, v) => acc + v, 0);
     }
     else {

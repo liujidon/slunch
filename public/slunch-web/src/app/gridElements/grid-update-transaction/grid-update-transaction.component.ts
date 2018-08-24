@@ -14,7 +14,7 @@ export class GridUpdateTransactionComponent {
 
   agInit(params){
     this.t = params.data;
-    this.transactionService = params.TransactionService;
+    this.transactionService = params.transactionService;
   }
 
   updateTransaction(t: Transaction){

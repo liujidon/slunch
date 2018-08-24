@@ -15,19 +15,17 @@
 
     <mat-expansion-panel style="margin:3em">
         <mat-expansion-panel-header>
-            <mat-panel-title>Today's Transactions</mat-panel-title>
+            <mat-panel-title>Transactions</mat-panel-title>
             <mat-panel-description>
-                Net: &nbsp; &nbsp;
+                Net today: &nbsp; &nbsp;
                 <span [ngClass]="getTodayPosition()>=0?'green':'red'">
                     {{getTodayPosition() | currency}}
                 </span>
             </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <div *ngIf="transactionService.todayTransactions.length > 0">
-            <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.todayGO">
-            </ag-grid-angular>
-        </div>
+        <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.allGO">
+        </ag-grid-angular>
 
     </mat-expansion-panel>
 

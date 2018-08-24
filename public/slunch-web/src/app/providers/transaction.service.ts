@@ -25,7 +25,7 @@ export class TransactionService {
   numUnprocessed: number;
 
   public unprocessedGO: GridOptions;
-  public todayGO: GridOptions;
+  public allGO: GridOptions;
   public myGO: GridOptions;
 
   constructor(
@@ -75,12 +75,12 @@ export class TransactionService {
       enableFilter: true
     }
 
-    this.todayGO = {
+    this.allGO = {
       onGridReady: (params)=>{
-        this.todayGO.api = params.api;
-        this.todayGO.columnApi = params.columnApi;
-        this.todayGO.api.setRowData(this.todayTransactions);
-        this.todayGO.api.sizeColumnsToFit();
+        this.allGO.api = params.api;
+        this.allGO.columnApi = params.columnApi;
+        this.allGO.api.setRowData(this.allTransactions);
+        this.allGO.api.sizeColumnsToFit();
       },
       columnDefs: [
         { headerName: "Time", field: "time", valueFormatter:(params)=>{
@@ -157,7 +157,8 @@ export class TransactionService {
 
     console.log("TransactionService transactionsSubscription subscribing");
     this.transactionsSubscription = this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions => {
-      this.allTransactions = transactions.sort((a, b) => a.time >= b.time ? -1 : 1);
+      this.allTransactions = transactions;
+      if(this.allGO.api) this.allGO.api.setRowData(this.allTransactions);
 
       this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
       if(this.unprocessedGO.api) this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
@@ -171,7 +172,7 @@ export class TransactionService {
         today.setHours(0);
         return new Date(transaction.time) >= today;
       });
-      if(this.todayGO.api) this.todayGO.api.setRowData(this.todayTransactions);
+      
 
       this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
       if(this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
