@@ -1,207 +1,57 @@
 <app-header></app-header>
 
-<mat-card style="margin:3em" *ngIf="transactionService.unprocessedTransactions.length > 0">
-    <mat-card-title>
-        Unprocessed Transactions
-    </mat-card-title>
-    <mat-card-content>
-        <mat-table [dataSource]="transactionService.unprocessedTransactionsDS">
-            <ng-container matColumnDef="time">
-                <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.time | date: 'short'}}</mat-cell>
-            </ng-container>
+<mat-accordion multi="true">
 
-            <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.displayName}}</mat-cell>
-            </ng-container>
+    <mat-expansion-panel style="margin:3em" [disabled]="transactionService.unprocessedTransactions.length == 0" [expanded]="transactionService.unprocessedTransactions.length > 0">
+        <mat-expansion-panel-header>
+            <mat-panel-title>Unprocessed Transactions</mat-panel-title>
+        </mat-expansion-panel-header>
 
-            <ng-container matColumnDef="description">
-                <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.description}}</mat-cell>
-            </ng-container>
+        <ag-grid-angular style="height: 500px;" class="ag-theme-material" [gridOptions]="transactionService.unprocessedGO">
+        </ag-grid-angular>
 
-            <ng-container matColumnDef="detail">
-                <mat-header-cell *matHeaderCellDef>Detail</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.detail}}</mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="price">
-                <mat-header-cell *matHeaderCellDef>Price</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <input *ngIf="(o.isDeposit && o.status == 'ack') || (!o.isDeposit && o.status == 'ordered')" style="width: 30%" [(ngModel)]="o.price">
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="status">
-                <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <mat-icon class="clickable" matTooltip="Complete: {{o?.completedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
-                    <mat-icon class="clickable" matTooltip="Ordered: {{o?.orderedBy}}" *ngIf="o.status == 'ordered'" style="color: green">done</mat-icon>
-                    <mat-icon class="clickable" matTooltip="Received: {{o?.ackedBy}}" *ngIf="o.status == 'ack'" style="color: blue">done</mat-icon>
-                    <mat-icon class="clickable" matTooltip="Pending" *ngIf="o.status == 'new'" style="color: red">warning</mat-icon>
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="acknowledge">
-                <mat-header-cell *matHeaderCellDef>Acknowledge</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <button mat-raised-button color="primary" (click)="acknowledgeTransaction(o)">Ack</button>
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="ordered">
-                <mat-header-cell *matHeaderCellDef>Ordered</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <button *ngIf="(!o.isDeposit && o.status != 'new')" mat-raised-button color="accent" (click)="confirmOrdered(o)">Ordered</button>
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="confirm">
-                <mat-header-cell *matHeaderCellDef>Confirm</mat-header-cell>
-                <mat-cell *matCellDef="let o">
-                    <button *ngIf="(o.isDeposit && o.status == 'ack') || (!o.isDeposit && o.status == 'ordered')" mat-raised-button color="warn"
-                        (click)="confirmTransaction(o)">Confirm</button>
-                </mat-cell>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="unprocessedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: unprocessedColumns;"></mat-row>
-
-        </mat-table>
-        <mat-paginator #unprocessedPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
-
-    </mat-card-content>
-
-</mat-card>
+    </mat-expansion-panel>
 
 
-
-<mat-card style="margin:3em">
-    <mat-card-title>
-        Today's Transactions
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-        <div style="padding:10px">
-            <h3>
-                Position:
+    <mat-expansion-panel style="margin:3em">
+        <mat-expansion-panel-header>
+            <mat-panel-title>Transactions</mat-panel-title>
+            <mat-panel-description>
+                Net today: &nbsp; &nbsp;
                 <span [ngClass]="getTodayPosition()>=0?'green':'red'">
                     {{getTodayPosition() | currency}}
                 </span>
-            </h3>
-        </div>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
 
-        <div *ngIf="transactionService.todayTransactions.length > 0">
-            <mat-table #todaySort="matSort" [dataSource]="transactionService.todayTransactionsDS" matSort>
-                <ng-container matColumnDef="time">
-                    <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
-                    <mat-cell *matCellDef="let o">{{o?.time | date: 'short'}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef>
-                        <strong>Total</strong>
-                    </mat-footer-cell>
-                </ng-container>
+        <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.allGO">
+        </ag-grid-angular>
 
-                <ng-container matColumnDef="name">
-                    <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-                    <mat-cell *matCellDef="let o">{{o?.displayName}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="description">
-                    <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-                    <mat-cell *matCellDef="let o">{{o?.description}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="detail">
-                    <mat-header-cell *matHeaderCellDef>Detail</mat-header-cell>
-                    <mat-cell *matCellDef="let o">{{o?.detail}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="debit">
-                    <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
-                    <mat-cell *matCellDef="let o">
-                        <span *ngIf="o.price >= 0" class="red">
-                            {{o.price | currency}}
-                        </span>
-                    </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>
-                        <strong class="red">{{getTotalDebit() | currency}}</strong>
-                    </mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="credit">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header="price">Credit</mat-header-cell>
-                    <mat-cell *matCellDef="let o">
-                        <span *ngIf="o.price < 0" class="green">
-                            {{(-1*o.price) | currency}}
-                        </span>
-                    </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>
-                        <strong class="green">{{-1*getTotalCredit() | currency}}</strong>
-                    </mat-footer-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="todayColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: todayColumns;"></mat-row>
-                <mat-footer-row *matFooterRowDef="todayColumns"></mat-footer-row>
-
-            </mat-table>
-            <mat-paginator #todayPaginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons></mat-paginator>
-        </div>
-
-    </mat-card-content>
-
-</mat-card>
+    </mat-expansion-panel>
 
 
 
-<mat-card style="margin:3em" *ngIf="adminService.accounts.length > 0">
-    <mat-card-title>
-        Accounts
-    </mat-card-title>
-    <mat-card-content>
-        <mat-table [dataSource]="adminService.accountsDS">
-            <ng-container matColumnDef="email">
-                <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.email}}</mat-cell>
-                <mat-footer-cell *matFooterCellDef>
-                    <strong>Total</strong>
-                </mat-footer-cell>
-            </ng-container>
+    <mat-expansion-panel style="margin:3em">
+        <mat-expansion-panel-header>
+            <mat-panel-title>User Accounts</mat-panel-title>
+            <mat-panel-description>
+                Total: &nbsp; &nbsp;
+                <span [ngClass]="getTotalBalance()>=0?'green':'red'">
+                    {{getTotalBalance() | currency}}
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
 
-            <ng-container matColumnDef="balance">
-                <mat-header-cell *matHeaderCellDef>Balance</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.balance | currency}}</mat-cell>
-                <mat-footer-cell *matFooterCellDef>
-                    <strong>{{getTotalBalance() | currency}}</strong>
-                </mat-footer-cell>
-            </ng-container>
+        <ag-grid-angular [gridOptions]="adminService.accountsGO" class="ag-theme-material" style="height: 500px">
+        </ag-grid-angular>
 
-            <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-                <mat-cell *matCellDef="let o">{{o?.firstname}} {{o?.lastname}}</mat-cell>
-                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="accountsColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: accountsColumns;"></mat-row>
-            <mat-footer-row *matFooterRowDef="accountsColumns"></mat-footer-row>
-
-        </mat-table>
-        <mat-paginator #accountPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
-    </mat-card-content>
-
-</mat-card>
+    </mat-expansion-panel>
 
 
-<mat-card style="margin:3em">
-    <mat-card-title>
-        Options
-    </mat-card-title>
-    <mat-card-content>
+    <mat-expansion-panel style="margin:3em">
+        <mat-expansion-panel-header>
+            <mat-panel-title>Food Options</mat-panel-title>
+        </mat-expansion-panel-header>
 
         <mat-table [dataSource]="pollService.pollOptionsDS">
             <ng-container matColumnDef="name">
@@ -221,21 +71,25 @@
             <ng-container matColumnDef="iconUrl">
                 <mat-header-cell *matHeaderCellDef>Icon URL</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <input [value]="o?.iconUrl" [(ngModel)]="o.iconUrl">
+                    <mat-form-field style="width:100px" appearance="outline">
+                        <input matInput style="width: 100px" [value]="o?.iconUrl" [(ngModel)]="o.iconUrl">
+                    </mat-form-field>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="menuUrl">
                 <mat-header-cell *matHeaderCellDef>Menu URL</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <input [value]="o?.menuUrl" [(ngModel)]="o.menuUrl">
+                    <mat-form-field style="width: 100px" appearance="outline">
+                        <input matInput style="width: 100px" [value]="o?.menuUrl" [(ngModel)]="o.menuUrl">
+                    </mat-form-field>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="refresh">
                 <mat-header-cell *matHeaderCellDef>Refresh</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button mat-raised-button (click)="updatePollOption(o)">
+                    <button color="primary" mat-raised-button (click)="updatePollOption(o)">
                         Refresh
                     </button>
                 </mat-cell>
@@ -244,7 +98,7 @@
             <ng-container matColumnDef="delete">
                 <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
                 <mat-cell *matCellDef="let o">
-                    <button mat-raised-button color="warn" (click)="deletePollOption(o)">
+                    <button mat-raised-button (click)="deletePollOption(o)">
                         Delete
                     </button>
                 </mat-cell>
@@ -255,6 +109,7 @@
 
         </mat-table>
         <mat-paginator #optionPaginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
-    </mat-card-content>
 
-</mat-card>
+    </mat-expansion-panel>
+
+</mat-accordion>

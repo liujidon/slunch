@@ -5,6 +5,7 @@ node_js:
 branches:
   only:
     - master
+    - dev
 
 before_script:
   - cd functions
@@ -15,9 +16,21 @@ before_script:
   - npm install -g @angular/cli
 
 script:
-  - ng build --prod --aot
-
+  - |
+    if [ $TRAVIS_BRANCH == "master" ]; then
+      ng build --prod --aot
+    fi
+    if [ $TRAVIS_BRANCH == "dev" ]; then
+      ng build --aot
+    fi
 after_success:
-  - cd ../..
-  - firebase use prod
-  - firebase deploy --token $FIREBASE_TOKEN
+  - |
+    cd ../..
+    if [ $TRAVIS_BRANCH == "master" ]; then
+      firebase use prod
+      firebase deploy --token $FIREBASE_TOKEN
+    fi
+    if [ $TRAVIS_BRANCH == "dev" ]; then
+      firebase use dev
+      firebase deploy --token $FIREBASE_TOKEN_DEV
+    fi

@@ -1,13 +1,10 @@
-import { Component, AfterViewInit, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { PollService } from '../providers/poll.service';
 import { AuthService } from '../providers/auth.service';
-import { PollFace } from '../interfaces';
 import { PollOption } from '../poll-option';
-import { MatStepper } from '@angular/material';
+import { MatStepper, MatFormField } from '@angular/material';
 import { TransactionService } from '../providers/transaction.service';
-import { Transaction } from '../transaction';
-import { Router } from '../../../node_modules/@angular/router';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -25,6 +22,7 @@ export class OrderComponent implements OnInit {
   recentOrders: Array<string>;
   popularOrders: Array<string>;
   @ViewChild("stepper") stepper: MatStepper;
+  @ViewChild("orderField") orderField: ElementRef;
 
   constructor(
     public pollService: PollService,
@@ -51,6 +49,9 @@ export class OrderComponent implements OnInit {
     this.recentOrders = this.transactionService.getRecentOrders(this.chosenOption.name);
     this.popularOrders = this.transactionService.getPopularOrders(this.chosenOption.name);
     stepper.next();
+    setTimeout(()=>{
+      this.orderField.nativeElement.focus();
+    }, 200)
   }
 
   clickSendOrder(stepper: MatStepper){

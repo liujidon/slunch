@@ -21,7 +21,7 @@
               </mat-form-field>
             </td>
             <td style="padding:5px">
-              <button mat-raised-button color="warn" (click)="addMoney()">Confirm</button>
+              <button [disabled]="!(addAmount > 0)" mat-raised-button color="warn" (click)="addMoney()">Confirm</button>
             </td>
           </tr>
         </table>
@@ -39,62 +39,12 @@
   </mat-card-title>
   <mat-card-content>
 
-    <mat-table [dataSource]="transactionService.myTransactionsDS">
-      <ng-container matColumnDef="time">
-        <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
-        <mat-cell *matCellDef="let o">{{o?.time | date: 'short'}}</mat-cell>
-      </ng-container>
+    <ag-grid-angular
+    style="height: 500px"
+    class="ag-theme-material"
+    [gridOptions]="transactionService.myGO">
+    </ag-grid-angular>
 
-      <ng-container matColumnDef="description">
-        <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-        <mat-cell *matCellDef="let o">{{o?.description}}</mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="detail">
-        <mat-header-cell *matHeaderCellDef>Detail</mat-header-cell>
-        <mat-cell *matCellDef="let o">{{o?.detail}}</mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="debit">
-        <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
-        <mat-cell *matCellDef="let o">
-          <span *ngIf="o.price >= 0" class="red">
-            {{o.price | currency}}
-          </span>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="credit">
-        <mat-header-cell *matHeaderCellDef>Credit</mat-header-cell>
-        <mat-cell *matCellDef="let o">
-          <span *ngIf="o.price < 0" class="green">
-            {{(-1*o.price) | currency}}
-          </span>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-        <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
-        <mat-cell *matCellDef="let o">
-          <mat-icon class="clickable" matTooltip="Complete: {{o?.completedBy}}" *ngIf="o.status == 'done'" style="color: green">done_all</mat-icon>
-          <mat-icon class="clickable" matTooltip="Ordered: {{o?.orderedBy}}" *ngIf="o.status == 'ordered'" style="color: green">done</mat-icon>
-          <mat-icon class="clickable" matTooltip="Received: {{o?.ackedBy}}" *ngIf="o.status == 'ack'" style="color: blue">done</mat-icon>
-          <mat-icon class="clickable" matTooltip="Pending" *ngIf="o.status == 'new'" style="color: red">warning</mat-icon>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="cancel">
-        <mat-header-cell *matHeaderCellDef>Cancel</mat-header-cell>
-        <mat-cell *matCellDef="let o">
-          <button *ngIf="o.status == 'new' || o.status == 'ack'" mat-raised-button color="warn" (click)="transactionService.cancelTransaction(o)">Cancel</button>
-        </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-    </mat-table>
-    <mat-paginator [pageSizeOptions]="[10, 20, 50]"></mat-paginator>
   </mat-card-content>
 
 

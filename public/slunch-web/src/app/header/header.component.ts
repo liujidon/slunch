@@ -58,6 +58,19 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  togglePoll(){
+    if(this.pollService.allowPoll){
+      this.stateService.setState({
+        allowPoll: false
+      });
+    }
+    else{
+      this.stateService.setState({
+        allowPoll: true
+      });
+    }
+  }
+
   logoClick(){
     this.router.navigate(["vote"]);
   }

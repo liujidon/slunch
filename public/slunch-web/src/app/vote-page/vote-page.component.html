@@ -1,10 +1,13 @@
 <app-header></app-header>
 
+<div *ngIf="!stateService.isOrdering && pollService.allowPoll">
+  <app-poll></app-poll>
+</div>
+<div style="margin:3em" *ngIf="!stateService.isOrdering && !pollService.allowPoll">
+  <h3>Poll not ready yet...</h3>
+</div>
 <div *ngIf="stateService.isOrdering">
   <app-order></app-order>
-</div>
-<div *ngIf="!stateService.isOrdering">
-  <app-poll></app-poll>
 </div>
 
 <div *ngIf="sentSuggestions < 1" style="margin:3em">

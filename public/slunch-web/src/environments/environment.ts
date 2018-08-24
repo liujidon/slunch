@@ -13,7 +13,8 @@ export const environment = {
     messagingSenderId: "1066268706966"
   },
   adminRef: "admin/zVF84avWHGhKC0QBNiKL",
-  stateRef: "state/FFv5YTIgUR0GwqvmkDgw"
+  stateRef: "state/FFv5YTIgUR0GwqvmkDgw",
+  defaultIconUrl: "http://www.tasteinsf.com/public/images/default-restaurant-thumbnail-250x244.png"
 };
 
 /*

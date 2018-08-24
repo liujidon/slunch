@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { AgGridModule } from 'ag-grid-angular';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
@@ -67,6 +68,11 @@ import { ServiceHandlerService } from './providers/service-handler.service';
 import { AdminComponent } from './admin/admin.component';
 import { AdminService } from './providers/admin.service';
 import { SortPipe } from './pipes/sort.pipe';
+import { FormatterService } from './providers/formatter.service';
+import { GridCancelTransactionComponent } from './gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
+import { GridControlStatusComponent } from './gridElements/grid-control-status/grid-control-status.component';
+import { GridStatusComponent } from './gridElements/grid-status/grid-status.component';
+import { GridUpdateTransactionComponent } from './gridElements/grid-update-transaction/grid-update-transaction.component';
 
 @NgModule({
   exports: [
@@ -122,7 +128,11 @@ export class MaterialModule {}
     AccountComponent,
     HeaderPlainComponent,
     AdminComponent,
-    SortPipe
+    SortPipe,
+    GridCancelTransactionComponent,
+    GridControlStatusComponent,
+    GridStatusComponent,
+    GridUpdateTransactionComponent
   ],
   imports: [
     BrowserModule,
@@ -133,7 +143,8 @@ export class MaterialModule {}
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    AgGridModule.withComponents([])
   ],
   providers: [
     AuthService,
@@ -142,7 +153,14 @@ export class MaterialModule {}
     TransactionService,
     PollService,
     ServiceHandlerService,
-    AdminService
+    AdminService,
+    FormatterService
+  ],
+  entryComponents: [
+    GridCancelTransactionComponent,
+    GridControlStatusComponent,
+    GridStatusComponent,
+    GridUpdateTransactionComponent
   ],
   bootstrap: [AppComponent]
 })

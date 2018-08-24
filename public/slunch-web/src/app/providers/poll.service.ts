@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { PollOption } from '../poll-option';
 import { Poll } from '../poll';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable, Subscription } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MatTableDataSource } from '@angular/material';
+import { Subscription } from 'rxjs'
+import { environment } from '../../environments/environment';
+import { StateFace } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,9 @@ export class PollService {
 
   latestPollSubscription: Subscription;
   latestPoll: Poll;
+
+  stateSubscription: Subscription;
+  allowPoll: Boolean;
 
   constructor(public db: AngularFirestore, public authService: AuthService) {
   }
@@ -36,6 +41,11 @@ export class PollService {
         return po;
       }, PollOption);
       this.pollOptionsDS = new MatTableDataSource(this.pollOptions.sort((a, b) => a.name < b.name ? -1 : 1));
+    });
+
+    console.log("PollService stateSubscription subscribing");
+    this.stateSubscription = this.db.doc<StateFace>(environment.stateRef).valueChanges().subscribe(state=>{
+      this.allowPoll = state.allowPoll;
     });
 
   }
@@ -79,7 +89,7 @@ export class PollService {
     let id: string = this.db.createId();
     po = {
       name:name,
-      iconUrl:"../../assets/default.png",
+      iconUrl: environment.defaultIconUrl,
       menuUrl:"http://www.google.com",
       id:id
     }
