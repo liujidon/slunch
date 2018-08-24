@@ -69,8 +69,10 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminService } from './providers/admin.service';
 import { SortPipe } from './pipes/sort.pipe';
 import { FormatterService } from './providers/formatter.service';
-import { GridButtonGroupComponent } from './gridElements/grid-button-group/grid-button-group.component';
-import { GridStatusIconComponent } from './gridElements/grid-status-icon/grid-status-icon.component';
+import { GridCancelTransactionComponent } from './gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
+import { GridControlStatusComponent } from './gridElements/grid-control-status/grid-control-status.component';
+import { GridStatusComponent } from './gridElements/grid-status/grid-status.component';
+import { GridUpdateTransactionComponent } from './gridElements/grid-update-transaction/grid-update-transaction.component';
 
 @NgModule({
   exports: [
@@ -127,8 +129,10 @@ export class MaterialModule {}
     HeaderPlainComponent,
     AdminComponent,
     SortPipe,
-    GridButtonGroupComponent,
-    GridStatusIconComponent
+    GridCancelTransactionComponent,
+    GridControlStatusComponent,
+    GridStatusComponent,
+    GridUpdateTransactionComponent
   ],
   imports: [
     BrowserModule,
@@ -153,8 +157,10 @@ export class MaterialModule {}
     FormatterService
   ],
   entryComponents: [
-    GridButtonGroupComponent,
-    GridStatusIconComponent
+    GridCancelTransactionComponent,
+    GridControlStatusComponent,
+    GridStatusComponent,
+    GridUpdateTransactionComponent
   ],
   bootstrap: [AppComponent]
 })

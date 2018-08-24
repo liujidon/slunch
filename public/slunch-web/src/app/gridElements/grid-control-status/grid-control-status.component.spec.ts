@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GridStatusIconComponent } from './grid-status-icon.component';
+import { GridControlStatusComponent } from './grid-control-status.component';
 
-describe('GridStatusIconComponent', () => {
-  let component: GridStatusIconComponent;
-  let fixture: ComponentFixture<GridStatusIconComponent>;
+describe('GridControlStatusComponent', () => {
+  let component: GridControlStatusComponent;
+  let fixture: ComponentFixture<GridControlStatusComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GridStatusIconComponent ]
+      declarations: [ GridControlStatusComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GridStatusIconComponent);
+    fixture = TestBed.createComponent(GridControlStatusComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

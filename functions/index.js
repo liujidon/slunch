@@ -14,7 +14,7 @@ exports.updateAccountBalance = functions.firestore
     console.log("Transaction update: ", transaction);
 
     let status = transaction.status;
-    if (status === null || status !== "done" || transaction.accountid === null)
+    if (status === null || transaction.accountid === null)
       return null;
     if (transaction.price === previousTransaction.price)
       return null;

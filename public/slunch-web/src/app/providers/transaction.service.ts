@@ -3,12 +3,13 @@ import { AuthService } from './auth.service';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Transaction } from '../transaction';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material';
 import { GridOptions } from 'ag-grid/main';
 import { FormatterService } from './formatter.service';
-import { DatePipe } from '@angular/common';
-import { GridButtonGroupComponent } from '../gridElements/grid-button-group/grid-button-group.component';
-import { GridStatusIconComponent } from '../gridElements/grid-status-icon/grid-status-icon.component';
+import { DatePipe, CurrencyPipe } from '@angular/common';
+import { GridControlStatusComponent } from '../gridElements/grid-control-status/grid-control-status.component';
+import { GridStatusComponent } from '../gridElements/grid-status/grid-status.component';
+import { GridCancelTransactionComponent } from '../gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
+import { GridUpdateTransactionComponent } from '../gridElements/grid-update-transaction/grid-update-transaction.component';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,11 @@ export class TransactionService {
   unprocessedTransactions: Array<Transaction> = [];
   todayTransactions: Array<Transaction> = [];
 
-  myTransactionsDS: MatTableDataSource<Transaction>;
-  todayTransactionsDS: MatTableDataSource<Transaction>;
-
   numUnprocessed: number;
 
   public unprocessedGO: GridOptions;
+  public todayGO: GridOptions;
+  public myGO: GridOptions;
 
   constructor(
     public authService: AuthService,
@@ -35,13 +35,11 @@ export class TransactionService {
   ) {
 
     this.unprocessedGO = {
-      
-      getRowNodeId: (data) => data.time,
       onGridReady: (params) => {
         this.unprocessedGO.api = params.api;
         this.unprocessedGO.columnApi = params.columnApi;
         this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
-        this.unprocessedGO.columnApi.autoSizeAllColumns();
+        this.unprocessedGO.api.sizeColumnsToFit();
       },
       rowHeight: 60,
       colWidth: 150,
@@ -50,26 +48,108 @@ export class TransactionService {
           valueFormatter:(params) => {
             let pipe = new DatePipe("en-us");
             return pipe.transform(params.data.time, "short");
-          }
+          }, sort:"desc"
         },
         { headerName: "Name", field: "displayName" },
         { headerName: "Description", field: "description" },
-        { headerName: "Price", field: "price", editable: true, },
+        { headerName: "Price", field: "price", editable: true, valueFormatter:(params)=>{
+          let pipe = new CurrencyPipe("en-us");
+          return pipe.transform(params.value);
+        }},
         {
           headerName: "Status",
-          cellRendererFramework: GridStatusIconComponent,
-          suppressAutoSize: true,
+          cellRendererFramework: GridStatusComponent,
           width: 110
         },
         {
           headerName: "Control",
-          cellRendererFramework: GridButtonGroupComponent,
+          cellRendererFramework: GridControlStatusComponent,
           cellRendererParams: {transactionService: this, authService: authService},
           width: 280
         }
-      ]
-
+      ],
+      animateRows: true,
+      sortingOrder:["desc", "asc", null],
+      enableSorting: true,
+      enableColResize: true,
+      enableFilter: true
     }
+
+    this.todayGO = {
+      onGridReady: (params)=>{
+        this.todayGO.api = params.api;
+        this.todayGO.columnApi = params.columnApi;
+        this.todayGO.api.setRowData(this.todayTransactions);
+        this.todayGO.api.sizeColumnsToFit();
+      },
+      columnDefs: [
+        { headerName: "Time", field: "time", valueFormatter:(params)=>{
+          let pipe = new DatePipe("en-us");
+          return pipe.transform(params.data.time, "short");
+        }, sort:"desc"},
+        { headerName: "Name", field: "displayName"},
+        { headerName: "Description", field: "description"},
+        { headerName: "Detail", field: "detail"},
+        { headerName: "Money", field: "price", valueFormatter:(params)=>{
+          let pipe = new CurrencyPipe("en-us");
+          if(params.value < 0) return pipe.transform(-params.value);
+          else return pipe.transform(params.value);
+        }, cellClass:(params)=>{
+          if(params.value >= 0) return 'red';
+          else return 'green';
+        }, editable: true},
+        { 
+          headerName: "Update", 
+          cellRendererFramework: GridUpdateTransactionComponent,
+          cellRendererParams: {transactionService: this}
+        }
+      ],
+      animateRows: true,
+      sortingOrder:["desc", "asc", null],
+      enableSorting: true,
+      enableColResize: true,
+      enableFilter: true
+    }
+
+    this.myGO = {
+      onGridReady: (params)=>{
+        this.myGO.api = params.api;
+        this.myGO.columnApi = params.columnApi;
+        this.myGO.api.setRowData(this.myTransactions);
+        this.myGO.api.sizeColumnsToFit();
+      },
+      columnDefs: [
+        {headerName: "Time", field:"time", valueFormatter:(params)=>{
+          let pipe = new DatePipe('en-us');
+          return pipe.transform(params.value, "short");
+        }, sort:"desc"},
+        {headerName: "Description", field:"description"},
+        {headerName: "Detail", field:"detail"},
+        {headerName: "Debit", field:"price", valueFormatter:(params)=>{
+          let pipe = new CurrencyPipe("en-us");
+          if(params.value >= 0) return pipe.transform(params.value);
+          else return "";
+        }, cellClass:["red"]},
+        {headerName:"Credit", field:"price", valueFormatter:(params)=>{
+          let pipe = new CurrencyPipe("en-us");
+          if(params.value < 0) return pipe.transform(-params.value);
+          else return "";
+        }, cellClass:["green"]},
+        {headerName: "Status", cellRendererFramework: GridStatusComponent},
+        {
+          headerName: "Cancel",
+          cellRendererFramework: GridCancelTransactionComponent,
+          cellRendererParams: {transactionService: this}
+        }
+      ],
+      animateRows: true,
+      sortingOrder:["desc", "asc", null],
+      enableSorting: true,
+      enableColResize: true,
+      enableFilter: true
+    }
+
+
 
   }
 
@@ -77,14 +157,10 @@ export class TransactionService {
 
     console.log("TransactionService transactionsSubscription subscribing");
     this.transactionsSubscription = this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions => {
-      this.allTransactions = transactions;
+      this.allTransactions = transactions.sort((a, b) => a.time >= b.time ? -1 : 1);
 
       this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
-      if(this.unprocessedGO.api){
-        this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
-      }
-
-      this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
+      if(this.unprocessedGO.api) this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
       this.numUnprocessed = this.unprocessedTransactions.length;
 
       this.todayTransactions = transactions.filter(transaction => {
@@ -95,9 +171,13 @@ export class TransactionService {
         today.setHours(0);
         return new Date(transaction.time) >= today;
       });
+      if(this.todayGO.api) this.todayGO.api.setRowData(this.todayTransactions);
 
-      this.myTransactionsDS = new MatTableDataSource(this.myTransactions.sort((a, b) => a.time >= b.time ? -1 : 1));
-      this.todayTransactionsDS = new MatTableDataSource(this.todayTransactions.sort((a, b) => a.time >= b.time ? -1 : 1))
+      this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
+      if(this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
+
+      
+
     });
 
   }

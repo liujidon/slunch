@@ -1,20 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Transaction } from '../../transaction';
-import { TransactionService } from '../../providers/transaction.service';
 import { AuthService } from '../../providers/auth.service';
+import { TransactionService } from '../../providers/transaction.service';
 
 @Component({
-  selector: 'app-grid-button-group',
-  templateUrl: './grid-button-group.component.html',
-  styleUrls: ['./grid-button-group.component.css']
+  selector: 'app-grid-control-status',
+  templateUrl: './grid-control-status.component.html',
+  styleUrls: ['./grid-control-status.component.css']
 })
-export class GridButtonGroupComponent {
+export class GridControlStatusComponent {
 
   t: Transaction;
   transactionService: TransactionService;
   authService: AuthService;
 
-  agInit(params){
+  agInit(params) {
     this.t = params.data;
     this.transactionService = params.transactionService;
     this.authService = params.authService;
@@ -53,4 +53,3 @@ export class GridButtonGroupComponent {
   }
 
 }
-

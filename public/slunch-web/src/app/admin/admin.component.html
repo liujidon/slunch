@@ -7,13 +7,7 @@
             <mat-panel-title>Unprocessed Transactions</mat-panel-title>
         </mat-expansion-panel-header>
 
-        <ag-grid-angular
-        style="height: 300px;"
-        class="ag-theme-material"
-        [gridOptions]="transactionService.unprocessedGO"
-        [enableFilter]="true"
-        [enableSorting]="true"
-        [enableColResize]="true">
+        <ag-grid-angular style="height: 500px;" class="ag-theme-material" [gridOptions]="transactionService.unprocessedGO">
         </ag-grid-angular>
 
     </mat-expansion-panel>
@@ -23,6 +17,7 @@
         <mat-expansion-panel-header>
             <mat-panel-title>Today's Transactions</mat-panel-title>
             <mat-panel-description>
+                Net: &nbsp; &nbsp;
                 <span [ngClass]="getTodayPosition()>=0?'green':'red'">
                     {{getTodayPosition() | currency}}
                 </span>
@@ -30,63 +25,8 @@
         </mat-expansion-panel-header>
 
         <div *ngIf="transactionService.todayTransactions.length > 0">
-            <mat-table #todaySort="matSort" [dataSource]="transactionService.todayTransactionsDS" matSort>
-                <ng-container matColumnDef="time">
-                    <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
-                    <mat-cell *matCellDef="let o">{{o?.time | date: 'short'}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef>
-                        <strong>Total</strong>
-                    </mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="name">
-                    <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-                    <mat-cell *matCellDef="let o">{{o?.displayName}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="description">
-                    <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-                    <mat-cell *matCellDef="let o">{{o?.description}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="detail">
-                    <mat-header-cell *matHeaderCellDef>Detail</mat-header-cell>
-                    <mat-cell *matCellDef="let o">{{o?.detail}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="debit">
-                    <mat-header-cell *matHeaderCellDef>Debit</mat-header-cell>
-                    <mat-cell *matCellDef="let o">
-                        <span *ngIf="o.price >= 0" class="red">
-                            {{o.price | currency}}
-                        </span>
-                    </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>
-                        <strong class="red">{{getTotalDebit() | currency}}</strong>
-                    </mat-footer-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="credit">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header="price">Credit</mat-header-cell>
-                    <mat-cell *matCellDef="let o">
-                        <span *ngIf="o.price < 0" class="green">
-                            {{(-1*o.price) | currency}}
-                        </span>
-                    </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>
-                        <strong class="green">{{-1*getTotalCredit() | currency}}</strong>
-                    </mat-footer-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="todayColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: todayColumns;"></mat-row>
-                <mat-footer-row *matFooterRowDef="todayColumns"></mat-footer-row>
-
-            </mat-table>
-            <mat-paginator #todayPaginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons></mat-paginator>
+            <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.todayGO">
+            </ag-grid-angular>
         </div>
 
     </mat-expansion-panel>
@@ -97,6 +37,7 @@
         <mat-expansion-panel-header>
             <mat-panel-title>User Accounts</mat-panel-title>
             <mat-panel-description>
+                Total: &nbsp; &nbsp;
                 <span [ngClass]="getTotalBalance()>=0?'green':'red'">
                     {{getTotalBalance() | currency}}
                 </span>

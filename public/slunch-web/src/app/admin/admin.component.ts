@@ -52,10 +52,6 @@ export class AdminComponent implements OnInit {
     if (this.adminService.accountsDS) {
       this.adminService.accountsDS.paginator = this.accountPaginator;
     }
-    if (this.transactionService.todayTransactionsDS) {
-      this.transactionService.todayTransactionsDS.paginator = this.todayPaginator;
-      this.transactionService.todayTransactionsDS.sort = this.todaySort;
-    }
     if (this.pollService.pollOptionsDS) {
       this.pollService.pollOptionsDS.paginator = this.optionPaginator;
     }
