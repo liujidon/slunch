@@ -34,14 +34,13 @@ export class PollService {
         this.pollOptionsGO.api = params.api;
         this.pollOptionsGO.columnApi = params.columnApi;
         this.pollOptionsGO.api.setRowData(this.pollOptions);
-        this.pollOptionsGO.api.sizeColumnsToFit();
       },
       rowHeight: 120,
       columnDefs: [
         { headerName: "Name", field: "name", sort: "asc"},
-        { headerName: "Icon", cellRendererFramework: GridImageComponent, width:110 },
-        { headerName: "Icon URL", field: "iconUrl", editable: true },
-        { headerName: "Menu URL", field: "menuUrl", editable: true },
+        { headerName: "Icon", cellRendererFramework: GridImageComponent, width:150 },
+        { headerName: "Icon URL", field: "iconUrl", editable: true, width: 150 },
+        { headerName: "Menu URL", field: "menuUrl", editable: true, width: 150 },
         {
           headerName: "Control",
           cellRendererFramework: GridPollOptionControlComponent,

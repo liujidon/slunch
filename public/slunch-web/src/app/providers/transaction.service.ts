@@ -39,7 +39,7 @@ export class TransactionService {
         this.unprocessedGO.api = params.api;
         this.unprocessedGO.columnApi = params.columnApi;
         this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
-        this.unprocessedGO.api.sizeColumnsToFit();
+        this.unprocessedGO.columnApi.autoSizeAllColumns();
       },
       rowHeight: 60,
       colWidth: 150,
@@ -80,7 +80,7 @@ export class TransactionService {
         this.allGO.api = params.api;
         this.allGO.columnApi = params.columnApi;
         this.allGO.api.setRowData(this.allTransactions);
-        this.allGO.api.sizeColumnsToFit();
+        this.allGO.columnApi.autoSizeAllColumns();
       },
       columnDefs: [
         { headerName: "Time", field: "time", valueFormatter:(params)=>{
@@ -116,7 +116,7 @@ export class TransactionService {
         this.myGO.api = params.api;
         this.myGO.columnApi = params.columnApi;
         this.myGO.api.setRowData(this.myTransactions);
-        this.myGO.api.sizeColumnsToFit();
+        this.myGO.columnApi.autoSizeAllColumns();
       },
       columnDefs: [
         {headerName: "Time", field:"time", valueFormatter:(params)=>{
