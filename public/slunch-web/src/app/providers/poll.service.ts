@@ -34,7 +34,7 @@ export class PollService {
         this.pollOptionsGO.api = params.api;
         this.pollOptionsGO.columnApi = params.columnApi;
         this.pollOptionsGO.api.setRowData(this.pollOptions);
-        this.pollOptionsGO.api.sizeColumnsToFit();
+        this.pollOptionsGO.columnApi.autoSizeAllColumns();
       },
       rowHeight: 120,
       columnDefs: [
