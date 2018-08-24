@@ -51,7 +51,7 @@ export class OrderComponent implements OnInit {
     stepper.next();
     setTimeout(()=>{
       this.orderField.nativeElement.focus();
-    }, 500)
+    }, 200)
   }
 
   clickSendOrder(stepper: MatStepper){
