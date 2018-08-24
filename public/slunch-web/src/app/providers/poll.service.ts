@@ -38,7 +38,7 @@ export class PollService {
       },
       rowHeight: 120,
       columnDefs: [
-        { headerName: "Name", field: "name" },
+        { headerName: "Name", field: "name", sort: "asc"},
         { headerName: "Icon", cellRendererFramework: GridImageComponent, width:110 },
         { headerName: "Icon URL", field: "iconUrl", editable: true },
         { headerName: "Menu URL", field: "menuUrl", editable: true },
@@ -49,7 +49,7 @@ export class PollService {
         }
       ],
       animateRows: true,
-      sortingOrder: ["desc", "asc", null],
+      sortingOrder: ["asc", "desc", null],
       enableSorting: true,
       enableColResize: true,
       enableFilter: true
