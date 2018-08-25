@@ -11,6 +11,7 @@ import { GridStatusComponent } from '../gridElements/grid-status/grid-status.com
 import { GridCancelTransactionComponent } from '../gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
 import { GridUpdateTransactionComponent } from '../gridElements/grid-update-transaction/grid-update-transaction.component';
 import { GridConfirmTransactionComponent } from '../gridElements/grid-confirm-transaction/grid-confirm-transaction.component';
+import { MatBottomSheet } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class TransactionService {
   todayTransactions: Array<Transaction> = [];
 
   numUnprocessed: number;
+  numUnprocessedOrders: number;
 
   public unprocessedGO: GridOptions;
   public allGO: GridOptions;
@@ -32,7 +34,8 @@ export class TransactionService {
   constructor(
     public authService: AuthService,
     public db: AngularFirestore,
-    public formatterService: FormatterService
+    public formatterService: FormatterService,
+    public bottomSheetService: MatBottomSheet
   ) {
 
     this.unprocessedGO = {
@@ -44,62 +47,50 @@ export class TransactionService {
       },
       columnDefs: [
         {
-          headerName: "Order",
-          children: [
-            {
-              cellRendererFramework: GridControlStatusComponent,
-              cellRendererParams: { transactionService: this, authService: authService },
-              suppressSorting: true, suppressFilter: true, suppressResize: true
-            },
-            {
-              cellRendererFramework: GridStatusComponent,
-              suppressSorting: true, suppressFilter: true, suppressResize: true
-            },
-            {
-              headerName: "Time", field: "time",
-              valueFormatter: (params) => {
-                let pipe = new DatePipe("en-us");
-                return pipe.transform(params.data.time, "short");
-              }, sort: "desc",
-              sortingOrder: ["desc", "asc"],
-              suppressFilter: true,
-              suppressResize: true
-            },
-            {
-              headerName: "Name", field: "displayName", suppressFilter: true,
-              sortingOrder: ["asc", "desc", null]
-            },
-            {
-              headerName: "Description", field: "description",
-              sortingOrder: ["asc", "desc", null], suppressFilter: true
-
-            },
-            {
-              headerName: "Detail", field: "detail",
-              sortingOrder: ["asc", "desc", null],
-              suppressFilter: true,
-              suppressSorting: true
-            }
-          ]
+          headerName: "Time", field: "time",
+          valueFormatter: (params) => {
+            let pipe = new DatePipe("en-us");
+            return pipe.transform(params.data.time, "short");
+          }, sort: "desc",
+          sortingOrder: ["desc", "asc"],
+          suppressFilter: true,
+          suppressResize: true
         },
         {
-          headerName: "Calculate",
-          children: [
-            {
-              headerName: "Price", field: "price", editable: true, valueFormatter: (params) => {
-                let pipe = new CurrencyPipe("en-us");
-                return pipe.transform(params.value);
-              }, suppressSorting: true, suppressFilter: true, suppressResize: true
-            },
-            {
-              cellRendererFramework: GridConfirmTransactionComponent,
-              cellRendererParams: {
-                transactionService: this,
-                authService: authService
-              },
-              suppressSorting: true, suppressFilter: true, suppressResize: true
-            }
-          ]
+          headerName: "Name", field: "displayName", suppressFilter: true,
+          sortingOrder: ["asc", "desc", null]
+        },
+        {
+          headerName: "Description", field: "description",
+          sortingOrder: ["asc", "desc", null], suppressFilter: true
+
+        },
+        {
+          headerName: "Detail", field: "detail",
+          sortingOrder: ["asc", "desc", null],
+          suppressFilter: true,
+          suppressSorting: true
+        },
+        {
+          cellRendererFramework: GridStatusComponent,
+          suppressSorting: true, suppressFilter: true, suppressResize: true
+        },
+        {
+          headerName: "Status",
+          cellRendererFramework: GridControlStatusComponent,
+          cellRendererParams: { transactionService: this, authService: authService },
+          suppressSorting: true, suppressFilter: true, suppressResize: true
+        },
+        {
+          headerName: "Confirm Transaction",
+          cellRendererFramework: GridConfirmTransactionComponent,
+          cellRendererParams: {
+            transactionService: this,
+            authService: authService,
+            bottomSheetService: bottomSheetService,
+            caption: "Confirm"
+          },
+          suppressSorting: true, suppressFilter: true, suppressResize: true
         }
       ],
       animateRows: true,
@@ -140,11 +131,15 @@ export class TransactionService {
           }, editable: true
         },
         {
-          headerName: "Update",
-          cellRendererFramework: GridUpdateTransactionComponent,
+          headerName: "Confirm Transaction",
+          cellRendererFramework: GridConfirmTransactionComponent,
           cellRendererParams: {
-            transactionService: this
-          }
+            transactionService: this,
+            authService: authService,
+            bottomSheetService: bottomSheetService,
+            caption: "Edit"
+          },
+          suppressSorting: true, suppressFilter: true, suppressResize: true
         }
       ],
       animateRows: true,
@@ -220,12 +215,14 @@ export class TransactionService {
 
     console.log("TransactionService transactionsSubscription subscribing");
     this.transactionsSubscription = this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions => {
-      this.allTransactions = transactions;
+      this.allTransactions = transactions.filter(transaction => transaction.status == "done");
       if (this.allGO.api) this.allGO.api.setRowData(this.allTransactions);
 
       this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
       if (this.unprocessedGO.api) this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
       this.numUnprocessed = this.unprocessedTransactions.length;
+
+      this.numUnprocessedOrders = this.unprocessedTransactions.filter(transaction => !transaction.isDeposit).length;
 
       this.todayTransactions = transactions.filter(transaction => {
         let today: Date = new Date();

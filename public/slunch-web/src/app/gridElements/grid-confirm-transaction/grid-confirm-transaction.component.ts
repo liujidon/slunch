@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TransactionService } from '../../providers/transaction.service';
 import { AuthService } from '../../providers/auth.service';
 import { Transaction } from '../../transaction';
+import { MatBottomSheet } from '@angular/material';
+import { CalculatePriceComponent } from '../../calculate-price/calculate-price.component';
 
 @Component({
   selector: 'app-grid-confirm-transaction',
@@ -13,27 +15,25 @@ export class GridConfirmTransactionComponent {
   transactionService: TransactionService;
   authService: AuthService;
   t: Transaction;
+  bottomSheetService: MatBottomSheet
+  caption: string;
 
-  agInit(params){
+  agInit(params) {
     this.transactionService = params.transactionService;
     this.authService = params.authService;
     this.t = params.data;
+    this.bottomSheetService = params.bottomSheetService;
+    this.caption = params.caption;
   }
 
   confirmTransaction(t: Transaction) {
-    let p: any = t.price;
-    if (t.isDeposit) {
-      p = -parseFloat(p);
-    }
-    else {
-      p = parseFloat(p);
-    }
     let data = {
-      status: "done",
-      price: p,
-      completedBy: this.authService.getUsername()
-    };
-    this.transactionService.updateTransaction(t, data);
+      transactionService: this.transactionService,
+      authService: this.authService,
+      t: this.t
+    }
+
+    this.bottomSheetService.open(CalculatePriceComponent, { data: data });
   }
 
 }

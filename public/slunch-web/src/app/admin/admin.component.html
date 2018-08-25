@@ -11,7 +11,7 @@
         </ag-grid-angular>
 
         <div style="margin: 1em">
-            <button mat-raised-button (click)="transactionService.exportUnprocessed()">
+            <button [disabled]="!(transactionService.numUnprocessedOrders > 0)" mat-raised-button (click)="transactionService.exportUnprocessed()">
                 Export Orders
             </button>
         </div>
