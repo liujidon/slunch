@@ -4,6 +4,7 @@
   padding-bottom:1em;
   padding-right:3em;
   padding-left:3em;
+  border: 1px lightgray solid;
 }
 
 .admin-control .control + .control{

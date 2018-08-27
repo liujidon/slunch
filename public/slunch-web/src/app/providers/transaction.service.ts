@@ -9,7 +9,6 @@ import { DatePipe, CurrencyPipe } from '@angular/common';
 import { GridControlStatusComponent } from '../gridElements/grid-control-status/grid-control-status.component';
 import { GridStatusComponent } from '../gridElements/grid-status/grid-status.component';
 import { GridCancelTransactionComponent } from '../gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
-import { GridUpdateTransactionComponent } from '../gridElements/grid-update-transaction/grid-update-transaction.component';
 import { GridConfirmTransactionComponent } from '../gridElements/grid-confirm-transaction/grid-confirm-transaction.component';
 import { MatBottomSheet } from '@angular/material';
 
