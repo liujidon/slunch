@@ -43,12 +43,12 @@
       </span>
     </button>
     <button mat-menu-item *ngIf="authService.isAdmin">
-      <mat-slide-toggle style="width: 100%; height:100%" [(ngModel)]="pollService.allowPoll" (click)="togglePoll()">
+      <mat-slide-toggle style="width: 100%; height:100%" [disabled]="stateService.isOrdering" [(ngModel)]="pollService.allowPoll" (click)="togglePoll()">
         Show Poll
       </mat-slide-toggle>
     </button>
     <button mat-menu-item *ngIf="authService.isAdmin">
-      <mat-slide-toggle style="width: 100%; height:100%" disabled="{{pollService.getAdminSelectedOptions().length < 1}}" [(ngModel)]="stateService.isOrdering" (click)="toggleOrders()">
+      <mat-slide-toggle style="width: 100%; height:100%" [disabled]="!(pollService.getAdminSelectedOptions().length > 0 && pollService.allowPoll)" [(ngModel)]="stateService.isOrdering" (click)="toggleOrders()">
         Allow Orders
       </mat-slide-toggle>
     </button>
