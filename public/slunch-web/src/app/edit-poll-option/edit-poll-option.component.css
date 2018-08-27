@@ -1,7 +1,7 @@
 .container{
     padding: 5px 0px;
     margin: auto;
-    width: 360px;
+    max-width: 360px;
 }
 
 .outline{
