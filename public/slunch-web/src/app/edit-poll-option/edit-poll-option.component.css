@@ -1,0 +1,42 @@
+.container{
+    padding: 5px 0px;
+    margin: auto;
+    width: 360px;
+}
+
+.outline{
+    background: #ffffff;
+    border: solid 1px lightgray;
+    color: #3a3944;
+    padding: 0 20px 20px;
+    position: relative;
+}
+
+.item{
+    padding-top: 20px;
+}
+
+.item.bottom-divider{
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 20px;
+}
+
+.detail{
+    color: rgba(38,45,59,1);
+    font-size: 15px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:block;
+    margin-bottom: 0px;
+}
+
+.sub-detail{
+    color: rgba(124,126,145,1);
+    font-size: 13px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:block;
+    margin-top: 5px;
+}

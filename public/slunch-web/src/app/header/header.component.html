@@ -11,10 +11,10 @@
   <!--<mat-icon class="clickable" style="color: white; font-size:200%" (click)="logout()" matTooltip="Sign Out">exit_to_app</mat-icon>-->
   <!--</div>-->
   <button style="color: white; margin-right: 1vw;" mat-button [matMenuTriggerFor]="menu">
-    <span style="font-size: 18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+    <span style="font-size: 18px">
       {{authService.getUsername()}}
     </span>
-    <span style="font-size: 18px;" [ngClass]="authService.account?.balance > 0 ? 'lightgreen':'lightred'">
+    <span style="font-size: 18px" [ngClass]="authService.account?.balance > 0 ? 'lightgreen':'lightred'">
       {{authService.account?.balance | currency}}
     </span>
     <span></span>

@@ -76,6 +76,7 @@ import { GridImageComponent } from './gridElements/grid-image/grid-image.compone
 import { GridPollOptionControlComponent } from './gridElements/grid-poll-option-control/grid-poll-option-control.component';
 import { GridConfirmTransactionComponent } from './gridElements/grid-confirm-transaction/grid-confirm-transaction.component';
 import { CalculatePriceComponent } from './calculate-price/calculate-price.component';
+import { EditPollOptionComponent } from './edit-poll-option/edit-poll-option.component';
 
 @NgModule({
   exports: [
@@ -138,7 +139,8 @@ export class MaterialModule {}
     GridImageComponent,
     GridPollOptionControlComponent,
     GridConfirmTransactionComponent,
-    CalculatePriceComponent
+    CalculatePriceComponent,
+    EditPollOptionComponent
   ],
   imports: [
     BrowserModule,
@@ -169,7 +171,8 @@ export class MaterialModule {}
     GridImageComponent,
     GridPollOptionControlComponent,
     GridConfirmTransactionComponent,
-    CalculatePriceComponent
+    CalculatePriceComponent,
+    EditPollOptionComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -9,6 +9,7 @@ import { StateFace } from '../interfaces';
 import { GridOptions } from 'ag-grid';
 import { GridImageComponent } from '../gridElements/grid-image/grid-image.component';
 import { GridPollOptionControlComponent } from '../gridElements/grid-poll-option-control/grid-poll-option-control.component';
+import { MatBottomSheet } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,11 @@ export class PollService {
   stateSubscription: Subscription;
   allowPoll: Boolean;
 
-  constructor(public db: AngularFirestore, public authService: AuthService) {
+  constructor(
+    public db: AngularFirestore,
+    public authService: AuthService,
+    public bottomSheetService: MatBottomSheet
+  ) {
 
     this.pollOptionsGO = {
       onGridReady: (params) => {
@@ -42,12 +47,13 @@ export class PollService {
           cellRendererFramework: GridImageComponent,
           width: 150
         },
-        { headerName: "Icon URL", field: "iconUrl", editable: true, width: 150 },
-        { headerName: "Menu URL", field: "menuUrl", editable: true, width: 150 },
         {
-          headerName: "Control",
+          headerName: "Edit",
           cellRendererFramework: GridPollOptionControlComponent,
-          cellRendererParams: { pollService: this }
+          cellRendererParams: { 
+            pollService: this,
+            bottomSheetService: this.bottomSheetService
+          }
         }
       ],
       animateRows: true,
