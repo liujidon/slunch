@@ -1,9 +1,9 @@
 <mat-card class="option">
 
   <div fxLayout="row">
-    <div fxFlex="50px"></div>
-    <div fxFlex="200px"></div>
-    <div fxFlex="50px">
+    <div fxFlex="0 1 50px"></div>
+    <div fxFlex="0 1 200px"></div>
+    <div fxFlex="0 1 50px">
       <h2>
         <mat-icon [color]="myvote() ? 'primary' : ''">thumb_up</mat-icon>
         <span>{{pollOption.votes.length}}</span>
@@ -30,7 +30,7 @@
     <div fxFlex="200px"></div>
     <div fxFlex="50px"></div>
   </div>
-  
+
 </mat-card>
 
 
