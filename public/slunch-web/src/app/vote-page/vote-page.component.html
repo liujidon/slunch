@@ -1,5 +1,21 @@
 <app-header></app-header>
 
+<div *ngIf="authService.isAdmin" class="admin-control">
+  <div class="control">
+    <mat-slide-toggle style="width: 100%; height:100%" [disabled]="stateService.isOrdering" [(ngModel)]="pollService.allowPoll"
+      (click)="togglePoll()">
+      <span style="text-overflow:clip;overflow:hidden">Show Poll</span>
+    </mat-slide-toggle>
+  </div>
+  <div class="control">
+    <mat-slide-toggle style="width: 100%; height:100%" [disabled]="!(pollService.getAdminSelectedOptions().length > 0 && pollService.allowPoll)"
+      [(ngModel)]="stateService.isOrdering" (click)="toggleOrders()">
+      <span>Allow Orders</span>
+    </mat-slide-toggle>
+  </div>
+
+</div>
+
 <div *ngIf="!stateService.isOrdering && pollService.allowPoll">
   <app-poll></app-poll>
 </div>

@@ -36,8 +36,12 @@ export class PollService {
       },
       rowHeight: 120,
       columnDefs: [
-        { headerName: "Name", field: "name", sort: "asc"},
-        { headerName: "Icon", cellRendererFramework: GridImageComponent, width:150 },
+        { headerName: "Name", field: "name", sort: "asc" },
+        {
+          headerName: "Icon",
+          cellRendererFramework: GridImageComponent,
+          width: 150
+        },
         { headerName: "Icon URL", field: "iconUrl", editable: true, width: 150 },
         { headerName: "Menu URL", field: "menuUrl", editable: true, width: 150 },
         {
@@ -91,7 +95,7 @@ export class PollService {
       this.pollOptionsSubscription.unsubscribe();
     }
 
-    if (this.stateSubscription){
+    if (this.stateSubscription) {
       console.log("PollService stateSubscription unsubscribing");
       this.stateSubscription.unsubscribe();
     }

@@ -43,36 +43,6 @@ export class HeaderComponent implements OnInit {
 
   }
 
-  toggleOrders() {
-    if (this.pollService.getAdminSelectedOptions().length > 0 && this.pollService.allowPoll) {
-      if (this.stateService.state.allowOrders) {
-        this.stateService.setState({
-          allowOrders: false
-        });
-      }
-      else {
-        this.stateService.setState({
-          allowOrders: true
-        });
-      }
-    }
-  }
-
-  togglePoll() {
-    if (!this.stateService.isOrdering) {
-      if (this.pollService.allowPoll) {
-        this.stateService.setState({
-          allowPoll: false
-        });
-      }
-      else {
-        this.stateService.setState({
-          allowPoll: true
-        });
-      }
-    }
-  }
-
   logoClick() {
     this.router.navigate(["vote"]);
   }
