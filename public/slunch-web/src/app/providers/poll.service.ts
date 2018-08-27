@@ -3,7 +3,6 @@ import { PollOption } from '../poll-option';
 import { Poll } from '../poll';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AuthService } from './auth.service';
-import { MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs'
 import { environment } from '../../environments/environment';
 import { StateFace } from '../interfaces';
@@ -90,6 +89,11 @@ export class PollService {
     if (this.pollOptionsSubscription) {
       console.log("PollService pollOptionsSubscription unsubscribing");
       this.pollOptionsSubscription.unsubscribe();
+    }
+
+    if (this.stateSubscription){
+      console.log("PollService stateSubscription unsubscribing");
+      this.stateSubscription.unsubscribe();
     }
 
   }

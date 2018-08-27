@@ -27,6 +27,10 @@ export class CalculatePriceComponent implements OnDestroy{
     this.authService = data.authService;
     this.transactionService = data.transactionService;
 
+    if(this.t.status == "done"){
+      this.t.price = 0;
+    }
+
     this.backDropSubscription = this.bottomSheetRef.backdropClick().subscribe(()=>{
       this.t.price = this.origPrice;
     });
