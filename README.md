@@ -1,5 +1,5 @@
 ## Slunch
-https://slunch-voter.firebaseapp.com
+https://slunch-voter-dev.firebaseapp.com/
 
 ## Setup
 ```
