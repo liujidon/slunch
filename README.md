@@ -1,5 +1,6 @@
 ## Slunch
-https://slunch-voter-dev.firebaseapp.com/
+Prod: https://slunch-voter.firebaseapp.com/
+Dev: https://slunch-voter-dev.firebaseapp.com/
 
 ## Setup
 ```
