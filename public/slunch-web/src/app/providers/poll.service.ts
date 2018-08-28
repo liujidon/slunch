@@ -90,7 +90,7 @@ export class PollService {
       }, PollOption);
       if (this.pollOptionsGO.api) this.pollOptionsGO.api.setRowData(this.pollOptions);
 
-      this.newOptions = this.pollOptions.filter((po)=>po.menuUrl=="http://www.google.com").length;
+      this.newOptions = this.pollOptions.filter((po)=>po.menuUrl=="http://www.google.com" || po.iconUrl==environment.defaultIconUrl).length;
 
     });
 
