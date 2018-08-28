@@ -3,13 +3,13 @@ import { PollOption } from '../poll-option';
 import { Poll } from '../poll';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AuthService } from './auth.service';
-import { MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs'
 import { environment } from '../../environments/environment';
 import { StateFace } from '../interfaces';
 import { GridOptions } from 'ag-grid';
 import { GridImageComponent } from '../gridElements/grid-image/grid-image.component';
 import { GridPollOptionControlComponent } from '../gridElements/grid-poll-option-control/grid-poll-option-control.component';
+import { MatBottomSheet } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,13 @@ export class PollService {
   stateSubscription: Subscription;
   allowPoll: Boolean;
 
-  constructor(public db: AngularFirestore, public authService: AuthService) {
+  newOptions: number = 0;
+
+  constructor(
+    public db: AngularFirestore,
+    public authService: AuthService,
+    public bottomSheetService: MatBottomSheet
+  ) {
 
     this.pollOptionsGO = {
       onGridReady: (params) => {
@@ -37,14 +43,19 @@ export class PollService {
       },
       rowHeight: 120,
       columnDefs: [
-        { headerName: "Name", field: "name", sort: "asc"},
-        { headerName: "Icon", cellRendererFramework: GridImageComponent, width:150 },
-        { headerName: "Icon URL", field: "iconUrl", editable: true, width: 150 },
-        { headerName: "Menu URL", field: "menuUrl", editable: true, width: 150 },
+        { headerName: "Name", field: "name", sort: "asc" },
         {
-          headerName: "Control",
+          headerName: "Icon",
+          cellRendererFramework: GridImageComponent,
+          width: 150
+        },
+        {
+          headerName: "Edit",
           cellRendererFramework: GridPollOptionControlComponent,
-          cellRendererParams: { pollService: this }
+          cellRendererParams: { 
+            pollService: this,
+            bottomSheetService: this.bottomSheetService
+          }
         }
       ],
       animateRows: true,
@@ -64,6 +75,7 @@ export class PollService {
 
     console.log("PollService pollOptionsSubscription subscribing");
     this.pollOptionsSubscription = this.db.collection<PollOption>('poll-options').snapshotChanges().subscribe(docChangeActions => {
+      
       this.pollOptions = docChangeActions.map(docChangeAction => {
         let doc: any = docChangeAction.payload.doc;
         let po = doc.data();
@@ -71,6 +83,8 @@ export class PollService {
         return po;
       }, PollOption);
       if (this.pollOptionsGO.api) this.pollOptionsGO.api.setRowData(this.pollOptions);
+
+      this.newOptions = this.pollOptions.filter((po)=>po.menuUrl=="http://www.google.com").length;
 
     });
 
@@ -90,6 +104,11 @@ export class PollService {
     if (this.pollOptionsSubscription) {
       console.log("PollService pollOptionsSubscription unsubscribing");
       this.pollOptionsSubscription.unsubscribe();
+    }
+
+    if (this.stateSubscription) {
+      console.log("PollService stateSubscription unsubscribing");
+      this.stateSubscription.unsubscribe();
     }
 
   }

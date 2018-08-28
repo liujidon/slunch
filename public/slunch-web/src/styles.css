@@ -2,10 +2,16 @@
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import 'ag-grid/dist/styles/ag-grid.css';
 @import 'ag-grid/dist/styles/ag-theme-material.css';
+@import 'ag-grid/dist/styles/ag-theme-balham.css';
+@import 'ag-grid/dist/styles/ag-theme-balham-dark.css';
+@import 'ag-grid/dist/styles/ag-theme-bootstrap.css';
+@import 'ag-grid/dist/styles/ag-theme-fresh.css';
 
 body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;
+  overflow-x: hidden;
+  width: 100%;
 }
 .clickable {
   cursor: pointer;
@@ -27,4 +33,12 @@ mat-grid-tile div img {
 
 .red{
   color: red;
+}
+
+.lightgreen{
+  color: lightgreen;
+}
+
+.lightred{
+  color: lightpink;
 }

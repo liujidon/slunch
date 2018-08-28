@@ -20,22 +20,6 @@ export class GridControlStatusComponent {
     this.authService = params.authService;
   }
 
-  confirmTransaction(t: Transaction) {
-    let p: any = t.price;
-    if (t.isDeposit) {
-      p = -parseFloat(p);
-    }
-    else {
-      p = parseFloat(p);
-    }
-    let data = {
-      status: "done",
-      price: p,
-      completedBy: this.authService.getUsername()
-    };
-    this.transactionService.updateTransaction(t, data);
-  }
-
   confirmOrdered(t: Transaction) {
     let data = {
       status: "ordered",

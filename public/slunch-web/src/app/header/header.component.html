@@ -1,50 +1,86 @@
-<div fxLayout="row" fxLayoutAlign="start center" style="width:100%; background-color:#d81e05">
-  <div fxFlexOffset="0.7%" fxFlex="69%">
-    <strong style="color: white; position: relative; font-size:55px">Slunch</strong>
+<div fxLayout="row" fxLayoutAlign="space-between center" style="width:100%; background-color:#d81e05">
+  <div>
+    <strong style="color: white; position: relative; float: left; font-size:55px">Slunch</strong>
   </div>
-  <div fxFlex="25%">
-    <strong style="color: white; position: relative; font-size:20px">
-      {{authService.getUsername()}}: {{authService.account?.balance | currency}}
-    </strong>
-  </div>
-  <div fxFlex="2%">
-    <mat-icon class="clickable" style="color: white; font-size:200%" (click)="logout()" matTooltip="Sign Out">exit_to_app</mat-icon>
-  </div>
-
+  <!--<div fxFlex="1 1 25%">-->
+  <!--<strong style="color: white; position: relative; font-size:12px">-->
+  <!--{{authService.getUsername()}}: {{authService.account?.balance | currency}}-->
+  <!--</strong>-->
+  <!--</div>-->
+  <!--<div fxFlex="2%">-->
+  <!--<mat-icon class="clickable" style="color: white; font-size:200%" (click)="logout()" matTooltip="Sign Out">exit_to_app</mat-icon>-->
+  <!--</div>-->
+  <button style="color: white; margin-right: 1vw;" mat-button [matMenuTriggerFor]="menu">
+    <span style="font-size: 18px">
+      {{authService.getUsername()}}
+    </span>
+    <span style="font-size: 18px" [ngClass]="authService.account?.balance > 0 ? 'lightgreen':'lightred'">
+      {{authService.account?.balance | currency}}
+    </span>
+    <span></span>
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+  <mat-menu style="align-content: center; display:none; width: 100%" #menu="matMenu" [overlapTrigger]="false" yPosition="below">
+    <button mat-menu-item (click)="router.navigate(['vote'])">
+      <span>
+        <mat-icon>how_to_vote</mat-icon>
+        Vote/Order</span>
+    </button>
+    <button mat-menu-item (click)="router.navigate(['account'])">
+      <span>
+        <mat-icon>person</mat-icon>
+        Account
+      </span>
+    </button>
+    <button mat-menu-item *ngIf="authService.isAdmin" (click)="router.navigate(['admin'])">
+      <span [matBadge]="transactionService.numUnprocessed" matBadgeOverlap="false" [matBadgeColor]="transactionService.numUnprocessed == 0 ? 'primary':'warn'">
+        <mat-icon>settings</mat-icon> Admin</span>
+    </button>
+    <button mat-menu-item *ngIf="authService.isAdmin" (click)="router.navigate(['new-poll'])">
+      <span>
+        <mat-icon>playlist_add</mat-icon>
+        New Poll
+      </span>
+    </button>
+    <button mat-menu-item (click)="logout()" matTooltip="Sign Out">
+      <span>
+        <mat-icon>exit_to_app</mat-icon>
+        Logout</span>
+    </button>
+  </mat-menu>
 </div>
 
-<nav mat-tab-nav-bar>
-  <div fxLayout="row wrap">
-    <div>
-      <a mat-tab-link (click)="router.navigate(['vote'])">Vote/Order</a>
-    </div>
-    <div>
-      <a mat-tab-link (click)="router.navigate(['account'])">Account</a>
-    </div>
-    <div>
-      <a mat-tab-link *ngIf="authService.isAdmin" (click)="router.navigate(['admin'])">
-        <p>
-          <span [matBadge]="transactionService.numUnprocessed" matBadgeOverlap="false" [matBadgeColor]="transactionService.numUnprocessed == 0 ? 'primary':'warn'">
-            Admin
-          </span>
-        </p>
-      </a>
-    </div>
-    <div>
-      <a mat-tab-link (click)="router.navigate(['new-poll'])" *ngIf="authService.isAdmin">
-        New Poll
-      </a>
-    </div>
-    <div>
-      <span mat-tab-link *ngIf="authService.isAdmin" (click)="togglePoll()">
-        <mat-slide-toggle [(ngModel)]="pollService.allowPoll">Show Poll</mat-slide-toggle>
-      </span>
-    </div>
-    <div>
-      <span mat-tab-link *ngIf="authService.isAdmin" (click)="toggleOrders()">
-        <mat-slide-toggle disabled="{{pollService.getAdminSelectedOptions().length < 1}}" [(ngModel)]="stateService.isOrdering">Allow Orders</mat-slide-toggle>
-      </span>
-    </div>
-  </div>
-
-</nav>
+<!--<nav mat-tab-nav-bar>-->
+<!--<div fxLayout="row wrap">-->
+<!--<div>-->
+<!--<a mat-tab-link (click)="router.navigate(['vote'])">Vote/Order</a>-->
+<!--</div>-->
+<!--<div>-->
+<!--<a mat-tab-link (click)="router.navigate(['account'])">Account</a>-->
+<!--</div>-->
+<!--<div>-->
+<!--<a mat-tab-link *ngIf="authService.isAdmin" (click)="router.navigate(['admin'])">-->
+<!--<p>-->
+<!--<span [matBadge]="transactionService.numUnprocessed" matBadgeOverlap="false" [matBadgeColor]="transactionService.numUnprocessed == 0 ? 'primary':'warn'">-->
+<!--Admin-->
+<!--</span>-->
+<!--</p>-->
+<!--</a>-->
+<!--</div>-->
+<!--<div>-->
+<!--<a mat-tab-link (click)="router.navigate(['new-poll'])" *ngIf="authService.isAdmin">-->
+<!--New Poll-->
+<!--</a>-->
+<!--</div>-->
+<!--<div>-->
+<!--<span mat-tab-link *ngIf="authService.isAdmin" (click)="togglePoll()">-->
+<!--<mat-slide-toggle [(ngModel)]="pollService.allowPoll">Show Poll</mat-slide-toggle>-->
+<!--</span>-->
+<!--</div>-->
+<!--<div>-->
+<!--<span mat-tab-link *ngIf="authService.isAdmin" (click)="toggleOrders()">-->
+<!--<mat-slide-toggle disabled="{{pollService.getAdminSelectedOptions().length < 1}}" [(ngModel)]="stateService.isOrdering">Allow Orders</mat-slide-toggle>-->
+<!--</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--</nav>-->

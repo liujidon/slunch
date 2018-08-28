@@ -15,6 +15,8 @@ export class AdminService {
   accounts: Array<AccountFace> = [];
   accountsSubscription: Subscription;
 
+  totalBalance: number = 0;
+
   accountsGO: GridOptions;
 
   constructor(public authService: AuthService, public db:AngularFirestore) {
@@ -53,6 +55,9 @@ export class AdminService {
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").valueChanges().subscribe(accounts => {
       this.accounts = accounts;
       if(this.accountsGO.api) this.accountsGO.api.setRowData(this.accounts);
+
+      this.totalBalance = this.accounts.map(a => a.balance).reduce((acc, v) => acc + v, 0);
+
     });
   }
 
@@ -61,6 +66,8 @@ export class AdminService {
     this.accountsSubscription.unsubscribe();
 
   }
+
+  
 
 
 

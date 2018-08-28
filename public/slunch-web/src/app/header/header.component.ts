@@ -25,57 +25,29 @@ export class HeaderComponent implements OnInit {
     public stateService: StateService,
     public router: Router,
     public pollService: PollService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.router.events.subscribe(() => {
-      if(this.authService.isLoggedIn()){
+      if (this.authService.isLoggedIn()) {
         this.username = this.authService.getUsername();
       }
-      else{
+      else {
         this.username = "";
       }
     });
 
-    if(!this.serviceHandlerService.subscribed){
+    if (!this.serviceHandlerService.subscribed) {
       this.serviceHandlerService.subscribe();
     }
 
   }
 
-  toggleOrders(){
-    if(this.pollService.getAdminSelectedOptions().length > 0){
-      if(this.stateService.state.allowOrders){
-        this.stateService.setState({
-          allowOrders: false
-        });
-      }
-      else{
-        this.stateService.setState({
-          allowOrders: true
-        });
-      }
-    }
-  }
-
-  togglePoll(){
-    if(this.pollService.allowPoll){
-      this.stateService.setState({
-        allowPoll: false
-      });
-    }
-    else{
-      this.stateService.setState({
-        allowPoll: true
-      });
-    }
-  }
-
-  logoClick(){
+  logoClick() {
     this.router.navigate(["vote"]);
   }
 
-  logout(){
+  logout() {
     this.serviceHandlerService.unsubscribe();
     this.authService.logout();
   }

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PollService } from '../../providers/poll.service';
 import { PollOption } from '../../poll-option';
+import { MatBottomSheet } from '@angular/material';
+import { EditPollOptionComponent } from '../../edit-poll-option/edit-poll-option.component';
 
 @Component({
   selector: 'app-grid-poll-option-control',
@@ -11,18 +13,22 @@ export class GridPollOptionControlComponent {
 
   po: PollOption;
   pollService: PollService;
+  bottomSheetService: MatBottomSheet;
 
   agInit(params){
     this.po = params.data;
     this.pollService = params.pollService;
+    this.bottomSheetService = params.bottomSheetService;
   }
 
-  updatePollOption(po:PollOption){
-    this.pollService.updatePollOption(po);
+  editPollOption(){
+    let data = {
+      po: this.po,
+      pollService: this.pollService
+    }
+    this.bottomSheetService.open(EditPollOptionComponent, {data: data});
   }
 
-  deletePollOption(po:PollOption){
-    this.pollService.deletePollOption(po);
-  }
+
 
 }
