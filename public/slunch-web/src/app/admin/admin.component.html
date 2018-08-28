@@ -59,7 +59,7 @@
         <mat-expansion-panel-header style="height: 300px">
             <mat-panel-title>Food Options</mat-panel-title>
             <mat-panel-description *ngIf="pollService.newOptions > 0" class="flex-grow-zero">
-                New Options: &nbsp; <strong class="red">{{pollService.newOptions}}</strong>
+                <strong>New:</strong> &nbsp; <strong class="red">{{pollService.newOptions}}</strong>
             </mat-panel-description>
         </mat-expansion-panel-header>
 

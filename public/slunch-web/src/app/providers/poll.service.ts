@@ -68,7 +68,10 @@ export class PollService {
       sortingOrder: ["asc", "desc", null],
       enableSorting: true,
       enableColResize: true,
-      enableFilter: true
+      enableFilter: true,
+      rowClassRules: {
+        "lightred-background": (params)=>params.data.menuUrl=="http://www.google.com" || params.data.iconUrl==environment.defaultIconUrl
+      }
     }
 
   }

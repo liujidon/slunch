@@ -34,7 +34,8 @@
     </button>
     <button mat-menu-item *ngIf="authService.isAdmin" (click)="router.navigate(['admin'])">
       <span [matBadge]="transactionService.numUnprocessed" matBadgeOverlap="false" [matBadgeColor]="transactionService.numUnprocessed == 0 ? 'primary':'warn'">
-        <mat-icon>settings</mat-icon> Admin</span>
+        <mat-icon>settings</mat-icon> Admin
+      </span>
     </button>
     <button mat-menu-item *ngIf="authService.isAdmin" (click)="router.navigate(['new-poll'])">
       <span>

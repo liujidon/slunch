@@ -1,9 +1,10 @@
 <div class="container">
   <div class="outline">
-    <div class="item bottom-divider">
-      <strong class="detail">
-        {{po.name}}
-      </strong>
+    <div class="item bottom-divider" >
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="po.name">
+      </mat-form-field>
     </div>
     <div class="item bottom-divider" style="padding-bottom: 0px;">
       <mat-form-field appearance="outline" style="width: 100%">

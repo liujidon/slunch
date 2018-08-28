@@ -42,3 +42,7 @@ mat-grid-tile div img {
 .lightred{
   color: lightpink;
 }
+
+.lightred-background{
+  background-color: lightpink;
+}
