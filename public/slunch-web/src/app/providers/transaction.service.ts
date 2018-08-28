@@ -230,6 +230,7 @@ export class TransactionService {
         today.setSeconds(0);
         today.setMinutes(0);
         today.setHours(0);
+
         return new Date(transaction.time) >= today;
       });
 
@@ -237,7 +238,7 @@ export class TransactionService {
       this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
       if (this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
 
-      this.todayPosition = -1 * this.todayTransactions.map(t => t.status=="done" ? t.price : 0).reduce((acc, v) => acc + v, 0);
+      this.todayPosition = -1 * this.todayTransactions.map(t => t.status=="done" ? parseFloat(t.price+"") : 0).reduce((acc, v) => acc + v, 0);
 
 
     });
