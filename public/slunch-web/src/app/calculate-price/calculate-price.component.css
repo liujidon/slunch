@@ -29,10 +29,6 @@
     margin-top: 5px;
 }
 
-.receipt-item .receipt-info + .receipt-info.under-input{
-    margin-top: 15px;
-}
-
 .pull-right{
     float: right!important;
 }

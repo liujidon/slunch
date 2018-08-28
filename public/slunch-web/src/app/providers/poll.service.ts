@@ -27,6 +27,8 @@ export class PollService {
   stateSubscription: Subscription;
   allowPoll: Boolean;
 
+  newOptions: number = 0;
+
   constructor(
     public db: AngularFirestore,
     public authService: AuthService,
@@ -73,6 +75,7 @@ export class PollService {
 
     console.log("PollService pollOptionsSubscription subscribing");
     this.pollOptionsSubscription = this.db.collection<PollOption>('poll-options').snapshotChanges().subscribe(docChangeActions => {
+      
       this.pollOptions = docChangeActions.map(docChangeAction => {
         let doc: any = docChangeAction.payload.doc;
         let po = doc.data();
@@ -80,6 +83,8 @@ export class PollService {
         return po;
       }, PollOption);
       if (this.pollOptionsGO.api) this.pollOptionsGO.api.setRowData(this.pollOptions);
+
+      this.newOptions = this.pollOptions.filter((po)=>po.menuUrl=="http://www.google.com").length;
 
     });
 

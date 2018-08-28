@@ -20,13 +20,14 @@
 
     <mat-expansion-panel style="margin:3em">
         <mat-expansion-panel-header>
-          <div style="width:100%" fxLayout="row" fxLayoutAlign="space-between center">
-            <mat-panel-title class="flex-grow-zero">Transactions</mat-panel-title>
-            <mat-panel-description class="flex-grow-zero">
-                Net today: &nbsp;<span [ngClass]="getTodayPosition()>=0?'green':'red'">{{getTodayPosition() | currency}}
-                </span>
-            </mat-panel-description>
-          </div>
+            <div style="width:100%" fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-panel-title class="flex-grow-zero">Transactions</mat-panel-title>
+                <mat-panel-description class="flex-grow-zero">
+                    Net today: &nbsp;
+                    <span [ngClass]="transactionService.todayPosition >=0 ?'green':'red'">{{transactionService.todayPosition | currency}}
+                    </span>
+                </mat-panel-description>
+            </div>
         </mat-expansion-panel-header>
 
         <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.allGO">
@@ -38,14 +39,14 @@
 
     <mat-expansion-panel style="margin:3em">
         <mat-expansion-panel-header>
-          <div style="width:100%" fxLayout="row" fxLayoutAlign="space-between center">
-          <mat-panel-title class="flex-grow-zero">User Accounts</mat-panel-title>
-            <mat-panel-description class="flex-grow-zero">
-                Total: &nbsp;
-                <span [ngClass]="getTotalBalance()>=0?'green':'red'">{{getTotalBalance() | currency}}
-                </span>
-            </mat-panel-description>
-          </div>
+            <div style="width:100%" fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-panel-title class="flex-grow-zero">User Accounts</mat-panel-title>
+                <mat-panel-description class="flex-grow-zero">
+                    Total: &nbsp;
+                    <span [ngClass]="adminService.totalBalance>=0?'green':'red'">{{adminService.totalBalance | currency}}
+                    </span>
+                </mat-panel-description>
+            </div>
         </mat-expansion-panel-header>
 
         <ag-grid-angular [gridOptions]="adminService.accountsGO" class="ag-theme-material" style="height: 500px">
@@ -55,8 +56,11 @@
 
 
     <mat-expansion-panel style="margin:3em">
-        <mat-expansion-panel-header>
+        <mat-expansion-panel-header style="height: 300px">
             <mat-panel-title>Food Options</mat-panel-title>
+            <mat-panel-description *ngIf="pollService.newOptions > 0" class="flex-grow-zero">
+                New Options: &nbsp; <strong class="red">{{pollService.newOptions}}</strong>
+            </mat-panel-description>
         </mat-expansion-panel-header>
 
         <ag-grid-angular [gridOptions]="pollService.pollOptionsGO" class="ag-theme-material" style="height: 500px">

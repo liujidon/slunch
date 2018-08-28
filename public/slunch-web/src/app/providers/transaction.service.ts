@@ -23,6 +23,7 @@ export class TransactionService {
   unprocessedTransactions: Array<Transaction> = [];
   todayTransactions: Array<Transaction> = [];
 
+  todayPosition: number = 0;
   numUnprocessed: number;
   numUnprocessedOrders: number;
 
@@ -127,7 +128,7 @@ export class TransactionService {
           }, cellClass: (params) => {
             if (params.value >= 0) return 'red';
             else return 'green';
-          }, editable: true
+          }
         },
         {
           headerName: "Confirm Transaction",
@@ -236,6 +237,7 @@ export class TransactionService {
       this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
       if (this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
 
+      this.todayPosition = -1 * this.todayTransactions.map(t => t.status=="done" ? t.price : 0).reduce((acc, v) => acc + v, 0);
 
 
     });

@@ -8,6 +8,11 @@
       </p>
       <p class="receipt-info">
         <span class="" style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+          {{t.detail}}
+        </span>
+      </p>
+      <p class="receipt-info">
+        <span class="" style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
           {{t.displayName}}
         </span>
       </p>
@@ -20,45 +25,33 @@
 
     <div *ngIf="!t.isDeposit">
       <div class="receipt-item bottom-divider">
-        <p class="receipt-info">
-          <span class="pull-right " style="color: rgba(38,45,59,1);font-size: 15px;">
-            <input [(ngModel)]="t.price" style="width: 3rem">
-          </span>
-          <span style="color: rgba(38,45,59,1);font-size: 15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
-            {{t.detail}}
-          </span>
-        </p>
-        <p class="receipt-info under-input">
-          <span class="pull-right " style="color: rgba(124,126,145,1);font-size: 13px;">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput [(ngModel)]="t.price">
+        </mat-form-field>
+        <p style="margin: 0px 0px">
+          <span class="pull-right" style="color: rgba(124,126,145,1);font-size: 13px;">
             {{calcTax() | currency}}
           </span>
-          <span class="" style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+          <span style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
             Tax
           </span>
         </p>
       </div>
-      <div class="receipt-item bottom-divider">
-        <p class="receipt-info">
-          <span class="pull-right " style="color: rgba(38,45,59,1);font-size: 15px;">
-            <input [(ngModel)]="fixed" style="width: 3rem">
-          </span>
-          <span style="color: rgba(38,45,59,1);font-size: 15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
-            Fixed Cost
-          </span>
-        </p>
+      <div class="receipt-item bottom-divider" style="padding-bottom: 0px">
+        <mat-form-field appearance="outline">
+          <mat-label>Fixed Cost</mat-label>
+          <input matInput [(ngModel)]="fixed">
+        </mat-form-field>
       </div>
     </div>
-    
+
     <div *ngIf="t.isDeposit">
-      <div class="receipt-item bottom-divider">
-        <p class="receipt-info">
-          <span class="pull-right " style="color: rgba(38,45,59,1);font-size: 15px;">
-            <input [(ngModel)]="t.price" style="width: 3rem">
-          </span>
-          <span style="color: rgba(38,45,59,1);font-size: 15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
-            Amount
-          </span>
-        </p>
+      <div class="receipt-item bottom-divider" style="padding-bottom: 0px">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput [(ngModel)]="t.price">
+        </mat-form-field>
       </div>
     </div>
 

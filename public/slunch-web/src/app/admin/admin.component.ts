@@ -28,29 +28,6 @@ export class AdminComponent implements OnInit {
 
   }
 
-  getTodayPosition() {
-    if (this.transactionService.todayTransactions) {
-      return -1 * this.transactionService.todayTransactions.map(t => {
-        if(t.status == "done"){
-          return parseFloat(t.price+"");
-        }
-        else return 0;
-      }).reduce((acc, v) => acc + v, 0);
-    }
-    else {
-      return 0;
-    }
-  }
-
-  getTotalBalance() {
-    if (this.adminService.accounts) {
-      return this.adminService.accounts.map(a => a.balance).reduce((acc, v) => acc + v, 0);
-    }
-    else {
-      return 0;
-    }
-  }
-
   updatePollOption(po:PollOption){
     this.pollService.updatePollOption(po);
   }
