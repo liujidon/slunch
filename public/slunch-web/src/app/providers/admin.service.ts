@@ -36,13 +36,13 @@ export class AdminService {
         }, cellClass:(params)=>{
           if(params.value > 0) return "green";
           else return "red";
-        }},
+        }, sortingOrder:["desc", "asc"], sort:"desc", suppressFilter: true},
         {headerName:"Name", valueGetter:(params)=>{
           return params.data.firstname + " " + params.data.lastname;
         }}
       ],
       animateRows: true,
-      sortingOrder:["desc", "asc", null],
+      sortingOrder:["asc", "desc", null],
       enableSorting: true,
       enableColResize: true,
       enableFilter: true

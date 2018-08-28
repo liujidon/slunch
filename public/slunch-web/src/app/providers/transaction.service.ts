@@ -115,11 +115,12 @@ export class TransactionService {
           },
           sort: "desc",
           filter: "agDateColumnFilter",
-          filterValueGetter: (params) => new Date(params.data.time)
+          filterValueGetter: (params) => new Date(params.data.time),
+          sortingOrder: ["desc", "asc"]
         },
         { headerName: "Name", field: "displayName" },
         { headerName: "Description", field: "description" },
-        { headerName: "Detail", field: "detail" },
+        { headerName: "Detail", field: "detail", suppressSorting: true },
         {
           headerName: "Money", field: "price", valueFormatter: (params) => {
             let pipe = new CurrencyPipe("en-us");
@@ -128,10 +129,10 @@ export class TransactionService {
           }, cellClass: (params) => {
             if (params.value >= 0) return 'red';
             else return 'green';
-          }
+          }, suppressFilter: true, sortingOrder: ["desc", "asc", null]
         },
         {
-          headerName: "Confirm Transaction",
+          headerName: "Edit Transaction",
           cellRendererFramework: GridConfirmTransactionComponent,
           cellRendererParams: {
             transactionService: this,
@@ -143,7 +144,7 @@ export class TransactionService {
         }
       ],
       animateRows: true,
-      sortingOrder: ["desc", "asc", null],
+      sortingOrder: ["asc", "desc", null],
       enableSorting: true,
       enableColResize: true,
       enableFilter: true,
@@ -162,33 +163,45 @@ export class TransactionService {
           headerName: "Time", field: "time", valueFormatter: (params) => {
             let pipe = new DatePipe('en-us');
             return pipe.transform(params.value, "short");
-          }, sort: "desc"
+          }, sort: "desc",
+          filter: "agDateColumnFilter",
+          filterValueGetter: (params) => new Date(params.data.time),
+          sortingOrder: ["desc", "asc"]
         },
         { headerName: "Description", field: "description" },
-        { headerName: "Detail", field: "detail" },
+        { headerName: "Detail", field: "detail", suppressSorting: true },
         {
           headerName: "Debit", field: "price", valueFormatter: (params) => {
             let pipe = new CurrencyPipe("en-us");
             if (params.value >= 0) return pipe.transform(params.value);
             else return "";
-          }, cellClass: ["red"]
+          }, cellClass: ["red"], suppressFilter: true, sortingOrder:["desc", "asc", null]
         },
         {
           headerName: "Credit", field: "price", valueFormatter: (params) => {
             let pipe = new CurrencyPipe("en-us");
             if (params.value < 0) return pipe.transform(-params.value);
             else return "";
-          }, cellClass: ["green"]
+          }, cellClass: ["green"], suppressFilter: true, sortingOrder:["desc", "asc", null]
         },
-        { headerName: "Status", cellRendererFramework: GridStatusComponent },
+        { 
+          headerName: "Status",
+          cellRendererFramework: GridStatusComponent,
+          suppressFilter: true,
+          suppressSorting: true,
+          suppressResize: true
+        },
         {
           headerName: "Cancel",
           cellRendererFramework: GridCancelTransactionComponent,
-          cellRendererParams: { transactionService: this }
+          cellRendererParams: { transactionService: this },
+          suppressFilter: true,
+          suppressSorting: true,
+          suppressResize: true
         }
       ],
       animateRows: true,
-      sortingOrder: ["desc", "asc", null],
+      sortingOrder: ["asc", "desc", null],
       enableSorting: true,
       enableColResize: true,
       enableFilter: true

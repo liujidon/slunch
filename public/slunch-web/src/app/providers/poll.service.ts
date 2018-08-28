@@ -47,7 +47,10 @@ export class PollService {
         {
           headerName: "Icon",
           cellRendererFramework: GridImageComponent,
-          width: 150
+          width: 150,
+          suppressFilter: true,
+          suppressSorting: true,
+          suppressResize: true
         },
         {
           headerName: "Edit",
@@ -55,7 +58,10 @@ export class PollService {
           cellRendererParams: { 
             pollService: this,
             bottomSheetService: this.bottomSheetService
-          }
+          },
+          suppressFilter: true,
+          suppressSorting: true,
+          suppressResize: true
         }
       ],
       animateRows: true,
