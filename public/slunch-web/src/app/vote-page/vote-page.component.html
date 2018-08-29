@@ -14,7 +14,7 @@
     </mat-slide-toggle>
   </div>
 
-  <div class="control" fxLayout="row wrap" fxLayoutGap="10px">
+  <div class="control" fxLayout="row wrap" fxLayoutGap="10px" *ngIf="pollService.allowPoll">
     <div *ngFor="let name of pollService.currentVoters" style="display: inline">
       <button mat-button [matMenuTriggerFor]="liked" style="width:80px; padding:0px; color:grey; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
         {{name}}
