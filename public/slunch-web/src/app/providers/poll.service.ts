@@ -27,6 +27,8 @@ export class PollService {
   stateSubscription: Subscription;
   allowPoll: Boolean;
 
+  currentVoters: Array<string> = [];
+
   newOptions: number = 0;
 
   constructor(
@@ -80,6 +82,15 @@ export class PollService {
     console.log("PollService latestPollSubscription subscribing");
     this.latestPollSubscription = this.db.collection<Poll>('poll', ref => ref.orderBy('createtime', 'desc').limit(1)).valueChanges().subscribe(pollArray => {
       this.latestPoll = pollArray[0];
+
+      this.currentVoters = []
+      this.latestPoll.options.forEach(po=>{
+        po.votes.forEach(name=>{
+          if(this.currentVoters.indexOf(name) == -1) this.currentVoters.push(name);
+        });
+      });
+      this.currentVoters = this.currentVoters.sort((a,b)=>a.toLowerCase()<=b.toLowerCase()?-1:1);
+
     });
 
     console.log("PollService pollOptionsSubscription subscribing");
@@ -157,6 +168,10 @@ export class PollService {
 
   deletePollOption(po: PollOption) {
     this.db.doc("poll-options/" + po.id).delete();
+  }
+
+  liked(name): Array<string> {
+    return this.latestPoll.options.filter(po=>po.votes.includes(name)).map(po=>po.name);
   }
 
 }

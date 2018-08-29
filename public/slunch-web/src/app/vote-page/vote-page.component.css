@@ -7,3 +7,15 @@
 .admin-control .control + .control{
   padding-top: 10px;
 }
+
+.liked-item{
+  margin: 0px 5px;
+  font-size: 15px;
+  color: black;
+}
+
+.liked-item ~ .liked-item{
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: lightgrey 1px solid;
+}
