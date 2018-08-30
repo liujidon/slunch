@@ -24,7 +24,8 @@
                 <mat-panel-title class="flex-grow-zero">Transactions</mat-panel-title>
                 <mat-panel-description class="flex-grow-zero">
                     Net today: &nbsp;
-                    <span [ngClass]="transactionService.todayPosition >=0 ?'green':'red'">{{transactionService.todayPosition | currency}}
+                    <span [ngClass]="transactionService.todayPosition >=0 ?'green':'red'">{{transactionService.todayPosition
+                        | currency}}
                     </span>
                 </mat-panel-description>
             </div>
@@ -32,6 +33,12 @@
 
         <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.allGO">
         </ag-grid-angular>
+
+        <mat-form-field style="margin-top: 20px">
+            <input (dateChange)="setDate($event)" matInput [matDatepicker]="showOver" [(ngModel)]="transactionService.dateLB" placeholder="Lower Bound Date">
+            <mat-datepicker-toggle matSuffix [for]="showOver"></mat-datepicker-toggle>
+            <mat-datepicker #showOver></mat-datepicker>
+        </mat-form-field>
 
     </mat-expansion-panel>
 

@@ -3,7 +3,8 @@ import { Transaction } from './transaction';
 
 export interface StateFace{
     allowPoll: boolean,
-    allowOrders: boolean
+    allowOrders: boolean,
+    dateLB: string
 }
 
 export interface AdminFace{
