@@ -67,5 +67,10 @@ export class CalculatePriceComponent implements OnDestroy{
     this.bottomSheetRef.dismiss();
   }
 
+  close(){
+    this.t.price = this.origPrice;
+    this.bottomSheetRef.dismiss();
+  }
+
 
 }
