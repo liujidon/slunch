@@ -253,7 +253,7 @@ export class TransactionService {
 
       if(this.initFlag){
         this.dateLB = new Date();
-        this.dateLB.setDate(this.dateLB.getDate() - 30);
+        this.dateLB.setMonth(this.dateLB.getMonth() - 1)
         this.dateLB.setHours(4); // Because database times are in GMT
         this.dateLB.setMinutes(0);
         this.dateLB.setSeconds(0);
