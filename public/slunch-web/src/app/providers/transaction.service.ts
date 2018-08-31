@@ -21,6 +21,7 @@ export class TransactionService {
 
   transactionsSubscription: Subscription;
   allTransactions: Array<Transaction> = [];
+  doneTransactions: Array<Transaction> = [];
   myTransactions: Array<Transaction> = [];
   unprocessedTransactions: Array<Transaction> = [];
   todayTransactions: Array<Transaction> = [];
@@ -35,7 +36,7 @@ export class TransactionService {
   numUnprocessedOrders: number;
 
   public unprocessedGO: GridOptions;
-  public allGO: GridOptions;
+  public doneGO: GridOptions;
   public myGO: GridOptions;
 
 
@@ -109,12 +110,12 @@ export class TransactionService {
       rowHeight: 40,
     }
 
-    this.allGO = {
+    this.doneGO = {
       onGridReady: (params) => {
-        this.allGO.api = params.api;
-        this.allGO.columnApi = params.columnApi;
-        this.allGO.api.setRowData(this.allTransactions);
-        this.allGO.columnApi.autoSizeAllColumns();
+        this.doneGO.api = params.api;
+        this.doneGO.columnApi = params.columnApi;
+        this.doneGO.api.setRowData(this.doneTransactions);
+        this.doneGO.columnApi.autoSizeAllColumns();
       },
       columnDefs: [
         {
@@ -252,7 +253,7 @@ export class TransactionService {
 
       if(this.initFlag){
         this.dateLB = new Date();
-        this.dateLB.setDate(this.dateLB.getDate() - 5);
+        this.dateLB.setDate(this.dateLB.getDate() - 30);
         this.dateLB.setHours(4); // Because database times are in GMT
         this.dateLB.setMinutes(0);
         this.dateLB.setSeconds(0);
@@ -277,8 +278,10 @@ export class TransactionService {
         console.log("TransactionService transactionsSubscription subscribing");
         this.transactionsSubscription = this.db.collection<Transaction>("transactions", ref => ref.orderBy("time", "desc").where("time", ">", this.dateLBToDateTime())).valueChanges().subscribe(transactions => {
 
-          this.allTransactions = transactions.filter(transaction => transaction.status == "done");
-          if (this.allGO.api) this.allGO.api.setRowData(this.allTransactions);
+          this.allTransactions = transactions;
+
+          this.doneTransactions = transactions.filter(transaction => transaction.status == "done");
+          if (this.doneGO.api) this.doneGO.api.setRowData(this.doneTransactions);
 
           this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
           if (this.unprocessedGO.api) this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
