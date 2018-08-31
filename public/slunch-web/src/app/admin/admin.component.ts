@@ -6,8 +6,6 @@ import { Router } from '@angular/router';
 import { AdminService } from '../providers/admin.service';
 import { PollService } from '../providers/poll.service';
 import { PollOption } from '../poll-option';
-import { EventEmitter } from 'events';
-import { MatDatepickerInputEvent } from '@angular/material';
 
 @Component({
   selector: 'app-admin',
@@ -40,7 +38,6 @@ export class AdminComponent implements OnInit {
 
   setDate(event){
     this.transactionService.setDateLB(new Date(event.value));
-    console.log(event);
   }
 
 

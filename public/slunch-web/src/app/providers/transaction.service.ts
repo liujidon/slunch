@@ -28,6 +28,7 @@ export class TransactionService {
   stateSubscription: Subscription;
 
   dateLB: Date;
+  initFlag: boolean = true;
 
   todayPosition: number = 0;
   numUnprocessed: number;
@@ -232,13 +233,16 @@ export class TransactionService {
     this.unprocessedGO.api.exportDataAsCsv(params);
   }
 
-  dateLBToString(): string{
+  dateLBToDateTime(): string {
     return new DatePipe("en-us").transform(this.dateLB, "yyyy-MM-ddTHH");
   }
 
-  setDateLB(d: Date){
-    d.setHours(d.getHours() + 4);
-    this.db.doc(environment.stateRef).update({dateLB: new DatePipe("en-us").transform(d, "yyyy-MM-ddTHH")});
+  dateLBToDate(): string {
+    return new DatePipe("en-us").transform(this.dateLB, "yyyy-MM-dd");
+  }
+
+  setDateLB(d: Date) {
+    this.db.doc(environment.stateRef).update({ dateLB: new DatePipe("en-us").transform(d, "yyyy-MM-dd") });
   }
 
   subscribe() {
@@ -246,16 +250,21 @@ export class TransactionService {
     console.log("TransactionService stateSubscription subscribing");
     this.stateSubscription = this.db.doc<StateFace>(environment.stateRef).valueChanges().subscribe(state => {
 
-      let d = new Date();
-      d.setDate(d.getDate() - 5);
-      d.setHours(4); // Because database times are in GMT
-      d.setMinutes(0);
-      d.setSeconds(0);
-      d.setMilliseconds(0);
-      this.dateLB = d;
-
-      if (state.dateLB < this.dateLBToString()) {
+      if(this.initFlag){
+        this.dateLB = new Date();
+        this.dateLB.setDate(this.dateLB.getDate() - 5);
+        this.dateLB.setHours(4); // Because database times are in GMT
+        this.dateLB.setMinutes(0);
+        this.dateLB.setSeconds(0);
+        this.dateLB.setMilliseconds(0);
+        this.initFlag = false;
+      }
+      else{
         this.dateLB = new Date(state.dateLB);
+        this.dateLB.setHours(28); // Because database times are in GMT
+        this.dateLB.setMinutes(0);
+        this.dateLB.setSeconds(0);
+        this.dateLB.setMilliseconds(0);
       }
 
       if (state) {
@@ -266,7 +275,7 @@ export class TransactionService {
         }
 
         console.log("TransactionService transactionsSubscription subscribing");
-        this.transactionsSubscription = this.db.collection<Transaction>("transactions", ref => ref.orderBy("time", "desc").where("time", ">", this.dateLBToString())).valueChanges().subscribe(transactions => {
+        this.transactionsSubscription = this.db.collection<Transaction>("transactions", ref => ref.orderBy("time", "desc").where("time", ">", this.dateLBToDateTime())).valueChanges().subscribe(transactions => {
 
           this.allTransactions = transactions.filter(transaction => transaction.status == "done");
           if (this.allGO.api) this.allGO.api.setRowData(this.allTransactions);
