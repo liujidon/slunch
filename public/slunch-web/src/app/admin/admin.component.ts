@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { TransactionService } from '../providers/transaction.service';
 import { StateService } from '../providers/state.service';
 import { AuthService } from '../providers/auth.service';
@@ -28,12 +28,16 @@ export class AdminComponent implements OnInit {
 
   }
 
-  updatePollOption(po:PollOption){
+  updatePollOption(po: PollOption) {
     this.pollService.updatePollOption(po);
   }
 
-  deletePollOption(po:PollOption){
+  deletePollOption(po: PollOption) {
     this.pollService.deletePollOption(po);
+  }
+
+  setDate(event){
+    this.transactionService.setDateLB(new Date(event.value));
   }
 
 

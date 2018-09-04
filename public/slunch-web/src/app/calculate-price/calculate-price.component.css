@@ -36,3 +36,7 @@
 p{
     margin: 0 0 10px;
 }
+
+.close:hover{
+    color:lightgrey
+}

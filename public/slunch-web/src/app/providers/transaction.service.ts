@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Pipe } from '@angular/core';
 import { AuthService } from './auth.service';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Transaction } from '../transaction';
-import { Subscription } from 'rxjs';
+import { Subscription, Operator, Observable, } from 'rxjs';
 import { GridOptions, CsvExportParams } from 'ag-grid';
 import { FormatterService } from './formatter.service';
 import { DatePipe, CurrencyPipe } from '@angular/common';
@@ -11,6 +11,8 @@ import { GridStatusComponent } from '../gridElements/grid-status/grid-status.com
 import { GridCancelTransactionComponent } from '../gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
 import { GridConfirmTransactionComponent } from '../gridElements/grid-confirm-transaction/grid-confirm-transaction.component';
 import { MatBottomSheet } from '@angular/material';
+import { environment } from '../../environments/environment';
+import { StateFace } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -19,17 +21,25 @@ export class TransactionService {
 
   transactionsSubscription: Subscription;
   allTransactions: Array<Transaction> = [];
+  doneTransactions: Array<Transaction> = [];
   myTransactions: Array<Transaction> = [];
   unprocessedTransactions: Array<Transaction> = [];
   todayTransactions: Array<Transaction> = [];
+
+  stateSubscription: Subscription;
+
+  dateLB: Date;
+  initFlag: boolean = true;
 
   todayPosition: number = 0;
   numUnprocessed: number;
   numUnprocessedOrders: number;
 
   public unprocessedGO: GridOptions;
-  public allGO: GridOptions;
+  public doneGO: GridOptions;
   public myGO: GridOptions;
+
+
 
   constructor(
     public authService: AuthService,
@@ -100,12 +110,12 @@ export class TransactionService {
       rowHeight: 40,
     }
 
-    this.allGO = {
+    this.doneGO = {
       onGridReady: (params) => {
-        this.allGO.api = params.api;
-        this.allGO.columnApi = params.columnApi;
-        this.allGO.api.setRowData(this.allTransactions);
-        this.allGO.columnApi.autoSizeAllColumns();
+        this.doneGO.api = params.api;
+        this.doneGO.columnApi = params.columnApi;
+        this.doneGO.api.setRowData(this.doneTransactions);
+        this.doneGO.columnApi.autoSizeAllColumns();
       },
       columnDefs: [
         {
@@ -175,16 +185,16 @@ export class TransactionService {
             let pipe = new CurrencyPipe("en-us");
             if (params.value >= 0) return pipe.transform(params.value);
             else return "";
-          }, cellClass: ["red"], suppressFilter: true, sortingOrder:["desc", "asc", null]
+          }, cellClass: ["red"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
         },
         {
           headerName: "Credit", field: "price", valueFormatter: (params) => {
             let pipe = new CurrencyPipe("en-us");
             if (params.value < 0) return pipe.transform(-params.value);
             else return "";
-          }, cellClass: ["green"], suppressFilter: true, sortingOrder:["desc", "asc", null]
+          }, cellClass: ["green"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
         },
-        { 
+        {
           headerName: "Status",
           cellRendererFramework: GridStatusComponent,
           suppressFilter: true,
@@ -224,37 +234,82 @@ export class TransactionService {
     this.unprocessedGO.api.exportDataAsCsv(params);
   }
 
+  dateLBToDateTime(): string {
+    return new DatePipe("en-us").transform(this.dateLB, "yyyy-MM-ddTHH");
+  }
+
+  dateLBToDate(): string {
+    return new DatePipe("en-us").transform(this.dateLB, "yyyy-MM-dd");
+  }
+
+  setDateLB(d: Date) {
+    this.db.doc(environment.stateRef).update({ dateLB: new DatePipe("en-us").transform(d, "yyyy-MM-dd") });
+  }
+
   subscribe() {
 
-    console.log("TransactionService transactionsSubscription subscribing");
-    this.transactionsSubscription = this.db.collection<Transaction>("transactions").valueChanges().subscribe(transactions => {
-      this.allTransactions = transactions.filter(transaction => transaction.status == "done");
-      if (this.allGO.api) this.allGO.api.setRowData(this.allTransactions);
+    console.log("TransactionService stateSubscription subscribing");
+    this.stateSubscription = this.db.doc<StateFace>(environment.stateRef).valueChanges().subscribe(state => {
 
-      this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
-      if (this.unprocessedGO.api) this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
-      this.numUnprocessed = this.unprocessedTransactions.length;
+      if(this.initFlag){
+        this.dateLB = new Date();
+        this.dateLB.setMonth(this.dateLB.getMonth() - 1)
+        this.dateLB.setHours(4); // Because database times are in GMT
+        this.dateLB.setMinutes(0);
+        this.dateLB.setSeconds(0);
+        this.dateLB.setMilliseconds(0);
+        this.initFlag = false;
+      }
+      else{
+        this.dateLB = new Date(state.dateLB);
+        this.dateLB.setHours(28); // Because database times are in GMT
+        this.dateLB.setMinutes(0);
+        this.dateLB.setSeconds(0);
+        this.dateLB.setMilliseconds(0);
+      }
 
-      this.numUnprocessedOrders = this.unprocessedTransactions.filter(transaction => !transaction.isDeposit).length;
+      if (state) {
 
-      this.todayTransactions = transactions.filter(transaction => {
-        let today: Date = new Date();
-        today.setMilliseconds(0);
-        today.setSeconds(0);
-        today.setMinutes(0);
-        today.setHours(0);
+        if (this.transactionsSubscription) {
+          console.log("TransactionService transactionSubscription unsubscribing");
+          this.transactionsSubscription.unsubscribe();
+        }
 
-        return new Date(transaction.time) >= today;
-      });
+        console.log("TransactionService transactionsSubscription subscribing");
+        this.transactionsSubscription = this.db.collection<Transaction>("transactions", ref => ref.orderBy("time", "desc").where("time", ">", this.dateLBToDateTime())).valueChanges().subscribe(transactions => {
+
+          this.allTransactions = transactions;
+
+          this.doneTransactions = transactions.filter(transaction => transaction.status == "done");
+          if (this.doneGO.api) this.doneGO.api.setRowData(this.doneTransactions);
+
+          this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
+          if (this.unprocessedGO.api) this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
+          this.numUnprocessed = this.unprocessedTransactions.length;
+
+          this.numUnprocessedOrders = this.unprocessedTransactions.filter(transaction => !transaction.isDeposit).length;
+
+          this.todayTransactions = transactions.filter(transaction => {
+            let today: Date = new Date();
+            today.setMilliseconds(0);
+            today.setSeconds(0);
+            today.setMinutes(0);
+            today.setHours(0);
+            return new Date(transaction.time) >= today;
+          });
 
 
-      this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
-      if (this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
+          this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
+          if (this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
 
-      this.todayPosition = -1 * this.todayTransactions.map(t => t.status=="done" ? parseFloat(t.price+"") : 0).reduce((acc, v) => acc + v, 0);
+          this.todayPosition = -1 * this.todayTransactions.map(t => t.status == "done" ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
 
+        });
+
+      }
 
     });
+
 
   }
 
@@ -262,6 +317,11 @@ export class TransactionService {
     if (this.transactionsSubscription) {
       console.log("TransactionService transactionsSubscription unsubscribing");
       this.transactionsSubscription.unsubscribe();
+    }
+
+    if (this.stateSubscription) {
+      console.log("TransactionService stateSubscription unsubscribing");
+      this.stateSubscription.unsubscribe();
     }
 
   }

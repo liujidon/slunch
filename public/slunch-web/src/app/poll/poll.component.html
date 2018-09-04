@@ -1,4 +1,3 @@
-
 <mat-card style="margin:3em">
   <mat-card-title>{{pollService.latestPoll?.topic}} Poll</mat-card-title>
   <mat-card-content>
@@ -6,6 +5,15 @@
     <div fxLayout.xs="column wrap" fxLayout="row wrap">
       <div style="margin:10px" *ngFor="let option of pollService.latestPoll?.options">
         <app-poll-option class="clickable" (click)="updateVote(option)" [matTooltip]="option?.name" [pollOption]="option"></app-poll-option>
+        <div>
+          <a style="width: 100%; height: 100%; text-decoration:none" [href]="option.menuUrl" target="_blank">
+            <mat-card class="menu" style="padding: 20px 0px">
+              <div fxLayout="row" fxLayoutAlign="center">
+                Menu
+              </div>
+            </mat-card>
+          </a>
+        </div>
       </div>
     </div>
 
