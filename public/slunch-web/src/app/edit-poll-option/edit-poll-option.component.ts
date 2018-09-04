@@ -14,7 +14,7 @@ export class EditPollOptionComponent implements OnDestroy {
   pollService: PollService;
   po: PollOption;
   backDropSubscription: Subscription;
-  
+
   origMenuUrl: string;
   origIconUrl: string;
 
@@ -24,28 +24,34 @@ export class EditPollOptionComponent implements OnDestroy {
   ) {
     this.po = data.po;
     this.pollService = data.pollService;
-    
-    this.origMenuUrl= data.po.menuUrl;
+
+    this.origMenuUrl = data.po.menuUrl;
     this.origIconUrl = data.po.iconUrl;
 
-    this.backDropSubscription = this.bottomSheetRef.backdropClick().subscribe(()=>{
+    this.backDropSubscription = this.bottomSheetRef.backdropClick().subscribe(() => {
       this.po.menuUrl = this.origMenuUrl;
       this.po.iconUrl = this.origIconUrl;
     });
 
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.backDropSubscription.unsubscribe();
   }
 
 
-  updatePollOption(po:PollOption){
+  updatePollOption(po: PollOption) {
     this.pollService.updatePollOption(po);
   }
 
-  deletePollOption(po:PollOption){
+  deletePollOption(po: PollOption) {
     this.pollService.deletePollOption(po);
+    this.bottomSheetRef.dismiss();
+  }
+
+  close() {
+    this.po.menuUrl = this.origMenuUrl;
+    this.po.iconUrl = this.origIconUrl;
     this.bottomSheetRef.dismiss();
   }
 

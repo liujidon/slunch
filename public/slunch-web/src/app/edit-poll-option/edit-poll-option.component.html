@@ -1,6 +1,9 @@
 <div class="container">
   <div class="outline">
-    <div class="item bottom-divider" >
+    <div style="position:absolute; top:5px; right: 5px;">
+      <mat-icon class="close clickable" (click)="close()">close</mat-icon>
+    </div>
+    <div class="item bottom-divider" style="padding-top: 30px">
       <mat-form-field appearance="outline" style="width: 100%">
         <mat-label>Name</mat-label>
         <input matInput [(ngModel)]="po.name">

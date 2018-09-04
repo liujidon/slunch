@@ -19,3 +19,7 @@
 .item.bottom-divider{
     border-bottom: 1px solid lightgray;
 }
+
+.close:hover{
+    color:lightgrey
+}
