@@ -70,8 +70,10 @@ import { AdminService } from './providers/admin.service';
 import { SortPipe } from './pipes/sort.pipe';
 import { FormatterService } from './providers/formatter.service';
 import { GridCancelTransactionComponent } from './gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
+import { GridCancelTransactionAdminComponent } from './gridElements/grid-cancel-transaction-admin/grid-cancel-transaction-admin.component';
 import { GridControlStatusComponent } from './gridElements/grid-control-status/grid-control-status.component';
 import { GridStatusComponent } from './gridElements/grid-status/grid-status.component';
+import { GridVoterStatusComponent} from './gridElements/grid-voter-status/grid-voter-status.component';
 import { GridImageComponent } from './gridElements/grid-image/grid-image.component';
 import { GridPollOptionControlComponent } from './gridElements/grid-poll-option-control/grid-poll-option-control.component';
 import { GridConfirmTransactionComponent } from './gridElements/grid-confirm-transaction/grid-confirm-transaction.component';
@@ -134,8 +136,10 @@ export class MaterialModule {}
     AdminComponent,
     SortPipe,
     GridCancelTransactionComponent,
+    GridCancelTransactionAdminComponent,
     GridControlStatusComponent,
     GridStatusComponent,
+    GridVoterStatusComponent,
     GridImageComponent,
     GridPollOptionControlComponent,
     GridConfirmTransactionComponent,
@@ -166,8 +170,10 @@ export class MaterialModule {}
   ],
   entryComponents: [
     GridCancelTransactionComponent,
+    GridCancelTransactionAdminComponent,
     GridControlStatusComponent,
     GridStatusComponent,
+    GridVoterStatusComponent,
     GridImageComponent,
     GridPollOptionControlComponent,
     GridConfirmTransactionComponent,

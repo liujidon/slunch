@@ -1,6 +1,10 @@
 <mat-card *ngIf="pollService.getAdminSelectedOptions().length > 0" style="margin:3em">
-  <mat-card-title>Ordering</mat-card-title>
-  <mat-card-content>
+  <mat-card-title>Ordering <div style="float:right;">
+    <button id="orderStatusButton"mat-raised-button color="warn" (click)="orderStatus(authService.userDetails)">
+      Not Ordering Today
+    </button>
+  </div></mat-card-title>
+  <mat-card-content id="orderCard">
     <mat-vertical-stepper #stepper>
 
       <mat-step label="Choose your restaurant">

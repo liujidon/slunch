@@ -1,18 +1,20 @@
-import { Injectable, Pipe } from '@angular/core';
-import { AuthService } from './auth.service';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Transaction } from '../transaction';
-import { Subscription, Operator, Observable, } from 'rxjs';
-import { GridOptions, CsvExportParams } from 'ag-grid';
-import { FormatterService } from './formatter.service';
-import { DatePipe, CurrencyPipe } from '@angular/common';
-import { GridControlStatusComponent } from '../gridElements/grid-control-status/grid-control-status.component';
-import { GridStatusComponent } from '../gridElements/grid-status/grid-status.component';
-import { GridCancelTransactionComponent } from '../gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
-import { GridConfirmTransactionComponent } from '../gridElements/grid-confirm-transaction/grid-confirm-transaction.component';
-import { MatBottomSheet } from '@angular/material';
-import { environment } from '../../environments/environment';
-import { StateFace } from '../interfaces';
+import {Injectable, Pipe} from '@angular/core';
+import {AuthService} from './auth.service';
+import {PollService} from './poll.service';
+import {AngularFirestore} from 'angularfire2/firestore';
+import {Transaction} from '../transaction';
+import {Subscription, Operator, Observable,} from 'rxjs';
+import {GridOptions, CsvExportParams} from 'ag-grid';
+import {FormatterService} from './formatter.service';
+import {DatePipe, CurrencyPipe} from '@angular/common';
+import {GridControlStatusComponent} from '../gridElements/grid-control-status/grid-control-status.component';
+import {GridStatusComponent} from '../gridElements/grid-status/grid-status.component';
+import {GridCancelTransactionComponent} from '../gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
+import {GridCancelTransactionAdminComponent} from '../gridElements/grid-cancel-transaction-admin/grid-cancel-transaction-admin.component';
+import {GridConfirmTransactionComponent} from '../gridElements/grid-confirm-transaction/grid-confirm-transaction.component';
+import {MatBottomSheet} from '@angular/material';
+import {environment} from '../../environments/environment';
+import {StateFace} from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,7 @@ export class TransactionService {
   doneTransactions: Array<Transaction> = [];
   myTransactions: Array<Transaction> = [];
   unprocessedTransactions: Array<Transaction> = [];
+  unprocessedOrders: Array<Transaction> = [];
   todayTransactions: Array<Transaction> = [];
 
   stateSubscription: Subscription;
@@ -40,13 +43,11 @@ export class TransactionService {
   public myGO: GridOptions;
 
 
-
-  constructor(
-    public authService: AuthService,
-    public db: AngularFirestore,
-    public formatterService: FormatterService,
-    public bottomSheetService: MatBottomSheet
-  ) {
+  constructor(public authService: AuthService,
+              public pollService: PollService,
+              public db: AngularFirestore,
+              public formatterService: FormatterService,
+              public bottomSheetService: MatBottomSheet) {
 
     this.unprocessedGO = {
       onGridReady: (params) => {
@@ -88,7 +89,7 @@ export class TransactionService {
         {
           headerName: "Status",
           cellRendererFramework: GridControlStatusComponent,
-          cellRendererParams: { transactionService: this, authService: authService },
+          cellRendererParams: {transactionService: this, authService: authService},
           suppressSorting: true, suppressFilter: true, suppressResize: true
         },
         {
@@ -99,6 +100,17 @@ export class TransactionService {
             authService: authService,
             bottomSheetService: bottomSheetService,
             caption: "Confirm"
+          },
+          suppressSorting: true, suppressFilter: true, suppressResize: true
+        },
+        {
+          headerName: "Cancel Transaction",
+          cellRendererFramework: GridCancelTransactionAdminComponent,
+          cellRendererParams: {
+            transactionService: this,
+            authService: authService,
+            bottomSheetService: bottomSheetService,
+            caption: "Cancel"
           },
           suppressSorting: true, suppressFilter: true, suppressResize: true
         }
@@ -120,26 +132,26 @@ export class TransactionService {
       columnDefs: [
         {
           headerName: "Time", field: "time", valueFormatter: (params) => {
-            let pipe = new DatePipe("en-us");
-            return pipe.transform(params.data.time, "short");
-          },
+          let pipe = new DatePipe("en-us");
+          return pipe.transform(params.data.time, "short");
+        },
           sort: "desc",
           filter: "agDateColumnFilter",
           filterValueGetter: (params) => new Date(params.data.time),
           sortingOrder: ["desc", "asc"]
         },
-        { headerName: "Name", field: "displayName" },
-        { headerName: "Description", field: "description" },
-        { headerName: "Detail", field: "detail", suppressSorting: true },
+        {headerName: "Name", field: "displayName"},
+        {headerName: "Description", field: "description"},
+        {headerName: "Detail", field: "detail", suppressSorting: true},
         {
           headerName: "Money", field: "price", valueFormatter: (params) => {
-            let pipe = new CurrencyPipe("en-us");
-            if (params.value < 0) return pipe.transform(-params.value);
-            else return pipe.transform(params.value);
-          }, cellClass: (params) => {
-            if (params.value >= 0) return 'red';
-            else return 'green';
-          }, suppressFilter: true, sortingOrder: ["desc", "asc", null]
+          let pipe = new CurrencyPipe("en-us");
+          if (params.value < 0) return pipe.transform(-params.value);
+          else return pipe.transform(params.value);
+        }, cellClass: (params) => {
+          if (params.value >= 0) return 'red';
+          else return 'green';
+        }, suppressFilter: true, sortingOrder: ["desc", "asc", null]
         },
         {
           headerName: "Edit Transaction",
@@ -149,6 +161,17 @@ export class TransactionService {
             authService: authService,
             bottomSheetService: bottomSheetService,
             caption: "Edit"
+          },
+          suppressSorting: true, suppressFilter: true, suppressResize: true
+        },
+        {
+          headerName: "Delete Transaction",
+          cellRendererFramework: GridCancelTransactionAdminComponent,
+          cellRendererParams: {
+            transactionService: this,
+            authService: authService,
+            bottomSheetService: bottomSheetService,
+            caption: "Delete"
           },
           suppressSorting: true, suppressFilter: true, suppressResize: true
         }
@@ -171,28 +194,28 @@ export class TransactionService {
       columnDefs: [
         {
           headerName: "Time", field: "time", valueFormatter: (params) => {
-            let pipe = new DatePipe('en-us');
-            return pipe.transform(params.value, "short");
-          }, sort: "desc",
+          let pipe = new DatePipe('en-us');
+          return pipe.transform(params.value, "short");
+        }, sort: "desc",
           filter: "agDateColumnFilter",
           filterValueGetter: (params) => new Date(params.data.time),
           sortingOrder: ["desc", "asc"]
         },
-        { headerName: "Description", field: "description" },
-        { headerName: "Detail", field: "detail", suppressSorting: true },
+        {headerName: "Description", field: "description"},
+        {headerName: "Detail", field: "detail", suppressSorting: true},
         {
           headerName: "Debit", field: "price", valueFormatter: (params) => {
-            let pipe = new CurrencyPipe("en-us");
-            if (params.value >= 0) return pipe.transform(params.value);
-            else return "";
-          }, cellClass: ["red"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
+          let pipe = new CurrencyPipe("en-us");
+          if (params.value >= 0) return pipe.transform(params.value);
+          else return "";
+        }, cellClass: ["red"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
         },
         {
           headerName: "Credit", field: "price", valueFormatter: (params) => {
-            let pipe = new CurrencyPipe("en-us");
-            if (params.value < 0) return pipe.transform(-params.value);
-            else return "";
-          }, cellClass: ["green"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
+          let pipe = new CurrencyPipe("en-us");
+          if (params.value < 0) return pipe.transform(-params.value);
+          else return "";
+        }, cellClass: ["green"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
         },
         {
           headerName: "Status",
@@ -202,12 +225,15 @@ export class TransactionService {
           suppressResize: true
         },
         {
-          headerName: "Cancel",
+          headerName: "Cancel Transaction",
           cellRendererFramework: GridCancelTransactionComponent,
-          cellRendererParams: { transactionService: this },
-          suppressFilter: true,
-          suppressSorting: true,
-          suppressResize: true
+          cellRendererParams: {
+            transactionService: this,
+            authService: authService,
+            bottomSheetService: bottomSheetService,
+            caption: "Cancel"
+          },
+          suppressSorting: true, suppressFilter: true, suppressResize: true
         }
       ],
       animateRows: true,
@@ -243,7 +269,7 @@ export class TransactionService {
   }
 
   setDateLB(d: Date) {
-    this.db.doc(environment.stateRef).update({ dateLB: new DatePipe("en-us").transform(d, "yyyy-MM-dd") });
+    this.db.doc(environment.stateRef).update({dateLB: new DatePipe("en-us").transform(d, "yyyy-MM-dd")});
   }
 
   subscribe() {
@@ -251,7 +277,7 @@ export class TransactionService {
     console.log("TransactionService stateSubscription subscribing");
     this.stateSubscription = this.db.doc<StateFace>(environment.stateRef).valueChanges().subscribe(state => {
 
-      if(this.initFlag){
+      if (this.initFlag) {
         this.dateLB = new Date();
         this.dateLB.setMonth(this.dateLB.getMonth() - 1)
         this.dateLB.setHours(4); // Because database times are in GMT
@@ -260,7 +286,7 @@ export class TransactionService {
         this.dateLB.setMilliseconds(0);
         this.initFlag = false;
       }
-      else{
+      else {
         this.dateLB = new Date(state.dateLB);
         this.dateLB.setHours(28); // Because database times are in GMT
         this.dateLB.setMinutes(0);
@@ -284,7 +310,9 @@ export class TransactionService {
           if (this.doneGO.api) this.doneGO.api.setRowData(this.doneTransactions);
 
           this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
+          this.unprocessedOrders = this.unprocessedTransactions.filter(transaction => !transaction.isDeposit);
           if (this.unprocessedGO.api) this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
+          this.updateVoterStatus()
           this.numUnprocessed = this.unprocessedTransactions.length;
 
           this.numUnprocessedOrders = this.unprocessedTransactions.filter(transaction => !transaction.isDeposit).length;
@@ -349,7 +377,7 @@ export class TransactionService {
     });
 
     let orders: Array<any> = Object.keys(d).map(key => {
-      return { "name": key, "n": d[key] }
+      return {"name": key, "n": d[key]}
     }).sort((a, b) => a.n >= b.n ? -1 : 1);
 
     return orders.map(x => x.name).slice(0, 5);
@@ -383,5 +411,15 @@ export class TransactionService {
     this.db.doc(t.id).delete();
   }
 
-
+  updateVoterStatus() {
+    var voters = this.pollService.getVoterList();
+    for (var i = 0; i < this.unprocessedOrders.length; i++) {
+      for (var k = 0; k < voters.length; k++) {
+          if(this.unprocessedOrders[i].displayName === voters[k].name){
+            voters[k].status = "Ordered";
+          }
+      }
+    }
+    this.pollService.setVoterOptions(voters)
+  }
 }
