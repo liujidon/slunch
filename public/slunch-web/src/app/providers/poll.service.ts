@@ -419,11 +419,6 @@ export class PollService {
         options.push(voteData);
       }
     }
-    console.log(options)
-    console.log(this.votersGO.api)
-    console.log(this.votersGO)
-    this.votersGO.api = this.voteGOApi;
-    this.votersGO.columnApi = this.voteGOColumnApi;
     this.votersGO.api.setRowData(options);
   }
 
