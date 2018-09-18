@@ -17,6 +17,9 @@ export class EditPollOptionComponent implements OnDestroy {
 
   origMenuUrl: string;
   origIconUrl: string;
+  origLongitude: number;
+  origLatitude: number;
+  origTransportation: string;
 
   constructor(
     private bottomSheetRef: MatBottomSheetRef<EditPollOptionComponent>,
@@ -27,10 +30,17 @@ export class EditPollOptionComponent implements OnDestroy {
 
     this.origMenuUrl = data.po.menuUrl;
     this.origIconUrl = data.po.iconUrl;
+    this.origLongitude = data.po.longitude;
+    this.origLatitude = data.po.latitude;
+    this.origTransportation = data.po.transportation
 
     this.backDropSubscription = this.bottomSheetRef.backdropClick().subscribe(() => {
       this.po.menuUrl = this.origMenuUrl;
       this.po.iconUrl = this.origIconUrl;
+      this.po.longitude = this.origLongitude;
+      this.po.latitude = this.origLatitude;
+      this.po.transportation = this.origTransportation;
+
     });
 
   }
@@ -42,6 +52,7 @@ export class EditPollOptionComponent implements OnDestroy {
 
   updatePollOption(po: PollOption) {
     this.pollService.updatePollOption(po);
+    this.bottomSheetRef.dismiss();
   }
 
   deletePollOption(po: PollOption) {
@@ -52,6 +63,9 @@ export class EditPollOptionComponent implements OnDestroy {
   close() {
     this.po.menuUrl = this.origMenuUrl;
     this.po.iconUrl = this.origIconUrl;
+    this.po.longitude = this.origLongitude;
+    this.po.latitude = this.origLatitude;
+    this.po.transportation = this.origTransportation;
     this.bottomSheetRef.dismiss();
   }
 

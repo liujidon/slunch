@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AgGridModule } from 'ag-grid-angular';
-
+import {AngularFireDatabaseModule} from 'angularfire2/database';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { HttpClientModule } from '@angular/common/http';
 
 import {
   MatAutocompleteModule,
@@ -153,6 +154,8 @@ export class MaterialModule {}
     AngularFirestoreModule,
     AngularFireAuthModule,
     BrowserAnimationsModule,
+    AngularFireDatabaseModule,
+    HttpClientModule,
     MaterialModule,
     FormsModule,
     FlexLayoutModule,

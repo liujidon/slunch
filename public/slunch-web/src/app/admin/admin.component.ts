@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AdminService } from '../providers/admin.service';
 import { PollService } from '../providers/poll.service';
 import { PollOption } from '../poll-option';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-admin',
@@ -13,6 +14,8 @@ import { PollOption } from '../poll-option';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
+
+  screenWidth: number = window.innerWidth;
 
   constructor(
     public transactionService: TransactionService,
@@ -26,6 +29,24 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
 
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenWidth = window.innerWidth;
+    if(window.innerWidth < 480) {
+      this.transactionService.doneGO.columnApi.autoSizeAllColumns();
+      this.transactionService.unprocessedGO.columnApi.autoSizeAllColumns()
+      this.adminService.accountsGO.columnApi.autoSizeAllColumns();
+      this.pollService.pollOptionsGO.columnApi.autoSizeAllColumns();
+    }
+    else{
+      this.transactionService.doneGO.api.sizeColumnsToFit();
+      this.transactionService.unprocessedGO.api.sizeColumnsToFit();
+      this.adminService.accountsGO.api.sizeColumnsToFit();
+      this.pollService.pollOptionsGO.api.sizeColumnsToFit();
+
+    }
   }
 
   updatePollOption(po: PollOption) {

@@ -20,7 +20,7 @@ export class PollComponent implements OnInit {
   updateVote(option: PollOption) {
     let uid = this.authService.getUid();
     let name = this.authService.getUsername();
-    
+
     let uidIndex = option.uidVotes.indexOf(uid);
     let nameIndex = option.votes.indexOf(name);
 
@@ -35,6 +35,8 @@ export class PollComponent implements OnInit {
       option.uidVotes.push(uid);
 
     this.pollService.updatePoll(this.pollService.latestPoll);
+
+    this.pollService.updateVoteStatus();
   }
 
 }

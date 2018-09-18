@@ -19,6 +19,20 @@
         <input matInput [(ngModel)]="po.menuUrl">
       </mat-form-field>
     </div>
+    <div class="item bottom-divider" style="padding-bottom: 0px;">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Longitude</mat-label>
+        <input matInput [(ngModel)]="po.longitude">
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Latitude</mat-label>
+        <input matInput [(ngModel)]="po.latitude">
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Method of Transportation [Walk, Transit, Car]</mat-label>
+        <input matInput [(ngModel)]="po.transportation">
+      </mat-form-field>
+    </div>
     <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center" class="item">
       <button style="background-color:cornflowerblue; width: 100%" mat-raised-button (click)="updatePollOption(po)">
         <span style="color: white">Update</span>

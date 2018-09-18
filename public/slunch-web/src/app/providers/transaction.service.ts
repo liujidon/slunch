@@ -54,7 +54,12 @@ export class TransactionService {
         this.unprocessedGO.api = params.api;
         this.unprocessedGO.columnApi = params.columnApi;
         this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
-        this.unprocessedGO.columnApi.autoSizeAllColumns();
+        if (window.innerWidth < 480) {
+          this.unprocessedGO.columnApi.autoSizeAllColumns();
+        }
+        else {
+          this.unprocessedGO.api.sizeColumnsToFit();
+        }
       },
       columnDefs: [
         {
@@ -127,7 +132,12 @@ export class TransactionService {
         this.doneGO.api = params.api;
         this.doneGO.columnApi = params.columnApi;
         this.doneGO.api.setRowData(this.doneTransactions);
-        this.doneGO.columnApi.autoSizeAllColumns();
+        if (window.innerWidth < 480) {
+          this.doneGO.columnApi.autoSizeAllColumns();
+        }
+        else {
+          this.doneGO.api.sizeColumnsToFit();
+        }
       },
       columnDefs: [
         {
@@ -162,7 +172,7 @@ export class TransactionService {
             bottomSheetService: bottomSheetService,
             caption: "Edit"
           },
-          suppressSorting: true, suppressFilter: true, suppressResize: true
+          suppressSorting: true, suppressFilter: true
         },
         {
           headerName: "Delete Transaction",
@@ -173,7 +183,7 @@ export class TransactionService {
             bottomSheetService: bottomSheetService,
             caption: "Delete"
           },
-          suppressSorting: true, suppressFilter: true, suppressResize: true
+          suppressSorting: true, suppressFilter: true
         }
       ],
       animateRows: true,
@@ -189,7 +199,12 @@ export class TransactionService {
         this.myGO.api = params.api;
         this.myGO.columnApi = params.columnApi;
         this.myGO.api.setRowData(this.myTransactions);
-        this.myGO.columnApi.autoSizeAllColumns();
+        if (window.innerWidth < 480) {
+          this.myGO.columnApi.autoSizeAllColumns();
+        }
+        else {
+          this.myGO.api.sizeColumnsToFit();
+        }
       },
       columnDefs: [
         {
@@ -312,7 +327,6 @@ export class TransactionService {
           this.unprocessedTransactions = transactions.filter(transaction => transaction.status != "done");
           this.unprocessedOrders = this.unprocessedTransactions.filter(transaction => !transaction.isDeposit);
           if (this.unprocessedGO.api) this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
-          this.updateVoterStatus()
           this.numUnprocessed = this.unprocessedTransactions.length;
 
           this.numUnprocessedOrders = this.unprocessedTransactions.filter(transaction => !transaction.isDeposit).length;
@@ -329,7 +343,6 @@ export class TransactionService {
 
           this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
           if (this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
-
           this.todayPosition = -1 * this.todayTransactions.map(t => t.status == "done" ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
 
         });
@@ -409,17 +422,18 @@ export class TransactionService {
 
   cancelTransaction(t: Transaction) {
     this.db.doc(t.id).delete();
+    const unprocessedOrdersForUID = this.unprocessedOrders.filter(transaction => transaction.uid == t.uid);
+    console.log(unprocessedOrdersForUID)
+    if (unprocessedOrdersForUID.length - 1 == 0) {
+      console.log(t.accountid.split('/')[1])
+      this.pollService.updateVoteStatusForSpecificID(t.accountid.split('/')[1]);
+    }
   }
 
-  updateVoterStatus() {
-    var voters = this.pollService.getVoterList();
-    for (var i = 0; i < this.unprocessedOrders.length; i++) {
-      for (var k = 0; k < voters.length; k++) {
-          if(this.unprocessedOrders[i].displayName === voters[k].name){
-            voters[k].status = "Ordered";
-          }
-      }
-    }
-    this.pollService.setVoterOptions(voters)
-  }
+  //
+  // getDebitCredit(){
+  //   for(var i = 0; i < this.myTransactions; i++){
+  //     if(status != "done")
+  //   }
+  // }
 }

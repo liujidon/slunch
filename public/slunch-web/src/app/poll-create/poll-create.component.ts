@@ -24,7 +24,7 @@ export class PollCreateComponent implements OnInit {
   }
 
   createPoll() {
-    
+
     this.newPoll.options = this.selectedOptions.map(so=>{
       so.uidVotes = [];
       so.votes = [];
@@ -36,8 +36,11 @@ export class PollCreateComponent implements OnInit {
     this.stateService.setState({
       allowOrders: false
     });
-    
+
+    // Create a function where it sets all accounts votes and votestatus back to default values and call it here
+
     this.router.navigate(['vote']);
+    this.pollService.resetVoteStatus();
   }
 
 }

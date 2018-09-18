@@ -57,27 +57,23 @@ export class OrderComponent implements OnInit {
     this.isOrderSent = true;
     stepper.next();
     this.isRestaurantChosen = false;
+    this.pollService.updateVoteStatusToOrdered();
   }
 
-  orderStatus(userDetails: any) {
-    var voters = this.pollService.getVoterList();
-    var name = userDetails.displayName != null ? userDetails.displayName : userDetails.email;
-    for (var i = 0; i < voters.length; i++) {
-      if (name == voters[i].name && voters[i].status == 'Not Ordered') {
-        voters[i].status = "Not Ordering"
-        document.getElementById("orderCard").style.display = 'none';
-        document.getElementById("orderStatusButton").innerHTML = "Order Now!"
-        console.log(voters)
-      }
-      else if (name == voters[i].name && voters[i].status == 'Not Ordering') {
-        voters[i].status = "Not Ordered"
-        document.getElementById("orderCard").style.display = 'block';
-        document.getElementById("orderStatusButton").innerHTML = "Not Ordering Today"
-      }
+  orderStatus(account: any) {
+    if (account.voteStatus == "Not Ordered") {
+      let data = {"voteStatus": "Not Ordering"}
+      document.getElementById("orderCard").style.display = 'none';
+      document.getElementById("orderStatusButton").innerHTML = "Order Now!"
+      this.pollService.toggleOrderStatus(account, data);
     }
-    this.pollService.setVoterOptions(voters);
-    console.log(this.pollService.getVoterList())
+    else if (account.voteStatus == "Not Ordering") {
+      let data = {"voteStatus": "Not Ordered"}
+      document.getElementById("orderCard").style.display = 'block';
+      document.getElementById("orderStatusButton").innerHTML = "Not Ordering Today"
+      this.pollService.toggleOrderStatus(account, data);
+    }
   }
-
-
 }
+
+

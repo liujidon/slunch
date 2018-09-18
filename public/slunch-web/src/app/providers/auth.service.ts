@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Router } from "@angular/router";
-
-import { AngularFireAuth } from 'angularfire2/auth';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {AngularFireAuth} from 'angularfire2/auth';
 import * as firebase from 'firebase';
-import { Observable } from 'rxjs/Observable';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { AdminFace, AccountFace } from '../interfaces';
-import { Subscription } from 'rxjs';
+import {Observable} from 'rxjs/Observable';
+import {AngularFirestore} from 'angularfire2/firestore';
+import {AdminFace, AccountFace} from '../interfaces';
+import {Subscription} from 'rxjs';
 
-import { environment } from 'src/environments/environment';
+import {environment} from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -26,30 +25,30 @@ export class AuthService {
 
   private adminSubscription: Subscription;
   private accountsSubscription: Subscription;
+  private accountsVoteSubscription: Subscription;
 
   constructor(private firebaseAuth: AngularFireAuth, private router: Router, db: AngularFirestore) {
     this.db = db;
     this.user = firebaseAuth.authState;
-    
+
     this.user.subscribe(
       (user) => {
         if (user) {
-          this.userDetails = user;        
+          this.userDetails = user;
           this.router.navigate(['vote']);
         } else {
           this.userDetails = null;
         }
       }
     );
-
   }
 
-  subscribe(){
+  subscribe() {
 
     console.log("AuthService adminSubscription subscribing");
     this.adminSubscription = this.db.doc(environment.adminRef).valueChanges().subscribe(
-      (doc: AdminFace)=>{
-        if(doc){
+      (doc: AdminFace) => {
+        if (doc) {
           this.isAdmin = doc.uids.includes(this.getUid());
           this.adminUids = doc.uids;
         }
@@ -59,25 +58,24 @@ export class AuthService {
     console.log("AuthService accountsSubscription subscribing")
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
-        
+
         let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.getUid())
-        if(temp.length > 0){
+        if (temp.length > 0) {
           let accountDoc = temp[0].payload.doc;
           this.account = accountDoc.data();
           this.account.id = accountDoc.id;
         }
       }
     );
-
   }
 
-  unsubscribe(){
-    if(this.adminSubscription){
+  unsubscribe() {
+    if (this.adminSubscription) {
       console.log("AuthService adminSubscription unsubscribing");
       this.adminSubscription.unsubscribe();
     }
 
-    if(this.accountsSubscription){
+    if (this.accountsSubscription) {
       console.log("AuthService accountsSubscription unsubscribing");
       this.accountsSubscription.unsubscribe();
     }
@@ -85,22 +83,31 @@ export class AuthService {
   }
 
   getUsername() {
-    if(this.userDetails){
-      if(this.userDetails.displayName != null)
+    if (this.userDetails) {
+      if (this.userDetails.displayName != null)
         return this.userDetails.displayName;
       else
         return this.userDetails.email;
     }
-    else{
+    else {
       return "";
     }
   }
 
-  getUid(){
-    if(this.userDetails){
+  getUid() {
+    if (this.userDetails) {
       return this.userDetails.uid;
     }
-    else{
+    else {
+      return null;
+    }
+  }
+
+  getID(){
+    if (this.account) {
+      return this.account.id;
+    }
+    else {
       return null;
     }
   }

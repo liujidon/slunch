@@ -1,6 +1,6 @@
 <mat-card *ngIf="pollService.getAdminSelectedOptions().length > 0" style="margin:3em">
   <mat-card-title>Ordering <div style="float:right;">
-    <button id="orderStatusButton"mat-raised-button color="warn" (click)="orderStatus(authService.userDetails)">
+    <button id="orderStatusButton"mat-raised-button color="warn" (click)="orderStatus(authService.account)" [attr.data-status]="(authService.account.voteStatus)">
       Not Ordering Today
     </button>
   </div></mat-card-title>

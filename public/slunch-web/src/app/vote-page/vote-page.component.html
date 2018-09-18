@@ -8,25 +8,11 @@
     </mat-slide-toggle>
   </div>
   <div class="control">
-    <mat-slide-toggle style="height:100%; margin-left: 2em;" [disabled]="!(pollService.getAdminSelectedOptions().length > 0 && pollService.allowPoll)"
+    <mat-slide-toggle style="height:100%; float:right;" [disabled]="!(pollService.getAdminSelectedOptions().length > 0)"
       [(ngModel)]="stateService.isOrdering" (click)="toggleOrders()">
       Allow Orders
     </mat-slide-toggle>
   </div>
-
-  <div class="control" fxLayout="row wrap" fxLayoutGap="10px" *ngIf="pollService.allowPoll">
-    <div *ngFor="let name of pollService.currentVoters" style="display: inline">
-      <button mat-button [matMenuTriggerFor]="liked" style="width:80px; padding:0px; color:grey; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-        {{name}}
-      </button>
-      <mat-menu #liked="matMenu" [overlapTrigger]="false" yPosition="below">
-        <div *ngFor="let place of pollService.liked(name)" class="liked-item bottom-divider">
-          {{place}}
-        </div>
-      </mat-menu>
-    </div>
-  </div>
-
 </div>
 
 <div *ngIf="!stateService.isOrdering && pollService.allowPoll">
@@ -42,12 +28,19 @@
   <mat-expansion-panel style="margin:3em">
     <mat-expansion-panel-header style="height: 300px">
       <mat-panel-title>Voters</mat-panel-title>
-      <mat-panel-description *ngIf="pollService.newOptions > 0" class="flex-grow-zero">
-        <strong>New:</strong> &nbsp; <strong class="red">{{pollService.newOptions}}</strong>
-      </mat-panel-description>
     </mat-expansion-panel-header>
 
     <ag-grid-angular [gridOptions]="pollService.votersGO" class="ag-theme-material" style="height: 500px">
+    </ag-grid-angular>
+  </mat-expansion-panel>
+</div>
+
+<div *ngIf="authService.isAdmin">
+  <mat-expansion-panel style="margin:3em">
+    <mat-expansion-panel-header style="height: 300px">
+      <mat-panel-title>Suggestions</mat-panel-title>
+    </mat-expansion-panel-header>
+    <ag-grid-angular [gridOptions]="pollService.suggestionsGO" class="ag-theme-material" style="height: 500px">
     </ag-grid-angular>
   </mat-expansion-panel>
 </div>
