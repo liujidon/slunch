@@ -34,9 +34,16 @@
 
 <mat-card style="margin: 3em">
 
-  <mat-card-title>
-    Transactions
-  </mat-card-title>
+  <div style="width:100%" fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-card-title class="flex-grow-zero">Transactions</mat-card-title>
+    <div class="flex-grow-zero">
+      Debit: &nbsp;
+      <span [ngClass]="'red'">{{transactionService.myDebit | currency}}</span>
+      &nbsp;
+      Credit: &nbsp;
+      <span [ngClass]="'green'">{{transactionService.myCredit | currency}}</span>
+    </div>
+  </div>
   <mat-card-content>
 
     <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.myGO">

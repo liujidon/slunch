@@ -35,6 +35,8 @@ export class TransactionService {
   initFlag: boolean = true;
 
   todayPosition: number = 0;
+  myDebit: number = 0;
+  myCredit: number = 0;
   numUnprocessed: number;
   numUnprocessedOrders: number;
 
@@ -54,12 +56,7 @@ export class TransactionService {
         this.unprocessedGO.api = params.api;
         this.unprocessedGO.columnApi = params.columnApi;
         this.unprocessedGO.api.setRowData(this.unprocessedTransactions);
-        if (window.innerWidth < 480) {
-          this.unprocessedGO.columnApi.autoSizeAllColumns();
-        }
-        else {
-          this.unprocessedGO.api.sizeColumnsToFit();
-        }
+        this.unprocessedGO.columnApi.autoSizeAllColumns();
       },
       columnDefs: [
         {
@@ -89,13 +86,14 @@ export class TransactionService {
         },
         {
           cellRendererFramework: GridStatusComponent,
-          suppressSorting: true, suppressFilter: true, suppressResize: true
+          suppressSorting: true, suppressFilter: true
         },
         {
           headerName: "Status",
           cellRendererFramework: GridControlStatusComponent,
+          field: 'statusButton',
           cellRendererParams: {transactionService: this, authService: authService},
-          suppressSorting: true, suppressFilter: true, suppressResize: true
+          suppressSorting: true, suppressFilter: true
         },
         {
           headerName: "Confirm Transaction",
@@ -106,7 +104,7 @@ export class TransactionService {
             bottomSheetService: bottomSheetService,
             caption: "Confirm"
           },
-          suppressSorting: true, suppressFilter: true, suppressResize: true
+          suppressSorting: true, suppressFilter: true, width: 190
         },
         {
           headerName: "Cancel Transaction",
@@ -117,7 +115,7 @@ export class TransactionService {
             bottomSheetService: bottomSheetService,
             caption: "Cancel"
           },
-          suppressSorting: true, suppressFilter: true, suppressResize: true
+          suppressSorting: true, suppressFilter: true
         }
       ],
       animateRows: true,
@@ -228,7 +226,7 @@ export class TransactionService {
         {
           headerName: "Credit", field: "price", valueFormatter: (params) => {
           let pipe = new CurrencyPipe("en-us");
-          if (params.value < 0) return pipe.transform(-params.value);
+          if (params.value < 0) {return pipe.transform(-params.value); }
           else return "";
         }, cellClass: ["green"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
         },
@@ -340,8 +338,9 @@ export class TransactionService {
             return new Date(transaction.time) >= today;
           });
 
-
           this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
+          this.myDebit = this.myTransactions.map(t => t.status == "done" && t.price >= 0 ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
+          this.myCredit = -1 * this.myTransactions.map(t => t.status == "done" && t.price < 0 ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
           if (this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
           this.todayPosition = -1 * this.todayTransactions.map(t => t.status == "done" ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
 
@@ -423,10 +422,8 @@ export class TransactionService {
   cancelTransaction(t: Transaction) {
     this.db.doc(t.id).delete();
     const unprocessedOrdersForUID = this.unprocessedOrders.filter(transaction => transaction.uid == t.uid);
-    console.log(unprocessedOrdersForUID)
     if (unprocessedOrdersForUID.length - 1 == 0) {
-      console.log(t.accountid.split('/')[1])
-      this.pollService.updateVoteStatusForSpecificID(t.accountid.split('/')[1]);
+      this.pollService.updateVoteStatus(t.accountid.split('/')[1], "Not Ordered");
     }
   }
 

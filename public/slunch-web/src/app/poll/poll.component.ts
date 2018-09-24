@@ -36,7 +36,7 @@ export class PollComponent implements OnInit {
 
     this.pollService.updatePoll(this.pollService.latestPoll);
 
-    this.pollService.updateVoteStatus();
+    this.pollService.updateVoteStatus(this.authService.getID(), "Not Ordered");
   }
 
 }

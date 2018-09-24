@@ -1,17 +1,21 @@
 <mat-card *ngIf="pollService.getAdminSelectedOptions().length > 0" style="margin:3em">
-  <mat-card-title>Ordering <div style="float:right;">
-    <button id="orderStatusButton"mat-raised-button color="warn" (click)="orderStatus(authService.account)" [attr.data-status]="(authService.account.voteStatus)">
-      Not Ordering Today
-    </button>
-  </div></mat-card-title>
-  <mat-card-content id="orderCard">
+  <mat-card-title>Ordering
+    <div style="float:right;">
+      <button id="orderStatusButton" mat-raised-button color="warn" (click)="orderStatus(authService.account)"
+              [attr.data-status]="(authService.account.voteStatus)">
+        Not Ordering Today
+      </button>
+    </div>
+  </mat-card-title>
+  <mat-card-content [style.display]="authService.account.voteStatus == 'Not Ordering' ? 'none':'block'" id="orderCard">
     <mat-vertical-stepper #stepper>
 
       <mat-step label="Choose your restaurant">
 
         <div fxLayout="row wrap" fxLayoutAlign=" center">
           <div class="option" style="margin:20px" *ngFor="let o of pollService.getAdminSelectedOptions()">
-            <img style="max-width: 150px" [matTooltip]="o?.name" class="clickable" src="{{o?.iconUrl}}" (click)="clickRestaurant(o, stepper)">
+            <img style="max-width: 150px" [matTooltip]="o?.name" class="clickable" src="{{o?.iconUrl}}"
+                 (click)="clickRestaurant(o, stepper)">
           </div>
         </div>
 
@@ -42,7 +46,8 @@
 
           <div style="margin:30px; width: 100%">
             <mat-form-field style="width: 100%">
-              <textarea #orderField matInput placeholder="Order:" [(ngModel)]="order" required [matAutocomplete]="auto"></textarea>
+              <textarea #orderField matInput placeholder="Order:" [(ngModel)]="order" required
+                        [matAutocomplete]="auto"></textarea>
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-optgroup [label]="'Recent Orders'">
                   <mat-option *ngFor="let o of recentOrders" [value]="o">

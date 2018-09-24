@@ -57,21 +57,19 @@ export class OrderComponent implements OnInit {
     this.isOrderSent = true;
     stepper.next();
     this.isRestaurantChosen = false;
-    this.pollService.updateVoteStatusToOrdered();
+    this.pollService.updateVoteStatus(this.authService.getID(), "Ordered");
   }
 
   orderStatus(account: any) {
-    if (account.voteStatus == "Not Ordered") {
-      let data = {"voteStatus": "Not Ordering"}
+    if (account.voteStatus == "Not Ordered" || account.voteStatus == "Not Voted") {
       document.getElementById("orderCard").style.display = 'none';
       document.getElementById("orderStatusButton").innerHTML = "Order Now!"
-      this.pollService.toggleOrderStatus(account, data);
+      this.pollService.updateVoteStatus(account.id, "Not Ordering");
     }
     else if (account.voteStatus == "Not Ordering") {
-      let data = {"voteStatus": "Not Ordered"}
       document.getElementById("orderCard").style.display = 'block';
       document.getElementById("orderStatusButton").innerHTML = "Not Ordering Today"
-      this.pollService.toggleOrderStatus(account, data);
+      this.pollService.updateVoteStatus(account.id, "Not Ordered");
     }
   }
 }

@@ -42,7 +42,6 @@ export class AdminComponent implements OnInit {
     }
     else{
       this.transactionService.doneGO.api.sizeColumnsToFit();
-      this.transactionService.unprocessedGO.api.sizeColumnsToFit();
       this.adminService.accountsGO.api.sizeColumnsToFit();
       this.pollService.pollOptionsGO.api.sizeColumnsToFit();
 

@@ -24,8 +24,9 @@ export class PollService {
   pollOptionsGO: GridOptions;
 
   suggestionsGO: GridOptions;
+  suggestionsOptionsGO: Array<object> = [];
 
-  votersOptions: Array<any> = [];
+  votersOptionsGO: Array<object> = [];
   votersGO: GridOptions;
 
   latestPollSubscription: Subscription;
@@ -44,9 +45,6 @@ export class PollService {
 
   accountsPollSubscription: Subscription;
   accountsSubscription: Subscription;
-
-  voteGOApi: any;
-  voteGOColumnApi: any;
 
   newOptions: number = 0;
 
@@ -102,13 +100,9 @@ export class PollService {
 
     this.votersGO = {
       onGridReady: (params) => {
-        console.log(params.api)
-        console.log(params.columnApi)
-        this.voteGOColumnApi = params.columnApi;
-        this.voteGOApi = params.api;
         this.votersGO.api = params.api;
         this.votersGO.columnApi = params.columnApi;
-        // this.votersGO.api.setRowData(this.voterListOptions());
+        this.votersGO.api.setRowData(this.votersOptionsGO);
         if (window.innerWidth < 480) {
           this.votersGO.columnApi.autoSizeAllColumns();
         }
@@ -118,13 +112,14 @@ export class PollService {
       },
       rowHeight: 40,
       columnDefs: [
-        {headerName: "Voter's Name", field: "name", sort: "asc"},
-        {headerName: "Chosen Retauarants", field: "restaurants", sort: "asc"},
+        {headerName: "Voter's Name", field: "firstname"},
+        {headerName: "Chosen Retauarants", field: "latestVotes", sort: "desc"},
         {
           headerName: "Ordered?",
           field: "voterStatus",
           cellRendererFramework: GridVoterStatusComponent,
-          suppressSorting: true, suppressFilter: true, suppressResize: true
+          suppressFilter: true, suppressResize: true,
+          sort: "desc"
         }
       ],
       animateRows: true,
@@ -141,6 +136,7 @@ export class PollService {
       onGridReady: (params) => {
         this.suggestionsGO.api = params.api;
         this.suggestionsGO.columnApi = params.columnApi;
+        this.suggestionsGO.api.setRowData(this.suggestionsOptionsGO);
         if (window.innerWidth < 480) {
           this.suggestionsGO.columnApi.autoSizeAllColumns();
         }
@@ -172,7 +168,6 @@ export class PollService {
     console.log("PollService latestPollSubscription subscribing");
     this.latestPollSubscription = this.db.collection<Poll>('poll', ref => ref.orderBy('createtime', 'desc').limit(1)).valueChanges().subscribe(pollArray => {
       this.latestPoll = pollArray[0];
-      console.log(this.latestPoll);
       // User clicks on a poll option
       this.currentVoters = []
       this.currentUidVoters = []
@@ -189,7 +184,6 @@ export class PollService {
       });
       this.currentVoters = this.currentVoters.sort((a, b) => a.toLowerCase() <= b.toLowerCase() ? -1 : 1);
       this.getRestaurantVoteListCount()
-      console.log(this.allowPoll)
       if (this.allowPoll && !this.allowOrder) {
         if (this.currentUidVoters.indexOf(this.authService.getUid()) > -1) {
           this.updateLatestVotes(this.likedUid(this.authService.getUid()));
@@ -198,11 +192,6 @@ export class PollService {
           this.updateLatestVotes([]);
         }
       }
-      this.db.collection<AccountFace>('accounts').valueChanges().subscribe(
-        data => {
-          this.setVoterOptions(data);
-        }
-      );
     });
 
     console.log("PollService pollOptionsSubscription subscribing");
@@ -249,7 +238,10 @@ export class PollService {
       console.log("PollService stateSubscription unsubscribing");
       this.stateSubscription.unsubscribe();
     }
-
+    if (this.accountsPollSubscription) {
+      console.log("PollService accountPoll unsubscribing");
+      this.accountsPollSubscription.unsubscribe();
+    }
   }
 
   getAdminSelectedOptions() {
@@ -302,10 +294,6 @@ export class PollService {
   // Account with the list, and the vote status. In the auth service subscribe to the change, and make a method
   // that creates an object of voter options, and then set that object to the voteGO api
 
-  getVoterList(): Array<any> {
-    return this.votersOptions;
-  }
-
   getRestaurantVoteListCount(): object {
     var restaurants = []
     const restaurantCount = {}
@@ -331,7 +319,8 @@ export class PollService {
             this.restaurantDistanceVotes[data[i].name] -= distance;
           }
         }
-        if (this.suggestionsGO.api) this.suggestionsGO.api.setRowData(this.getSuggestions());
+        this.getSuggestions();
+        if (this.suggestionsGO.api) this.suggestionsGO.api.setRowData(this.suggestionsOptionsGO);
       }
     )
     return restaurantCount;
@@ -387,7 +376,7 @@ export class PollService {
 
       }
     }
-    return [highestVoteRow, closestRow, highestVoteClosestRow];
+    this.suggestionsOptionsGO = [highestVoteRow, closestRow, highestVoteClosestRow];
   }
 
   getKeysWithHighestValue(o, n) {
@@ -407,55 +396,18 @@ export class PollService {
   }
 
   setVoterOptions(data) {
-    var options = [];
-    for (var i = 0; i < data.length; i++) {
-      var user = data[i];
-      if (user.voteStatus != "Not Voted") {
-        var voteData = {};
-        var restaurants = this.convertListToString(user.latestVotes);
-        voteData["name"] = user.firstname;
-        voteData["restaurants"] = restaurants;
-        voteData["voterStatus"] = user.voteStatus;
-        options.push(voteData);
-      }
+    this.votersOptionsGO = data.map(user => ({
+      firstname: user.firstname,
+      latestVotes: user.latestVotes,
+      voterStatus: user.voteStatus
+    }));
+    if (this.votersGO.api != null) {
+      this.votersGO.api.setRowData(this.votersOptionsGO);
     }
-    this.votersGO.api.setRowData(options);
   }
 
-  convertListToString(voteList) {
-    var str = "";
-    for (var i = 0; i < voteList.length; i++) {
-      if (i == voteList.length - 1) {
-        str += voteList[i];
-
-      }
-      else {
-        str += voteList[i] + ", ";
-      }
-    }
-    return str;
-  }
-
-
-  updateVoteStatus() {
-    let data = {
-      "voteStatus": "Not Ordered"
-    }
-    this.db.collection<AccountFace>('accounts').doc(this.authService.getID()).update(data);
-  }
-
-  updateVoteStatusForSpecificID(ID) {
-    let data = {
-      "voteStatus": "Not Ordered"
-    }
-    this.db.collection<AccountFace>('accounts').doc(ID).update(data);
-  }
-
-  updateVoteStatusToOrdered() {
-    let data = {
-      "voteStatus": "Ordered"
-    }
-    this.db.collection<AccountFace>('accounts').doc(this.authService.getID()).update(data);
+  updateVoteStatus(ID, status) {
+    this.db.collection<AccountFace>('accounts').doc(ID).update({"voteStatus": status});
   }
 
   updateLatestVotes(latestVotes) {
@@ -464,30 +416,23 @@ export class PollService {
       "voteStatus": "Not Ordered"
     }
     if (latestVotes.length == 0) {
-      data = {
-        "voteStatus": "Not Voted",
-        "latestVotes": latestVotes
-      }
+      data["voteStatus"] = "Not Voted";
     }
     this.db.collection<AccountFace>('accounts').doc(this.authService.getID()).update(data);
   }
 
-  toggleOrderStatus(account, data) {
-    this.db.collection<AccountFace>('accounts').doc(account.id).update(data);
-  }
-
   resetVoteStatus() {
-    let data = {
-      "voteStatus": "Not Voted",
-      "latestVotes": []
-    }
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
         let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc);
         for (var i = 0; i < temp.length; i++) {
-          this.db.collection<AccountFace>('accounts').doc(temp[i].payload.doc.id).update(data);
+          this.db.collection<AccountFace>('accounts').doc(temp[i].payload.doc.id).update({
+            "voteStatus": "Not Voted",
+            "latestVotes": []
+          });
         }
-      });
+      })
+    this.accountsSubscription.unsubscribe();
   }
 
 }
