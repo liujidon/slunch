@@ -63,12 +63,12 @@ export class OrderComponent implements OnInit {
   orderStatus(account: any) {
     if (account.voteStatus == "Not Ordered" || account.voteStatus == "Not Voted") {
       document.getElementById("orderCard").style.display = 'none';
-      document.getElementById("orderStatusButton").innerHTML = "Order Now!"
+      document.getElementById("orderStatusButton").innerHTML = "I'm In!"
       this.pollService.updateVoteStatus(account.id, "Not Ordering");
     }
     else if (account.voteStatus == "Not Ordering") {
       document.getElementById("orderCard").style.display = 'block';
-      document.getElementById("orderStatusButton").innerHTML = "Not Ordering Today"
+      document.getElementById("orderStatusButton").innerHTML = "I'm Out!"
       this.pollService.updateVoteStatus(account.id, "Not Ordered");
     }
   }

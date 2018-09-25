@@ -2,8 +2,10 @@
   <mat-card-title>Ordering
     <div style="float:right;">
       <button id="orderStatusButton" mat-raised-button color="warn" (click)="orderStatus(authService.account)"
+              [disabled]="authService.account.voteStatus == 'Ordered'"
               [attr.data-status]="(authService.account.voteStatus)">
-        Not Ordering Today
+        {{authService.account.voteStatus == "Not Ordered" || authService.account.voteStatus == "Not Voted" ? "I'm Out!":
+        "I'm In!" }}
       </button>
     </div>
   </mat-card-title>

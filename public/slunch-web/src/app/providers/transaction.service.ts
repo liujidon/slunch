@@ -107,14 +107,12 @@ export class TransactionService {
           suppressSorting: true, suppressFilter: true, width: 190
         },
         {
-          headerName: "Cancel Transaction",
           cellRendererFramework: GridCancelTransactionAdminComponent,
           cellRendererParams: {
             transactionService: this,
-            authService: authService,
-            bottomSheetService: bottomSheetService,
-            caption: "Cancel"
+            caption: "Cancel Transaction"
           },
+          cellStyle: {textAlign: "center"},
           suppressSorting: true, suppressFilter: true
         }
       ],
@@ -173,14 +171,12 @@ export class TransactionService {
           suppressSorting: true, suppressFilter: true
         },
         {
-          headerName: "Delete Transaction",
           cellRendererFramework: GridCancelTransactionAdminComponent,
           cellRendererParams: {
             transactionService: this,
-            authService: authService,
-            bottomSheetService: bottomSheetService,
             caption: "Delete"
           },
+          cellStyle: {textAlign: "center"},
           suppressSorting: true, suppressFilter: true
         }
       ],
@@ -226,7 +222,9 @@ export class TransactionService {
         {
           headerName: "Credit", field: "price", valueFormatter: (params) => {
           let pipe = new CurrencyPipe("en-us");
-          if (params.value < 0) {return pipe.transform(-params.value); }
+          if (params.value < 0) {
+            return pipe.transform(-params.value);
+          }
           else return "";
         }, cellClass: ["green"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
         },
@@ -238,15 +236,13 @@ export class TransactionService {
           suppressResize: true
         },
         {
-          headerName: "Cancel Transaction",
-          cellRendererFramework: GridCancelTransactionComponent,
+          cellRendererFramework: GridCancelTransactionAdminComponent,
           cellRendererParams: {
             transactionService: this,
-            authService: authService,
-            bottomSheetService: bottomSheetService,
-            caption: "Cancel"
+            caption: "Cancel Transaction"
           },
-          suppressSorting: true, suppressFilter: true, suppressResize: true
+          cellStyle: {textAlign: "center"},
+          suppressSorting: true, suppressFilter: true
         }
       ],
       animateRows: true,

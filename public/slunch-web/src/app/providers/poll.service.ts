@@ -23,6 +23,9 @@ export class PollService {
 
   pollOptionsGO: GridOptions;
 
+  scotiaLat = 43.649479;
+  scotiaLong = -79.379566;
+
   suggestionsGO: GridOptions;
   suggestionsOptionsGO: Array<object> = [];
 
@@ -184,14 +187,13 @@ export class PollService {
       });
       this.currentVoters = this.currentVoters.sort((a, b) => a.toLowerCase() <= b.toLowerCase() ? -1 : 1);
       this.getRestaurantVoteListCount()
-      if (this.allowPoll && !this.allowOrder) {
-        if (this.currentUidVoters.indexOf(this.authService.getUid()) > -1) {
-          this.updateLatestVotes(this.likedUid(this.authService.getUid()));
-        }
-        else {
-          this.updateLatestVotes([]);
-        }
+      if (this.currentUidVoters.indexOf(this.authService.getUid()) > -1) {
+        this.updateLatestVotes(this.likedUid(this.authService.getUid()));
       }
+      else {
+        this.updateLatestVotes([]);
+      }
+
     });
 
     console.log("PollService pollOptionsSubscription subscribing");
@@ -314,7 +316,7 @@ export class PollService {
         this.restaurantCountDistance = {}
         for (var i = 0; i < data.length; i++) {
           if (data[i].name in this.restaurantCountVotes) {
-            const distance = this.getDistance(43.649479, -79.379566, data[i].latitude, data[i].longitude);
+            const distance = this.getDistance(this.scotiaLat, this.scotiaLong, data[i].latitude, data[i].longitude);
             this.restaurantCountDistance[data[i].name] = distance;
             this.restaurantDistanceVotes[data[i].name] -= distance;
           }
@@ -422,6 +424,7 @@ export class PollService {
   }
 
   resetVoteStatus() {
+    console.log("reset accounts");
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
         let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc);
