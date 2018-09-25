@@ -222,8 +222,9 @@ export class PollService {
     console.log("PollService accountPoll subscribing");
     this.accountsPollSubscription = this.db.collection<AccountFace>('accounts').valueChanges().subscribe(
       data => {
-        if(this.newPollCreated){
+        if(this.newPollCreated && this.accountsSubscription){
           this.accountsSubscription.unsubscribe()
+          this.newPollCreated = false
         }
         this.setVoterOptions(data);
       }
