@@ -110,7 +110,7 @@ export class TransactionService {
           cellRendererFramework: GridCancelTransactionAdminComponent,
           cellRendererParams: {
             transactionService: this,
-            caption: "Cancel Transaction"
+            caption: "Delete Transaction"
           },
           cellStyle: {textAlign: "center"},
           suppressSorting: true, suppressFilter: true
@@ -236,7 +236,7 @@ export class TransactionService {
           suppressResize: true
         },
         {
-          cellRendererFramework: GridCancelTransactionAdminComponent,
+          cellRendererFramework: GridCancelTransactionComponent,
           cellRendererParams: {
             transactionService: this,
             caption: "Cancel Transaction"
@@ -422,11 +422,4 @@ export class TransactionService {
       this.pollService.updateVoteStatus(t.accountid.split('/')[1], "Not Ordered");
     }
   }
-
-  //
-  // getDebitCredit(){
-  //   for(var i = 0; i < this.myTransactions; i++){
-  //     if(status != "done")
-  //   }
-  // }
 }

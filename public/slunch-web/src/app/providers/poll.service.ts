@@ -4,6 +4,7 @@ import {Poll} from '../poll';
 import {AngularFirestore, docChanges} from 'angularfire2/firestore';
 import {AuthService} from './auth.service';
 import {Subscription} from 'rxjs';
+import {map} from 'rxjs/operators'
 import {environment} from '../../environments/environment';
 import {StateFace, AccountFace} from '../interfaces';
 import {GridOptions} from 'ag-grid';
@@ -50,6 +51,7 @@ export class PollService {
   accountsSubscription: Subscription;
 
   newOptions: number = 0;
+  newPollCreated: boolean = false;
 
 
   constructor(public db: AngularFirestore,
@@ -220,6 +222,9 @@ export class PollService {
     console.log("PollService accountPoll subscribing");
     this.accountsPollSubscription = this.db.collection<AccountFace>('accounts').valueChanges().subscribe(
       data => {
+        if(this.newPollCreated){
+          this.accountsSubscription.unsubscribe()
+        }
         this.setVoterOptions(data);
       }
     );
@@ -243,6 +248,9 @@ export class PollService {
     if (this.accountsPollSubscription) {
       console.log("PollService accountPoll unsubscribing");
       this.accountsPollSubscription.unsubscribe();
+    }
+    if(this.accountsSubscription) {
+      this.accountsSubscription.unsubscribe();
     }
   }
 
@@ -424,18 +432,17 @@ export class PollService {
   }
 
   resetVoteStatus() {
-    console.log("reset accounts");
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
-        let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc);
-        for (var i = 0; i < temp.length; i++) {
-          this.db.collection<AccountFace>('accounts').doc(temp[i].payload.doc.id).update({
-            "voteStatus": "Not Voted",
-            "latestVotes": []
-          });
-        }
-      })
-    this.accountsSubscription.unsubscribe();
+          let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc);
+          for (var i = 0; i < temp.length; i++) {
+            this.db.collection<AccountFace>('accounts').doc(temp[i].payload.doc.id).update({
+              "voteStatus": "Not Voted",
+              "latestVotes": []
+            });
+      }
+          this.newPollCreated = true;
+      })    
   }
 
 }
