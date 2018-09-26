@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { StateService } from '../providers/state.service';
-import { PollService } from '../providers/poll.service';
-import { AuthService } from '../providers/auth.service';
-import { HostListener } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {StateService} from '../providers/state.service';
+import {PollService} from '../providers/poll.service';
+import {AuthService} from '../providers/auth.service';
+import {HostListener} from '@angular/core';
 
 @Component({
   selector: 'app-vote-page',
@@ -19,12 +19,10 @@ export class VotePageComponent implements OnInit {
 
   screenWidth: number = window.innerWidth;
 
-  constructor(
-    public stateService: StateService,
-    public pollService: PollService,
-    public authService: AuthService
-  ) {}
-
+  constructor(public stateService: StateService,
+              public pollService: PollService,
+              public authService: AuthService) {
+  }
 
 
   ngOnInit() {
@@ -34,18 +32,20 @@ export class VotePageComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
     this.screenWidth = window.innerWidth;
-    if(window.innerWidth < 480) {
-      this.pollService.suggestionsGO.columnApi.autoSizeAllColumns();
-      this.pollService.votersGO.columnApi.autoSizeAllColumns();
-    }
-    else{
-      this.pollService.suggestionsGO.api.sizeColumnsToFit();
-      this.pollService.votersGO.api.sizeColumnsToFit();
+    if (this.authService.isAdmin) {
+      if (window.innerWidth < 480) {
+        this.pollService.suggestionsGO.columnApi.autoSizeAllColumns();
+        this.pollService.votersGO.columnApi.autoSizeAllColumns();
+      }
+      else {
+        this.pollService.suggestionsGO.api.sizeColumnsToFit();
+        this.pollService.votersGO.api.sizeColumnsToFit();
 
+      }
     }
   }
 
-  sendSuggestion(){
+  sendSuggestion() {
     this.pollService.writePollOption(this.newOption);
     this.newOption = "";
     this.sentSuggestions = this.sentSuggestions + 1;
@@ -81,7 +81,6 @@ export class VotePageComponent implements OnInit {
       }
     }
   }
-
 
 
 }

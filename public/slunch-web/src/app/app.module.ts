@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AgGridModule } from 'ag-grid-angular';
@@ -50,6 +50,7 @@ import {
 
 import { AppComponent } from './app.component';
 import { AppRoutes } from './app.routes';
+import {ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { environment } from '../environments/environment';
 import { PollComponent } from './poll/poll.component';
 import { PollOptionComponent } from './poll-option/poll-option.component';
@@ -87,6 +88,7 @@ import { EditPollOptionComponent } from './edit-poll-option/edit-poll-option.com
     MatBadgeModule,
     MatBottomSheetModule,
     MatButtonModule,
+    ReactiveFormsModule,
     MatButtonToggleModule,
     MatCardModule,
     MatCheckboxModule,
@@ -125,6 +127,7 @@ export class MaterialModule {}
 @NgModule({
   declarations: [
     AppComponent,
+    ConfirmationDialogComponent,
     VotePageComponent,
     LoginPageComponent,
     PollComponent,
@@ -155,6 +158,7 @@ export class MaterialModule {}
     AngularFireAuthModule,
     BrowserAnimationsModule,
     AngularFireDatabaseModule,
+    ReactiveFormsModule,
     HttpClientModule,
     MaterialModule,
     FormsModule,
@@ -181,6 +185,7 @@ export class MaterialModule {}
     GridPollOptionControlComponent,
     GridConfirmTransactionComponent,
     CalculatePriceComponent,
+    ConfirmationDialogComponent,
     EditPollOptionComponent
   ],
   bootstrap: [AppComponent]

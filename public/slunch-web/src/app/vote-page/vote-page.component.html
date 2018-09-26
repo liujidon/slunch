@@ -1,17 +1,34 @@
 <app-header></app-header>
 
 <div *ngIf="authService.isAdmin" class="admin-control">
+
   <div class="control" style="float: left">
     <mat-slide-toggle style="height:100%" [disabled]="stateService.isOrdering" [(ngModel)]="pollService.allowPoll"
-      (click)="togglePoll()">
+                      (click)="togglePoll()">
       Show Poll
     </mat-slide-toggle>
   </div>
   <div class="control">
     <mat-slide-toggle style="height:100%; float:right;" [disabled]="!(pollService.getAdminSelectedOptions().length > 0)"
-      [(ngModel)]="stateService.isOrdering" (click)="toggleOrders()">
+                      [(ngModel)]="stateService.isOrdering" (click)="toggleOrders()">
       Allow Orders
     </mat-slide-toggle>
+  </div>
+</div>
+
+<div *ngIf="authService.isAdmin" class="admin-control">
+  <div class="control" fxLayout="row wrap" fxLayoutGap="10px" *ngIf="pollService.allowPoll">
+    <div *ngFor="let name of pollService.currentVoters">
+      <button mat-button [matMenuTriggerFor]="liked"
+              style="width:80px; padding:0px; color:grey; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+        {{name}}
+      </button>
+      <mat-menu #liked="matMenu" [overlapTrigger]="false" yPosition="below">
+        <div *ngFor="let place of pollService.liked(name)" class="liked-item bottom-divider">
+          {{place}}
+        </div>
+      </mat-menu>
+    </div>
   </div>
 </div>
 
@@ -29,7 +46,6 @@
     <mat-expansion-panel-header style="height: 300px">
       <mat-panel-title>Voters</mat-panel-title>
     </mat-expansion-panel-header>
-
     <ag-grid-angular [gridOptions]="pollService.votersGO" class="ag-theme-material" style="height: 500px">
     </ag-grid-angular>
   </mat-expansion-panel>

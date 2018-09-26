@@ -423,11 +423,7 @@ export class PollService {
 
   updateLatestVotes(latestVotes) {
     let data = {
-      "latestVotes": latestVotes,
-      "voteStatus": "Not Ordered"
-    }
-    if (latestVotes.length == 0) {
-      data["voteStatus"] = "Not Voted";
+      "latestVotes": latestVotes
     }
     this.db.collection<AccountFace>('accounts').doc(this.authService.getID()).update(data);
   }
@@ -443,7 +439,7 @@ export class PollService {
             });
       }
           this.newPollCreated = true;
-      })    
+      })
   }
 
 }
