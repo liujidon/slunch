@@ -128,7 +128,7 @@ export class PollService {
         }
       ],
       animateRows: true,
-      sortingOrder: ["asc", "desc", null],
+      sortingOrder: ["asc", "desc"],
       enableSorting: true,
       enableColResize: true,
       enableFilter: true,
@@ -157,7 +157,7 @@ export class PollService {
         {headerName: "Restaurant 3", field: "Restaurant 3", sort: "asc"},
       ],
       animateRows: true,
-      sortingOrder: ["asc", "desc", null],
+      sortingOrder: ["asc", "desc"],
       enableSorting: true,
       enableColResize: true,
       enableFilter: true,
