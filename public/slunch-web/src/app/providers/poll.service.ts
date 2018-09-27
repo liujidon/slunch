@@ -222,7 +222,7 @@ export class PollService {
     console.log("PollService accountPoll subscribing");
     this.accountsPollSubscription = this.db.collection<AccountFace>('accounts').valueChanges().subscribe(
       data => {
-        if(this.newPollCreated && this.accountsSubscription){
+        if (this.newPollCreated && this.accountsSubscription) {
           this.accountsSubscription.unsubscribe()
           this.newPollCreated = false
         }
@@ -250,7 +250,7 @@ export class PollService {
       console.log("PollService accountPoll unsubscribing");
       this.accountsPollSubscription.unsubscribe();
     }
-    if(this.accountsSubscription) {
+    if (this.accountsSubscription) {
       this.accountsSubscription.unsubscribe();
     }
   }
@@ -425,20 +425,23 @@ export class PollService {
     let data = {
       "latestVotes": latestVotes
     }
+    if (latestVotes.length == 0) {
+      data["voteStatus"] = "Not Voted"
+    }
     this.db.collection<AccountFace>('accounts').doc(this.authService.getID()).update(data);
   }
 
   resetVoteStatus() {
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
-          let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc);
-          for (var i = 0; i < temp.length; i++) {
-            this.db.collection<AccountFace>('accounts').doc(temp[i].payload.doc.id).update({
-              "voteStatus": "Not Voted",
-              "latestVotes": []
-            });
-      }
-          this.newPollCreated = true;
+        let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc);
+        for (var i = 0; i < temp.length; i++) {
+          this.db.collection<AccountFace>('accounts').doc(temp[i].payload.doc.id).update({
+            "voteStatus": "Not Voted",
+            "latestVotes": []
+          });
+        }
+        this.newPollCreated = true;
       })
   }
 
