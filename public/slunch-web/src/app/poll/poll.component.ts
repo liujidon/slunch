@@ -39,4 +39,18 @@ export class PollComponent implements OnInit {
     this.pollService.updateVoteStatus(this.authService.getID(), "Not Ordered");
   }
 
+  orderStatus() {
+    var voteStatus = this.authService.getVoteStatus()
+    if (voteStatus == "Not Ordered" || voteStatus == "Not Voted") {
+      document.getElementById("pollCard").style.display = 'none';
+      document.getElementById("pollStatusButton").innerHTML = "I'm In!"
+      this.pollService.updateVoteStatus(this.authService.getID(), "Not Ordering");
+    }
+    else if (voteStatus == "Not Ordering") {
+      document.getElementById("pollCard").style.display = 'block';
+      document.getElementById("pollStatusButton").innerHTML = "I'm Out!"
+      this.pollService.updateVoteStatus(this.authService.getID(), this.authService.checkIfNoVotes());
+    }
+  }
+
 }

@@ -86,7 +86,7 @@ export class TransactionService {
         },
         {
           cellRendererFramework: GridStatusComponent,
-          suppressSorting: true, suppressFilter: true
+          suppressSorting: true, suppressFilter: true, width: 30, suppressResize: true
         },
         {
           headerName: "Status",
@@ -104,7 +104,7 @@ export class TransactionService {
             bottomSheetService: bottomSheetService,
             caption: "Confirm"
           },
-          suppressSorting: true, suppressFilter: true, width: 190
+          suppressSorting: true, suppressFilter: true
         },
         {
           cellRendererFramework: GridCancelTransactionAdminComponent,
@@ -168,7 +168,7 @@ export class TransactionService {
             bottomSheetService: bottomSheetService,
             caption: "Edit"
           },
-          suppressSorting: true, suppressFilter: true
+          suppressSorting: true, suppressFilter: true, width: 190
         },
         {
           cellRendererFramework: GridCancelTransactionAdminComponent,
@@ -177,7 +177,7 @@ export class TransactionService {
             caption: "Delete"
           },
           cellStyle: {textAlign: "center"},
-          suppressSorting: true, suppressFilter: true
+          suppressSorting: true, suppressFilter: true, width: 100, suppressResize: true
         }
       ],
       animateRows: true,
@@ -233,7 +233,7 @@ export class TransactionService {
           cellRendererFramework: GridStatusComponent,
           suppressFilter: true,
           suppressSorting: true,
-          suppressResize: true
+          suppressResize: true, width: 100
         },
         {
           cellRendererFramework: GridCancelTransactionComponent,
@@ -242,7 +242,7 @@ export class TransactionService {
             caption: "Cancel Transaction"
           },
           cellStyle: {textAlign: "center"},
-          suppressSorting: true, suppressFilter: true
+          suppressSorting: true, suppressFilter: true, width: 100, suppressResize: true
         }
       ],
       animateRows: true,

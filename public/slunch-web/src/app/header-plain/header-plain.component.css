@@ -1,0 +1,9 @@
+.responsive-header {
+  font-size: 7vw;
+}
+
+@media screen and (min-width: 787px) {
+  .responsive-header {
+    font-size: 55px;
+  }
+}

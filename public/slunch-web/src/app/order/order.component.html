@@ -1,7 +1,7 @@
 <mat-card *ngIf="pollService.getAdminSelectedOptions().length > 0" style="margin:3em">
   <mat-card-title>Ordering
     <div style="float:right;">
-      <button id="orderStatusButton" mat-raised-button color="warn" (click)="orderStatus(authService.account)"
+      <button id="orderStatusButton" mat-raised-button color="warn" (click)="orderStatus()"
               [disabled]="authService.account.voteStatus == 'Ordered'"
               [attr.data-status]="(authService.account.voteStatus)">
         {{authService.account.voteStatus == "Not Ordered" || authService.account.voteStatus == "Not Voted" ? "I'm Out!":
@@ -23,12 +23,15 @@
 
       </mat-step>
 
-      <mat-step label="Specify order">
-
+      <mat-step label="Specify order and press send">
+        <button *ngIf="chosenOption" style="float:right" mat-raised-button
+                [disabled]="order.length <= 0 || authService.account.voteStatus == 'Ordered'" color="warn"
+                (click)="clickSendOrder(stepper)">
+          Send Order
+        </button>
         <div fxLayout="row wrap" *ngIf="chosenOption" fxLayoutAlign=" center">
-
-          <div style="margin:30px">
-            <a href="{{chosenOption?.menuUrl}}" target="_blank">
+          <div style="margin:30px; width: 100%;">
+            <a style="float:left;" href="{{chosenOption?.menuUrl}}" target="_blank">
               <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign=" center">
                 <div>
                   <img style="max-width: 150px" src="{{chosenOption?.iconUrl}}">
@@ -40,16 +43,10 @@
             </a>
           </div>
 
-          <div style="margin:30px">
-            <button mat-raised-button [disabled]="order.length <= 0" color="warn" (click)="clickSendOrder(stepper)">
-              Send Order
-            </button>
-          </div>
-
           <div style="margin:30px; width: 100%">
             <mat-form-field style="width: 100%">
               <textarea #orderField matInput placeholder="Order:" [(ngModel)]="order" required
-                        [matAutocomplete]="auto"></textarea>
+                        [matAutocomplete]="auto" (keydown)="enterSendOrder($event, stepper)"></textarea>
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-optgroup [label]="'Recent Orders'">
                   <mat-option *ngFor="let o of recentOrders" [value]="o">

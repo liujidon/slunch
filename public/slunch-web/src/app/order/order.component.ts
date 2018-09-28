@@ -36,7 +36,8 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    console.log(this.authService.account)
+    console.log(document.getElementsByClassName("mat-form-field-label-wrapper")[1]);
   }
 
   clickRestaurant(option: PollOption, stepper: MatStepper) {
@@ -60,16 +61,23 @@ export class OrderComponent implements OnInit {
     this.pollService.updateVoteStatus(this.authService.getID(), "Ordered");
   }
 
-  orderStatus(account: any) {
-    if (account.voteStatus == "Not Ordered" || account.voteStatus == "Not Voted") {
+  orderStatus() {
+    var voteStatus = this.authService.getVoteStatus()
+    if (voteStatus == "Not Ordered" || voteStatus == "Not Voted") {
       document.getElementById("orderCard").style.display = 'none';
       document.getElementById("orderStatusButton").innerHTML = "I'm In!"
-      this.pollService.updateVoteStatus(account.id, "Not Ordering");
+      this.pollService.updateVoteStatus(this.authService.getID(), "Not Ordering");
     }
-    else if (account.voteStatus == "Not Ordering") {
+    else if (voteStatus == "Not Ordering") {
       document.getElementById("orderCard").style.display = 'block';
       document.getElementById("orderStatusButton").innerHTML = "I'm Out!"
-      this.pollService.updateVoteStatus(account.id, "Not Ordered");
+      this.pollService.updateVoteStatus(this.authService.getID(), this.authService.checkIfNoVotes());
+    }
+  }
+
+  enterSendOrder(event, stepper) {
+    if (event.keyCode == 13 && this.authService.getVoteStatus() != 'Ordered' && this.order != "") {
+      this.clickSendOrder(stepper);
     }
   }
 }

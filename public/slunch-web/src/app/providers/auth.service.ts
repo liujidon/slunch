@@ -58,8 +58,9 @@ export class AuthService {
     console.log("AuthService accountsSubscription subscribing")
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
-
+        console.log(docChangeActions)
         let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.getUid())
+
         if (temp.length > 0) {
           let accountDoc = temp[0].payload.doc;
           this.account = accountDoc.data();
@@ -103,13 +104,29 @@ export class AuthService {
     }
   }
 
-  getID(){
+  getID() {
     if (this.account) {
       return this.account.id;
     }
     else {
       return null;
     }
+  }
+
+  getVoteStatus(){
+    if (this.account){
+      return this.account.voteStatus
+    }
+    else{
+      return null
+    }
+  }
+
+  checkIfNoVotes() {
+    if (this.account.latestVotes.length == 0) {
+      return "Not Voted"
+    }
+    return "Not Ordered"
   }
 
   signup(email: string, password: string) {

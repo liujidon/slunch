@@ -418,14 +418,16 @@ export class PollService {
   }
 
   updateVoteStatus(ID, status) {
-    this.db.collection<AccountFace>('accounts').doc(ID).update({"voteStatus": status});
+    if (this.authService.getVoteStatus() != 'Ordered') {
+      this.db.collection<AccountFace>('accounts').doc(ID).update({"voteStatus": status});
+    }
   }
 
   updateLatestVotes(latestVotes) {
     let data = {
       "latestVotes": latestVotes
     }
-    if (latestVotes.length == 0) {
+    if (latestVotes.length == 0 && this.authService.getVoteStatus() != 'Not Ordering') {
       data["voteStatus"] = "Not Voted"
     }
     this.db.collection<AccountFace>('accounts').doc(this.authService.getID()).update(data);

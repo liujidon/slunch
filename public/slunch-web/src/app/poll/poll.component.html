@@ -1,7 +1,16 @@
 <mat-card style="margin:3em">
-  <mat-card-title>{{pollService.latestPoll?.topic}} Poll</mat-card-title>
-  <mat-card-content>
+  <mat-card-title>{{pollService.latestPoll?.topic}} Poll
+    <div style="float:right;">
+      <button id="pollStatusButton" mat-raised-button color="warn" (click)="orderStatus()"
+              [disabled]="authService.account.voteStatus == 'Ordered'"
+              [attr.data-status]="(authService.account.voteStatus)">
+        {{authService.account.voteStatus == "Not Ordered" || authService.account.voteStatus == "Not Voted" ? "I'm Out!":
+        "I'm In!" }}
+      </button>
+    </div>
+  </mat-card-title>
 
+  <mat-card-content [style.display]="authService.account.voteStatus == 'Not Ordering' ? 'none':'block'" id="pollCard">
     <div fxLayout.xs="column wrap" fxLayout="row wrap">
       <div style="margin:10px" *ngFor="let option of pollService.latestPoll?.options">
         <app-poll-option class="clickable" (click)="updateVote(option)" [matTooltip]="option?.name" [pollOption]="option"></app-poll-option>
@@ -16,6 +25,5 @@
         </div>
       </div>
     </div>
-
   </mat-card-content>
 </mat-card>

@@ -5,3 +5,11 @@
 .option:active {
     opacity: 1;
 }
+
+.mat-autocomplete-panel{
+  position: fixed;
+}
+
+.mat-step-text-label{
+  font-size: 12px;
+}
