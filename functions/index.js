@@ -39,13 +39,25 @@ exports.updateAccountBalance = functions.firestore
     });
   });
 
+exports.updateVoteStatus = functions.firestore
+    .document('polls/{pollId}')
+    .onCreate((snap, context) => {
+      let accounts = admin.firestore.collection('accounts');
+      accounts.get().then(querySnapshot => {
+          querySnapshot.forEach(documentSnapshot => {
+              console.log(`Document found at path: ${documentSnapshot.ref.path}`);
+          });
+      });
+    });
+
+
 exports.setupNewUser = functions.auth.user().onCreate((user) => {
   console.log("Setting up new user: ", user);
   let firstname = "";
   let lastname = "";
-  
+
   firstname = user.email.split("@")[0];
-  
+
   if(user.displayName !== null) {
     let splitName = user.displayName.split(' ');
     if(splitName.length > 0)
@@ -58,7 +70,9 @@ exports.setupNewUser = functions.auth.user().onCreate((user) => {
     email: user.email,
     uid: user.uid,
     firstname: firstname,
-    lastname: lastname
+    lastname: lastname,
+    lastestVotes: [],
+    voteStatus: "Not Voted"
   };
   return admin.firestore().collection('accounts').add(account);
 });
