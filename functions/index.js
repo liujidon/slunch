@@ -39,16 +39,16 @@ exports.updateAccountBalance = functions.firestore
     });
   });
 
-exports.updateVoteStatus = functions.firestore
-    .document('polls/{pollId}')
-    .onCreate((snap, context) => {
-      let accounts = admin.firestore.collection('accounts');
-      accounts.get().then(querySnapshot => {
-          querySnapshot.forEach(documentSnapshot => {
-              console.log(`Document found at path: ${documentSnapshot.ref.path}`);
-          });
-      });
-    });
+// exports.updateVoteStatus = functions.firestore
+//     .document('polls/{pollId}')
+//     .onCreate((snap, context) => {
+//       let accounts = admin.firestore.collection('accounts');
+//       accounts.get().then(querySnapshot => {
+//           querySnapshot.forEach(documentSnapshot => {
+//               console.log(`Document found at path: ${documentSnapshot.ref.path}`);
+//           });
+//       });
+//     });
 
 
 exports.setupNewUser = functions.auth.user().onCreate((user) => {
