@@ -419,7 +419,7 @@ export class TransactionService {
     this.db.doc(t.id).delete();
     const unprocessedOrdersForUID = this.unprocessedOrders.filter(transaction => transaction.uid == t.uid);
     if (unprocessedOrdersForUID.length - 1 == 0) {
-      this.pollService.updateVoteStatus(t.accountid.split('/')[1], "Not Ordered");
+      this.pollService.changeStatusToOrdered(t.accountid.split('/')[1]);
     }
   }
 }

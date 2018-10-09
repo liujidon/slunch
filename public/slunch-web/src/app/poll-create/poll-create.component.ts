@@ -40,7 +40,6 @@ export class PollCreateComponent implements OnInit {
     // Create a function where it sets all accounts votes and votestatus back to default values and call it here
 
     this.router.navigate(['vote']);
-    this.pollService.resetVoteStatus();
   }
 
 }

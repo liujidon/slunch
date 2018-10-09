@@ -2,7 +2,7 @@
   <mat-card-title>{{pollService.latestPoll?.topic}} Poll
     <div style="float:right;">
       <button id="pollStatusButton" mat-raised-button color="warn" (click)="orderStatus()"
-              [disabled]="authService.account.voteStatus == 'Ordered'"
+              [disabled]="authService.account.voteStatus == 'Have Ordered'"
               [attr.data-status]="(authService.account.voteStatus)">
         {{authService.account.voteStatus == "Not Ordered" || authService.account.voteStatus == "Not Voted" ? "I'm Out!":
         "I'm In!" }}

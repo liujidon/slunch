@@ -418,9 +418,13 @@ export class PollService {
   }
 
   updateVoteStatus(ID, status) {
-    if (this.authService.getVoteStatus() != 'Ordered') {
+    if (this.authService.getVoteStatus() != 'Have Ordered') {
       this.db.collection<AccountFace>('accounts').doc(ID).update({"voteStatus": status});
     }
+  }
+
+  changeStatusToOrdered(ID){
+    this.db.collection<AccountFace>('accounts').doc(ID).update({"voteStatus": "Not Ordered"});
   }
 
   updateLatestVotes(latestVotes) {
@@ -432,19 +436,4 @@ export class PollService {
     }
     this.db.collection<AccountFace>('accounts').doc(this.authService.getID()).update(data);
   }
-
-  resetVoteStatus() {
-    this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
-      docChangeActions => {
-        let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc);
-        for (var i = 0; i < temp.length; i++) {
-          this.db.collection<AccountFace>('accounts').doc(temp[i].payload.doc.id).update({
-            "voteStatus": "Not Voted",
-            "latestVotes": []
-          });
-        }
-        this.newPollCreated = true;
-      })
-  }
-
 }

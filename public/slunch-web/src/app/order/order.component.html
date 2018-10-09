@@ -2,7 +2,7 @@
   <mat-card-title>Ordering
     <div style="float:right;">
       <button id="orderStatusButton" mat-raised-button color="warn" (click)="orderStatus()"
-              [disabled]="authService.account.voteStatus == 'Ordered'"
+              [disabled]="authService.account.voteStatus == 'Have Ordered'"
               [attr.data-status]="(authService.account.voteStatus)">
         {{authService.account.voteStatus == "Not Ordered" || authService.account.voteStatus == "Not Voted" ? "I'm Out!":
         "I'm In!" }}
@@ -25,7 +25,7 @@
 
       <mat-step label="Specify order and press send">
         <button *ngIf="chosenOption" style="float:right" mat-raised-button
-                [disabled]="order.length <= 0 || authService.account.voteStatus == 'Ordered'" color="warn"
+                [disabled]="order.length <= 0 || authService.account.voteStatus == 'Have Ordered'" color="warn"
                 (click)="clickSendOrder(stepper)">
           Send Order
         </button>

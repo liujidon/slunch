@@ -58,7 +58,7 @@ export class OrderComponent implements OnInit {
     this.isOrderSent = true;
     stepper.next();
     this.isRestaurantChosen = false;
-    this.pollService.updateVoteStatus(this.authService.getID(), "Ordered");
+    this.pollService.updateVoteStatus(this.authService.getID(), "Have Ordered");
   }
 
   orderStatus() {
@@ -76,7 +76,7 @@ export class OrderComponent implements OnInit {
   }
 
   enterSendOrder(event, stepper) {
-    if (event.keyCode == 13 && this.authService.getVoteStatus() != 'Ordered' && this.order != "") {
+    if (event.keyCode == 13 && this.authService.getVoteStatus() != 'Have Ordered' && this.order != "") {
       this.clickSendOrder(stepper);
     }
   }
