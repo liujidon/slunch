@@ -45,13 +45,10 @@ exports.updateVoteStatus = functions.firestore
         return admin.firestore().collection('accounts').get().then(querySnapshot => {
             return querySnapshot.forEach(documentSnapshot => {
                 let account = admin.firestore().collection('accounts').doc(documentSnapshot.id);
-                if (documentSnapshot.data().voteStatus !== "Not Voted" || documentSnapshot.data().latestVotes.length !== 0) {
-                    console.log("Changing ", documentSnapshot.id, "voteStatus and latestVotes fields")
-                    return account.update({
-                        voteStatus: "Not Voted",
-                        latestVotes: []
-                    });
-                }
+                return account.update({
+                    voteStatus: "Not Voted",
+                    latestVotes: []
+                });
             });
         });
     });
