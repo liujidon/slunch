@@ -117,16 +117,17 @@ export class PollService {
       },
       rowHeight: 40,
       columnDefs: [
-        {headerName: "Voter's Name", field: "firstname"},
-        {headerName: "Chosen Retauarants", field: "latestVotes", sort: "desc"},
+        {headerName: "Voter's Name", field: "firstname", width: 75, lockPosition: true},
         {
-          headerName: "Ordered?",
+          headerName: "Status",
           field: "voterStatus",
           cellRendererFramework: GridVoterStatusComponent,
-          suppressFilter: true, suppressResize: true,
-          sort: "desc"
-        }
+          suppressFilter: true, suppressResize: true, width: 50,
+          sort: "desc", suppressMovable: true
+        },
+        {headerName: "Chosen Retauarants", field: "latestVotes", sort: "desc" }
       ],
+      suppressDragLeaveHidesColumns: true,
       animateRows: true,
       sortingOrder: ["asc", "desc"],
       enableSorting: true,
@@ -222,10 +223,6 @@ export class PollService {
     console.log("PollService accountPoll subscribing");
     this.accountsPollSubscription = this.db.collection<AccountFace>('accounts').valueChanges().subscribe(
       data => {
-        if (this.newPollCreated && this.accountsSubscription) {
-          this.accountsSubscription.unsubscribe()
-          this.newPollCreated = false
-        }
         this.setVoterOptions(data);
       }
     );
@@ -299,11 +296,6 @@ export class PollService {
   likedUid(uid): Array<string> {
     return this.latestPoll.options.filter(po => po.uidVotes.includes(uid)).map(po => po.name);
   }
-
-  //Make a function where for each uid, you call likedUid for each uid and get a list of restaurants
-  // Take that list of restaurants in the loop, and make a function in auth service to update that specific
-  // Account with the list, and the vote status. In the auth service subscribe to the change, and make a method
-  // that creates an object of voter options, and then set that object to the voteGO api
 
   getRestaurantVoteListCount(): object {
     var restaurants = []
@@ -411,7 +403,7 @@ export class PollService {
       firstname: user.firstname,
       latestVotes: user.latestVotes,
       voterStatus: user.voteStatus
-    }));
+    })).filter(user => user.voterStatus != "Not Voted");
     if (this.votersGO.api != null) {
       this.votersGO.api.setRowData(this.votersOptionsGO);
     }
