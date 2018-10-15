@@ -36,8 +36,6 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.authService.account)
-    console.log(document.getElementsByClassName("mat-form-field-label-wrapper")[1]);
   }
 
   clickRestaurant(option: PollOption, stepper: MatStepper) {

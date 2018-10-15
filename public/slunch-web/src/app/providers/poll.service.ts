@@ -125,7 +125,7 @@ export class PollService {
           suppressFilter: true, suppressResize: true, width: 50,
           sort: "desc", suppressMovable: true
         },
-        {headerName: "Chosen Retauarants", field: "latestVotes", sort: "desc" }
+        {headerName: "Chosen Retauarants", field: "latestVotes", sort: "desc"}
       ],
       suppressDragLeaveHidesColumns: true,
       animateRows: true,
@@ -415,7 +415,7 @@ export class PollService {
     }
   }
 
-  changeStatusToOrdered(ID){
+  changeStatusToOrdered(ID) {
     this.db.collection<AccountFace>('accounts').doc(ID).update({"voteStatus": "Not Ordered"});
   }
 
@@ -423,7 +423,7 @@ export class PollService {
     let data = {
       "latestVotes": latestVotes
     }
-    if (latestVotes.length == 0 && this.authService.getVoteStatus() != 'Not Ordering') {
+    if (latestVotes.length == 0 && (this.authService.getVoteStatus() != 'Not Ordering' && this.authService.getVoteStatus() != "Have Ordered")) {
       data["voteStatus"] = "Not Voted"
     }
     this.db.collection<AccountFace>('accounts').doc(this.authService.getID()).update(data);

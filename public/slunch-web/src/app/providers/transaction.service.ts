@@ -35,6 +35,7 @@ export class TransactionService {
   initFlag: boolean = true;
 
   todayPosition: number = 0;
+  todaySpent: object;
   myDebit: number = 0;
   myCredit: number = 0;
   numUnprocessed: number;
@@ -339,7 +340,7 @@ export class TransactionService {
           this.myCredit = -1 * this.myTransactions.map(t => t.status == "done" && t.price < 0 ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
           if (this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
           this.todayPosition = -1 * this.todayTransactions.map(t => t.status == "done" ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
-
+          this.todaySpent = this.getTotalSpent();
         });
 
       }
@@ -413,6 +414,27 @@ export class TransactionService {
 
   updateTransaction(t: Transaction, data: any) {
     this.db.doc(t.id).update(data);
+  }
+
+  getTotalSpent() {
+    var spent = {}
+    var final = []
+    for (var i = 0; i < this.todayTransactions.length; i++) {
+      var t = this.todayTransactions[i]
+      if (t.status == 'done' && t.isDeposit == false) {
+        if (t.completedBy in spent) {
+          spent[t.completedBy] += t.price
+        }
+        else {
+          spent[t.completedBy] = t.price
+        }
+      }
+    }
+    var keys = Object.keys(spent)
+    for (var k = 0; k < keys.length; k++) {
+      final.push({'completedBy': keys[k], 'price': spent[keys[k]]})
+    }
+    return final
   }
 
   cancelTransaction(t: Transaction) {

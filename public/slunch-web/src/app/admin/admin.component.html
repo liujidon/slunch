@@ -22,6 +22,9 @@
         <mat-expansion-panel-header>
             <div style="width:100%" fxLayout="row" fxLayoutAlign="space-between center">
                 <mat-panel-title class="flex-grow-zero">Transactions</mat-panel-title>
+                <div class="flex-grow-zero" *ngFor = "let account of transactionService.todaySpent">
+                  <span>{{account.completedBy}}:&nbsp;{{account.price | currency}}</span>
+                </div>
                 <mat-panel-description class="flex-grow-zero">
                     Net today: &nbsp;
                     <span [ngClass]="transactionService.todayPosition >=0 ?'green':'red'">{{transactionService.todayPosition

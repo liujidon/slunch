@@ -58,6 +58,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthService } from './providers/auth.service';
 import { AuthGuardService } from './providers/auth-guard.service';
 import { StateService } from './providers/state.service';
+import { PastOrderService } from './providers/past-order.service';
 import { TransactionService } from './providers/transaction.service';
 import { VotePageComponent } from './vote-page/vote-page.component';
 import { OrderComponent } from './order/order.component';
@@ -173,7 +174,8 @@ export class MaterialModule {}
     PollService,
     ServiceHandlerService,
     AdminService,
-    FormatterService
+    FormatterService,
+    PastOrderService
   ],
   entryComponents: [
     GridCancelTransactionComponent,

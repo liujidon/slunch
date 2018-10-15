@@ -58,7 +58,6 @@ export class AuthService {
     console.log("AuthService accountsSubscription subscribing")
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
-        console.log(docChangeActions)
         let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.getUid())
 
         if (temp.length > 0) {
