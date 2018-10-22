@@ -43,12 +43,14 @@ export class CalculatePriceComponent implements OnDestroy {
       this.t.price = (data.t.price / 1.13).toFixed(2);
     }
     else {
-      this.pastOrderSubscription = this.db.collection<PastOrder>("past-order").valueChanges().subscribe(pastOrders => {
-        var filter = pastOrders.filter(pastOrder => pastOrder.order == this.t.detail && pastOrder.restaurant == this.t.description)
-        if (filter.length != 0) {
+      this.pastOrderSubscription = this.db.collection<PastOrder>("past-order").valueChanges().subscribe(restaurants => {
+        var restaurant = restaurants.filter(restaurantOrders => restaurantOrders.restaurant == this.t.description)
+        if (restaurant.length != 0) {
           this.foundPastOrder = true;
-          this.pastOrder = filter[0]
-          this.t.price = parseFloat(parseFloat(this.pastOrder.price + "").toFixed(2));
+          this.pastOrder = restaurant[0]
+          if(this.t.detail in this.pastOrder.orders) {
+            this.t.price = parseFloat(parseFloat(this.pastOrder.orders[this.t.detail]+ "").toFixed(2));
+          }
         }
       })
     }
@@ -86,7 +88,7 @@ export class CalculatePriceComponent implements OnDestroy {
       this.transactionService.updateTransaction(this.t, data);
       if (this.t.status != "done") {
         if (this.foundPastOrder) {
-          if (this.t.price != this.pastOrder.price * 1.13) {
+          if (this.t.price != this.pastOrder.orders[this.t.detail] * 1.13) {
             this.pastOrderService.updateOrderPrice(this.t, this.pastOrder);
           }
         }

@@ -31,15 +31,16 @@ export class PastOrderService {
     let id = this.db.createId();
     let pastOrder = new PastOrder();
     pastOrder.id = "past-order/" + id
-    pastOrder.price = parseFloat(parseFloat(t.price + "").toFixed(2))
-    pastOrder.order = t.detail
+    pastOrder.orders[t.detail] = parseFloat(parseFloat(t.price + "").toFixed(2))
     pastOrder.restaurant = t.description
     this.db.collection<PastOrder>("past-order").doc(id).set(JSON.parse(JSON.stringify(pastOrder)));
   }
 
   updateOrderPrice(t: any, pastOrder: any) {
+    var newData = pastOrder.orders
+    newData[t.detail] = parseFloat(parseFloat(t.price + "").toFixed(2))
     let data = {
-      "price": parseFloat(parseFloat(t.price + "").toFixed(2))
+      "orders": newData
     }
     this.db.doc(pastOrder.id).update(data);
   }

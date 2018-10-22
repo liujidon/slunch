@@ -4,16 +4,13 @@
 export class PastOrder {
 
   id: string
-  order: string;
   restaurant: string;
-  price: number;
+  orders: object;
   lastUpdated: any;
 
   constructor() {
     this.lastUpdated = new Date();
     this.restaurant = "";
-    this.price = 0;
-    this.order = "";
-    this.id = "";
+    this.orders = {};
   }
 }
