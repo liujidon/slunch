@@ -6,6 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {AdminFace, AccountFace} from '../interfaces';
 import {Subscription} from 'rxjs';
+import {ToastrService} from 'ngx-toastr';
 
 import {environment} from 'src/environments/environment';
 
@@ -27,7 +28,7 @@ export class AuthService {
   private accountsSubscription: Subscription;
   private accountsVoteSubscription: Subscription;
 
-  constructor(private firebaseAuth: AngularFireAuth, private router: Router, db: AngularFirestore) {
+  constructor(private firebaseAuth: AngularFireAuth, private router: Router, db: AngularFirestore, private toastrService: ToastrService) {
     this.db = db;
     this.user = firebaseAuth.authState;
 
@@ -64,6 +65,10 @@ export class AuthService {
           let accountDoc = temp[0].payload.doc;
           this.account = accountDoc.data();
           this.account.id = accountDoc.id;
+          if (this.account.balance.toFixed(2) < 0) {
+            this.toastrService.error('Please make a deposit of at least $' + -1 * this.account.balance.toFixed(2) +
+              ' to your account.', 'Negative Balance');
+          }
         }
       }
     );
@@ -103,6 +108,15 @@ export class AuthService {
     }
   }
 
+  getAccount() {
+    if (this.account) {
+      return this.account;
+    }
+    else {
+      return null;
+    }
+  }
+
   getID() {
     if (this.account) {
       return this.account.id;
@@ -112,11 +126,11 @@ export class AuthService {
     }
   }
 
-  getVoteStatus(){
-    if (this.account){
+  getVoteStatus() {
+    if (this.account) {
       return this.account.voteStatus
     }
-    else{
+    else {
       return null
     }
   }

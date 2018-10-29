@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 import {StateService} from '../providers/state.service';
 import {PollService} from '../providers/poll.service';
 import {AuthService} from '../providers/auth.service';
@@ -12,8 +12,8 @@ import {HostListener} from '@angular/core';
     '(window:resize)': 'onResize($event)'
   }
 })
-export class VotePageComponent implements OnInit {
-
+export class VotePageComponent implements OnInit, AfterViewInit {
+  authService: AuthService;
   newOption: string = "";
   sentSuggestions: number = 0;
 
@@ -21,12 +21,15 @@ export class VotePageComponent implements OnInit {
 
   constructor(public stateService: StateService,
               public pollService: PollService,
-              public authService: AuthService) {
+              authService: AuthService) {
+    this.authService = authService;
   }
 
 
   ngOnInit() {
+  }
 
+  ngAfterViewInit(){
   }
 
   @HostListener('window:resize', ['$event'])
@@ -81,6 +84,5 @@ export class VotePageComponent implements OnInit {
       }
     }
   }
-
 
 }

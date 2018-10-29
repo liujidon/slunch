@@ -9,6 +9,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 import {
   MatAutocompleteModule,
@@ -164,7 +165,12 @@ export class MaterialModule {}
     MaterialModule,
     FormsModule,
     FlexLayoutModule,
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([]),
+    ToastrModule.forRoot(({
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      disableTimeOut: true,
+    }))
   ],
   providers: [
     AuthService,
