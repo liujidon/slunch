@@ -49,9 +49,11 @@
     <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.myGO">
     </ag-grid-angular>
 
-    <div style="margin-top: 20px">
-      *Showing transactions for <strong>{{transactionService.dateLBToDate()}}</strong> onwards
-    </div>
+    <mat-form-field style="margin-top: 20px">
+      <input (dateChange)="setDate($event)" matInput [matDatepicker]="showOver" [(ngModel)]="transactionService.dateLB" placeholder="Lower Bound Date">
+      <mat-datepicker-toggle matSuffix [for]="showOver"></mat-datepicker-toggle>
+      <mat-datepicker #showOver></mat-datepicker>
+    </mat-form-field>
 
   </mat-card-content>
 

@@ -45,4 +45,8 @@ export class AccountComponent implements OnInit {
     this.addAmount = "";
   }
 
+  setDate(event){
+    this.transactionService.setDateLB(new Date(event.value));
+  }
+
 }
