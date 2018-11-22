@@ -46,6 +46,7 @@ export class PollService {
 
   currentVoters: Array<string> = [];
   currentUidVoters: Array<string> = [];
+  currentVoteRestuarantNames: object = {};
 
   accountsPollSubscription: Subscription;
   accountsSubscription: Subscription;
@@ -166,9 +167,7 @@ export class PollService {
         "lightred-background": (params) => params.data.menuUrl == "http://www.google.com" || params.data.iconUrl == environment.defaultIconUrl
       }
     }
-
   }
-
 
   subscribe() {
     console.log("PollService latestPollSubscription subscribing");
@@ -177,10 +176,12 @@ export class PollService {
       // User clicks on a poll option
       this.currentVoters = []
       this.currentUidVoters = []
+      this.currentVoteRestuarantNames = {}
       this.latestPoll.options.forEach(po => {
         po.votes.forEach(name => {
           if (this.currentVoters.indexOf(name) == -1) this.currentVoters.push(name);
         });
+        this.currentVoteRestuarantNames[po.name] = po.votes;
       });
       // Gets all the uids that have voted
       this.latestPoll.options.forEach(po => {
@@ -300,6 +301,7 @@ export class PollService {
   getRestaurantVoteListCount(): object {
     var restaurants = []
     const restaurantCount = {}
+    var restaurantVoters = {}
     for (var i = 0; i < this.currentVoters.length; i++) {
       restaurants = restaurants.concat(this.liked(this.currentVoters[i]));
     }
@@ -348,12 +350,15 @@ export class PollService {
   }
 
   getSuggestions() {
+    var satisfaction = this.getRestaurantsThatSatisfy()
+    var highestSatisfactionKeys = this.getKeysWithHighestValue(satisfaction, 3);
     var highestVoteSuggestionsKeys = this.getKeysWithHighestValue(this.restaurantCountVotes, 3);
     var closestSuggestionsKeys = this.getKeysWithHighestValue(this.restaurantCountDistance, -3);
     var highestVoteClosestKeys = this.getKeysWithHighestValue(this.restaurantDistanceVotes, 3);
     var highestVoteRow = {"Type": "Highest Votes"}
     var closestRow = {"Type": "Closest Votes"}
     var highestVoteClosestRow = {"Type": "Highest Votes and Closest Restaurant"}
+    var highestSatisfactionRow = {"Type": "Most Satisfied"}
 
     for (var i = 0; i < 3; i++) {
       var key = "Restaurant " + (i + 1)
@@ -378,8 +383,35 @@ export class PollService {
         highestVoteClosestRow[key] = highestVoteClosestKeys[i] + ' (Score: ' + this.restaurantDistanceVotes[highestVoteClosestKeys[i]].toFixed(2) + ')';
 
       }
+      if (highestSatisfactionKeys[i] == undefined) {
+        highestSatisfactionRow[key] = " ";
+      }
+      else {
+        highestSatisfactionRow[key] = highestSatisfactionKeys[i] + ' (Score: ' + satisfaction[highestSatisfactionKeys[i]]+ ')';
+
+      }
     }
-    this.suggestionsOptionsGO = [highestVoteRow, closestRow, highestVoteClosestRow];
+    this.suggestionsOptionsGO = [highestVoteRow, closestRow, highestVoteClosestRow, highestSatisfactionRow];
+  }
+
+  getRestaurantsThatSatisfy() {
+    var allRestaurants = Object.keys(this.currentVoteRestuarantNames)
+    var satisfaction = {}
+    var checked = []
+    for (var i = 0; i < allRestaurants.length; i++) {
+      for (var k = 0; k < allRestaurants.length; k++) {
+        if (i == k || checked.indexOf(allRestaurants[k]) > -1) {
+          continue;
+        }
+        var allVoters = this.currentVoteRestuarantNames[allRestaurants[i]].concat(this.currentVoteRestuarantNames[allRestaurants[k]]);
+        var uniqueVoters = new Set(allVoters)
+        var restaurants = allRestaurants[i] + ", " + allRestaurants[k]
+        satisfaction[restaurants] = uniqueVoters.size
+      }
+      checked.push(allRestaurants[i])
+    }
+    console.log(satisfaction)
+    return satisfaction;
   }
 
   getKeysWithHighestValue(o, n) {

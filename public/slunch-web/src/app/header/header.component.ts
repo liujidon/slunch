@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { AuthService } from '../providers/auth.service';
-import { Router } from '@angular/router';
-import { StateService } from '../providers/state.service';
-import { StateFace } from '../interfaces';
-import { TransactionService } from '../providers/transaction.service';
-import { ServiceHandlerService } from '../providers/service-handler.service';
-import { PollService } from '../providers/poll.service';
+import {Component, OnInit, Input} from '@angular/core';
+import {AuthService} from '../providers/auth.service';
+import {Router} from '@angular/router';
+import {StateService} from '../providers/state.service';
+import {StateFace} from '../interfaces';
+import {TransactionService} from '../providers/transaction.service';
+import {ServiceHandlerService} from '../providers/service-handler.service';
+import {PollService} from '../providers/poll.service';
 
 @Component({
   selector: 'app-header',
@@ -18,14 +18,13 @@ export class HeaderComponent implements OnInit {
   isOrdering: boolean;
   username: string;
 
-  constructor(
-    private serviceHandlerService: ServiceHandlerService,
-    public authService: AuthService,
-    public transactionService: TransactionService,
-    public stateService: StateService,
-    public router: Router,
-    public pollService: PollService
-  ) { }
+  constructor(private serviceHandlerService: ServiceHandlerService,
+              public authService: AuthService,
+              public transactionService: TransactionService,
+              public stateService: StateService,
+              public router: Router,
+              public pollService: PollService) {
+  }
 
   ngOnInit() {
     this.router.events.subscribe(() => {
@@ -50,6 +49,23 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.serviceHandlerService.unsubscribe();
     this.authService.logout();
+  }
+
+  resetDateAndNavigate(page) {
+    var date = new Date();
+    if (date.getDay() === 1 || date.getDay() === 2 || date.getDay() === 3) {
+      date.setDate(date.getDate() - 7);
+    }
+    else {
+      date.setDate(date.getDate() - 3);
+    }
+    date.setHours(4); // Because database times are in GMT
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    this.transactionService.setDateLB(date);
+    this.router.navigate([page])
   }
 
 }

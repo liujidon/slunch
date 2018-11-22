@@ -311,10 +311,10 @@ export class TransactionService {
 
       if (state) {
 
-        if (this.transactionsSubscription) {
-          console.log("TransactionService transactionSubscription unsubscribing");
-          this.transactionsSubscription.unsubscribe();
-        }
+        // if (this.transactionsSubscription) {
+        //   console.log("TransactionService transactionSubscription unsubscribing");
+        //   this.transactionsSubscription.unsubscribe();
+        // }
 
         console.log("TransactionService transactionsSubscription subscribing");
         this.transactionsSubscription = this.db.collection<Transaction>("transactions", ref => ref.orderBy("time", "desc").where("time", ">", this.dateLBToDateTime())).valueChanges().subscribe(transactions => {

@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-between center" style="width:100%; background-color:#d81e05">
-  <div class="clickable" (click)="router.navigate(['vote'])">
+  <div class="clickable" (click)="resetDateAndNavigate('vote')">
     <strong class="responsive-header" style="color: white; position: relative; float: left;">Slunch</strong>
   </div>
   <button style="color: white; margin-right: 1vw;" mat-button [matMenuTriggerFor]="menu">
@@ -13,23 +13,23 @@
     <mat-icon>arrow_drop_down</mat-icon>
   </button>
   <mat-menu style="align-content: center; display:none; width: 100%" #menu="matMenu" [overlapTrigger]="false" yPosition="below">
-    <button mat-menu-item (click)="router.navigate(['vote'])">
+    <button mat-menu-item (click)="resetDateAndNavigate('vote')">
       <span>
         <mat-icon>how_to_vote</mat-icon>
         Vote/Order</span>
     </button>
-    <button mat-menu-item (click)="router.navigate(['account'])">
+    <button mat-menu-item (click)="resetDateAndNavigate('account')">
       <span>
         <mat-icon>person</mat-icon>
         Account
       </span>
     </button>
-    <button mat-menu-item *ngIf="authService.isAdmin" (click)="router.navigate(['admin'])">
+    <button mat-menu-item *ngIf="authService.isAdmin" (click)="resetDateAndNavigate('admin')">
       <span [matBadge]="transactionService.numUnprocessed" matBadgeOverlap="false" [matBadgeColor]="transactionService.numUnprocessed == 0 ? 'primary':'warn'">
         <mat-icon>settings</mat-icon> Admin
       </span>
     </button>
-    <button mat-menu-item *ngIf="authService.isAdmin" (click)="router.navigate(['new-poll'])">
+    <button mat-menu-item *ngIf="authService.isAdmin" (click)="resetDateAndNavigate('new-poll')">
       <span>
         <mat-icon>playlist_add</mat-icon>
         New Poll
