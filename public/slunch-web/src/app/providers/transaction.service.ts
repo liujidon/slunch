@@ -188,71 +188,6 @@ export class TransactionService {
       enableFilter: true,
       rowHeight: 40
     }
-
-    this.myGO = {
-      onGridReady: (params) => {
-        this.myGO.api = params.api;
-        this.myGO.columnApi = params.columnApi;
-        this.myGO.api.setRowData(this.myTransactions);
-        if (window.innerWidth < 480) {
-          this.myGO.columnApi.autoSizeAllColumns();
-        }
-        else {
-          this.myGO.api.sizeColumnsToFit();
-        }
-      },
-      columnDefs: [
-        {
-          headerName: "Time", field: "time", valueFormatter: (params) => {
-          let pipe = new DatePipe('en-us');
-          return pipe.transform(params.value, "short");
-        }, sort: "desc",
-          filter: "agDateColumnFilter",
-          filterValueGetter: (params) => new Date(params.data.time),
-          sortingOrder: ["desc", "asc"]
-        },
-        {headerName: "Description", field: "description"},
-        {headerName: "Detail", field: "detail", suppressSorting: true},
-        {
-          headerName: "Debit", field: "price", valueFormatter: (params) => {
-          let pipe = new CurrencyPipe("en-us");
-          if (params.value >= 0) return pipe.transform(params.value);
-          else return "";
-        }, cellClass: ["red"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
-        },
-        {
-          headerName: "Credit", field: "price", valueFormatter: (params) => {
-          let pipe = new CurrencyPipe("en-us");
-          if (params.value < 0) {
-            return pipe.transform(-params.value);
-          }
-          else return "";
-        }, cellClass: ["green"], suppressFilter: true, sortingOrder: ["desc", "asc", null]
-        },
-        {
-          headerName: "Status",
-          cellRendererFramework: GridStatusComponent,
-          suppressFilter: true,
-          suppressSorting: true,
-          suppressResize: true, width: 100
-        },
-        {
-          cellRendererFramework: GridCancelTransactionComponent,
-          cellRendererParams: {
-            transactionService: this,
-            caption: "Cancel Transaction"
-          },
-          cellStyle: {textAlign: "center"},
-          suppressSorting: true, suppressFilter: true, width: 100, suppressResize: true
-        }
-      ],
-      animateRows: true,
-      sortingOrder: ["asc", "desc", null],
-      enableSorting: true,
-      enableColResize: true,
-      enableFilter: true
-    }
-
   }
 
   exportUnprocessed() {
@@ -340,10 +275,6 @@ export class TransactionService {
             return new Date(transaction.time) >= today;
           });
 
-          this.myTransactions = transactions.filter(transaction => transaction.uid == this.authService.getUid());
-          this.myDebit = this.myTransactions.map(t => t.status == "done" && t.price >= 0 ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
-          this.myCredit = -1 * this.myTransactions.map(t => t.status == "done" && t.price < 0 ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
-          if (this.myGO.api) this.myGO.api.setRowData(this.myTransactions)
           this.todayPosition = -1 * this.todayTransactions.map(t => t.status == "done" ? parseFloat(t.price + "") : 0).reduce((acc, v) => acc + v, 0);
           this.todaySpent = this.getTotalSpent();
         });
@@ -366,17 +297,6 @@ export class TransactionService {
       this.stateSubscription.unsubscribe();
     }
 
-  }
-
-  getRecentOrders(restaurant: string): Array<string> {
-    let orders: Array<string> = [];
-    this.myTransactions.filter(t => t.description == restaurant).forEach(t => {
-      let food = t.detail.toLowerCase();
-      if (orders.indexOf(food) === -1) {
-        orders.push(food);
-      }
-    });
-    return orders.slice(0, 3);
   }
 
   getPopularOrders(restaurant: string): Array<string> {

@@ -4,7 +4,8 @@ import { Transaction } from './transaction';
 export interface StateFace{
     allowPoll: boolean,
     allowOrders: boolean,
-    dateLB: string
+    dateLB: string,
+    myTransactionDateLB: string
 }
 
 export interface AdminFace{

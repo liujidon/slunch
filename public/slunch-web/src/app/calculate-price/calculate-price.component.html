@@ -1,28 +1,32 @@
 <div class="receipt-aside">
   <div class="receipt-details">
-    
+
     <div style="position:absolute; top:5px; right: 5px;">
       <mat-icon class="close clickable" (click)="close()">close</mat-icon>
     </div>
-    
+
     <div class="receipt-item bottom-divider">
       <p class="receipt-info">
-        <strong class="" style="color: rgba(38,45,59,1);font-size: 15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+        <strong class=""
+                style="color: rgba(38,45,59,1);font-size: 15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
           {{t.description}}
         </strong>
       </p>
       <p class="receipt-info">
-        <span class="" style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+        <span class=""
+              style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
           {{t.detail}}
         </span>
       </p>
       <p class="receipt-info">
-        <span class="" style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+        <span class=""
+              style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
           {{t.displayName}}
         </span>
       </p>
       <p class="receipt-info">
-        <span class="" style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+        <span class=""
+              style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
           {{t.time | date : 'short'}}
         </span>
       </p>
@@ -38,7 +42,8 @@
           <span class="pull-right" style="color: rgba(124,126,145,1);font-size: 13px;">
             {{calcTax() | currency}}
           </span>
-          <span style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+          <span
+            style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
             Tax
           </span>
         </p>
@@ -48,6 +53,26 @@
           <mat-label>Fixed Cost</mat-label>
           <input matInput [(ngModel)]="fixed">
         </mat-form-field>
+      </div>
+    </div>
+
+    <div *ngIf="!t.isDeposit">
+      <div class="receipt-item bottom-divider">
+        <p style="margin: 0px 0px">
+          <span
+            style="color: rgba(124,126,145,1);font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+            Suggestions
+          </span>
+        </p>
+        <div style="margin: 12px 0;" fxLayout="column" fxLayoutAlign="space-between start">
+          <mat-checkbox style="width: 100%" *ngFor="let orders of orderSimilarities; let i = index"
+                        [(ngModel)]="orders.checked" (change)="changeCheckbox(i, orders)">
+            <div style="color: grey; float:left; margin: 0 !important;">${{orders.price}}&nbsp;-&nbsp;</div>
+            <div style="float:right; margin: 0 !important; ">{{orders.name| slice: 0 : 24 }}{{orders.name.length > 24 ?
+              '...' : ''}}
+            </div>
+          </mat-checkbox>
+        </div>
       </div>
     </div>
 
@@ -64,12 +89,14 @@
       <span class="pull-right " style="color: rgba(38,45,59,1);font-size: 17px;">
         {{calcTotal() | currency}}
       </span>
-      <span class="" style="color: rgba(38,45,59,1);font-size: 17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
+      <span class=""
+            style="color: rgba(38,45,59,1);font-size: 17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
         Total
       </span>
     </div>
     <div class="receipt-item">
-      <button [disabled]="!(calcTotal() > 0)" mat-raised-button color="warn" style="width:100%" (click)="confirmTotal()">
+      <button [disabled]="!(calcTotal() > 0)" mat-raised-button color="warn" style="width:100%"
+              (click)="confirmTotal()">
         <span style="color:#ffffff;font-size:13px;">Confirm</span>
       </button>
     </div>

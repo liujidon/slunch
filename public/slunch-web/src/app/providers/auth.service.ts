@@ -126,6 +126,15 @@ export class AuthService {
     }
   }
 
+  getEmail() {
+    if (this.account) {
+      return this.account.email;
+    }
+    else {
+      return null;
+    }
+  }
+
   getVoteStatus() {
     if (this.account) {
       return this.account.voteStatus

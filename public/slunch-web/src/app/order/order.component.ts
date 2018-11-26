@@ -5,6 +5,7 @@ import {PollOption} from '../poll-option';
 import {MatStepper} from '@angular/material';
 import {TransactionService} from '../providers/transaction.service';
 import {Router} from '@angular/router';
+import {AccountService} from '../providers/account.service'
 
 
 @Component({
@@ -27,6 +28,7 @@ export class OrderComponent implements OnInit {
   constructor(public pollService: PollService,
               public authService: AuthService,
               public transactionService: TransactionService,
+              public accountService: AccountService,
               public router: Router) {
     this.order = "";
     this.isRestaurantChosen = false;
@@ -43,7 +45,7 @@ export class OrderComponent implements OnInit {
     this.isOrderSent = false;
     this.chosenOption = option;
     this.isRestaurantChosen = true;
-    this.recentOrders = this.transactionService.getRecentOrders(this.chosenOption.name);
+    this.recentOrders = this.accountService.getRecentOrders(this.chosenOption.name);
     this.popularOrders = this.transactionService.getPopularOrders(this.chosenOption.name);
     stepper.next();
     setTimeout(() => {

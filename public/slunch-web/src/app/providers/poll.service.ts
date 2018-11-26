@@ -410,7 +410,6 @@ export class PollService {
       }
       checked.push(allRestaurants[i])
     }
-    console.log(satisfaction)
     return satisfaction;
   }
 

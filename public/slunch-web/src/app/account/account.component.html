@@ -38,19 +38,19 @@
     <mat-card-title class="flex-grow-zero">Transactions</mat-card-title>
     <div class="flex-grow-zero">
       Debit: &nbsp;
-      <span [ngClass]="'red'">{{transactionService.myDebit | currency}}</span>
+      <span [ngClass]="'red'">{{accountService.myDebit | currency}}</span>
       &nbsp;
       Credit: &nbsp;
-      <span [ngClass]="'green'">{{transactionService.myCredit | currency}}</span>
+      <span [ngClass]="'green'">{{accountService.myCredit | currency}}</span>
     </div>
   </div>
   <mat-card-content>
 
-    <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="transactionService.myGO">
+    <ag-grid-angular style="height: 500px" class="ag-theme-material" [gridOptions]="accountService.myGO">
     </ag-grid-angular>
 
     <mat-form-field style="margin-top: 20px">
-      <input (dateChange)="setDate($event)" matInput [matDatepicker]="showOver" [(ngModel)]="transactionService.dateLB" placeholder="Lower Bound Date">
+      <input (dateChange)="setDate($event)" matInput [matDatepicker]="showOver" [(ngModel)]="accountService.dateLB" placeholder="Lower Bound Date">
       <mat-datepicker-toggle matSuffix [for]="showOver"></mat-datepicker-toggle>
       <mat-datepicker #showOver></mat-datepicker>
     </mat-form-field>
