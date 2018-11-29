@@ -24,7 +24,6 @@ export class TransactionService {
   transactionsSubscription: Subscription;
   allTransactions: Array<Transaction> = [];
   doneTransactions: Array<Transaction> = [];
-  myTransactions: Array<Transaction> = [];
   unprocessedTransactions: Array<Transaction> = [];
   unprocessedOrders: Array<Transaction> = [];
   todayTransactions: Array<Transaction> = [];
@@ -224,12 +223,7 @@ export class TransactionService {
 
       if (this.initFlag) {
         this.dateLB = new Date();
-        if(this.dateLB.getDay() === 1 || this.dateLB.getDay() === 2 || this.dateLB.getDay() === 3){
-          this.dateLB.setDate(this.dateLB.getDate() - 7);
-        }
-        else{
-          this.dateLB.setDate(this.dateLB.getDate() - 3);
-        }
+        this.dateLB.setDate(this.dateLB.getDate() - 7);
         this.dateLB.setHours(4); // Because database times are in GMT
         this.dateLB.setMinutes(0);
         this.dateLB.setSeconds(0);

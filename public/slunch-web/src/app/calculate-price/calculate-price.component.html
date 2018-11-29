@@ -68,7 +68,7 @@
           <mat-checkbox style="width: 100%" *ngFor="let orders of orderSimilarities; let i = index"
                         [(ngModel)]="orders.checked" (change)="changeCheckbox(i, orders)">
             <div style="color: grey; float:left; margin: 0 !important;">${{orders.price}}&nbsp;-&nbsp;</div>
-            <div style="float:right; margin: 0 !important; ">{{orders.name| slice: 0 : 24 }}{{orders.name.length > 24 ?
+            <div style="float:right; margin: 0 !important; " matTooltip="{{orders.name}}">{{orders.name| slice: 0 : 24 }}{{orders.name.length > 24 ?
               '...' : ''}}
             </div>
           </mat-checkbox>

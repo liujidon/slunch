@@ -52,7 +52,7 @@ export class AccountService {
           sortingOrder: ["desc", "asc"]
         },
         {headerName: "Description", field: "description"},
-        {headerName: "Detail", field: "detail", suppressSorting: true},
+        {headerName: "Detail", field: "detail", suppressSorting: true,  editable: true},
         {
           headerName: "Debit", field: "price", valueFormatter: (params) => {
           let pipe = new CurrencyPipe("en-us");
