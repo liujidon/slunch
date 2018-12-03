@@ -100,7 +100,7 @@ export class AccountService {
     this.stateSubscription = this.db.doc<StateFace>(environment.stateRef).valueChanges().subscribe(state => {
       if (this.initFlag) {
         this.dateLB = new Date();
-        this.dateLB.setDate(this.dateLB.getDate() - 7);
+        this.dateLB.setDate(this.dateLB.getDate() - 14);
         this.dateLB.setHours(4); // Because database times are in GMT
         this.dateLB.setMinutes(0);
         this.dateLB.setSeconds(0);
