@@ -12,6 +12,7 @@ import {GridStatusComponent} from '../gridElements/grid-status/grid-status.compo
 import {GridCancelTransactionComponent} from '../gridElements/grid-cancel-transaction/grid-cancel-transaction.component';
 import {environment} from '../../environments/environment';
 import {StateFace} from '../interfaces';
+import { TransactionService } from './transaction.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class AccountService {
   private stateSubscription: Subscription;
   initFlag: boolean = true;
 
-  constructor(db: AngularFirestore, public authService: AuthService) {
+  constructor(db: AngularFirestore, public authService: AuthService, public transactionService: TransactionService) {
     this.db = db;
     this.myGO = {
       onGridReady: (params) => {
@@ -79,7 +80,7 @@ export class AccountService {
         {
           cellRendererFramework: GridCancelTransactionComponent,
           cellRendererParams: {
-            transactionService: this,
+            accountService: this,
             caption: "Cancel Transaction"
           },
           cellStyle: {textAlign: "center"},
@@ -157,5 +158,9 @@ export class AccountService {
       }
     });
     return orders.slice(0, 3);
+  }
+
+  cancelTransaction(t: Transaction) {
+    this.transactionService.cancelTransaction(t);
   }
 }

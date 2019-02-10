@@ -13,13 +13,13 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 })
 export class ConfirmationDialogComponent implements OnInit {
 
-  transactionService: TransactionService;
+  service: any;
   t: Transaction;
 
   constructor(private dialogRef: MatDialogRef<ConfirmationDialogComponent>,
               @Inject(MAT_DIALOG_DATA) data) {
     this.t = data.transaction;
-    this.transactionService = data.transactionService;
+    this.service = data.service;
 
   }
 
@@ -27,7 +27,7 @@ export class ConfirmationDialogComponent implements OnInit {
   }
 
   deleteTransaction() {
-    this.transactionService.cancelTransaction(this.t);
+    this.service.cancelTransaction(this.t);
     this.dialogRef.close();
   }
 

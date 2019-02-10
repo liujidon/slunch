@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TransactionService } from '../../providers/transaction.service';
+import { AccountService } from '../../providers/account.service';
 import { Transaction } from '../../transaction';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
 import {MatDialog, MatDialogConfig} from "@angular/material";
@@ -11,7 +11,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material";
 })
 export class GridCancelTransactionComponent {
 
-  transactionService: TransactionService;
+  accountService: AccountService;
   t: Transaction;
 
   constructor(
@@ -19,12 +19,12 @@ export class GridCancelTransactionComponent {
   ) { }
 
   agInit(params){
-    this.transactionService = params.transactionService;
+    this.accountService = params.accountService;
     this.t = params.data;
   }
 
   cancelTransaction(t: Transaction){
-    this.transactionService.cancelTransaction(t);
+    this.accountService.cancelTransaction(t);
   }
 
   openDialog(t: Transaction) {
@@ -33,7 +33,7 @@ export class GridCancelTransactionComponent {
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.data = {'transaction': t, 'transactionService': this.transactionService};
+    dialogConfig.data = {'transaction': t, 'service': this.accountService};
     dialogConfig.width = '350px';
     dialogConfig.height = '200px';
 

@@ -83,6 +83,7 @@ import { GridPollOptionControlComponent } from './gridElements/grid-poll-option-
 import { GridConfirmTransactionComponent } from './gridElements/grid-confirm-transaction/grid-confirm-transaction.component';
 import { CalculatePriceComponent } from './calculate-price/calculate-price.component';
 import { EditPollOptionComponent } from './edit-poll-option/edit-poll-option.component';
+import { AccountService } from './providers/account.service';
 
 @NgModule({
   exports: [
@@ -173,6 +174,7 @@ export class MaterialModule {}
     }))
   ],
   providers: [
+    AccountService,
     AuthService,
     AuthGuardService,
     StateService,

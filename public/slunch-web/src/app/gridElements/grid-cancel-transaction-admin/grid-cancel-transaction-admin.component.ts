@@ -37,7 +37,7 @@ export class GridCancelTransactionAdminComponent {
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.data = {'transaction': t, 'transactionService': this.transactionService};
+    dialogConfig.data = {'transaction': t, 'service': this.transactionService};
     dialogConfig.width = '350px';
     dialogConfig.height = '200px';
 
