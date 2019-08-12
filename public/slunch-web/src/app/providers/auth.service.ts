@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {AngularFireAuth} from 'angularfire2/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { auth } from 'firebase/app';
 import * as firebase from 'firebase';
 import {Observable} from 'rxjs/Observable';
 import {AngularFirestore} from 'angularfire2/firestore';
@@ -60,7 +61,6 @@ export class AuthService {
     this.accountsSubscription = this.db.collection<AccountFace>("accounts").snapshotChanges().subscribe(
       docChangeActions => {
         let temp = docChangeActions.filter(docChangeAction => docChangeAction.payload.doc.get("uid") == this.getUid())
-
         if (temp.length > 0) {
           let accountDoc = temp[0].payload.doc;
           this.account = accountDoc.data();

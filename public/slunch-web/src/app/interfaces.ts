@@ -25,8 +25,8 @@ export interface AccountFace{
     lastname: string;
     email: string;
     balance: number;
-    lastestVotes: Array<string>;
-    voteStatus: String;
+    latestVotes: Array<string>;
+    voteStatus: string;
     credit: number;
     debit: number;
 }
